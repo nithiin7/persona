@@ -5,11 +5,23 @@ import Stripe from 'stripe'
 import { manageSubscriptionStatusChange } from '@/utils/actions/stripe/actions'
 import { createServiceClient } from '@/utils/supabase/server'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-04-30.basil'
-})
+function getStripe(): Stripe {
+  const apiKey = process.env.STRIPE_SECRET_KEY;
+  if (!apiKey) {
+    throw new Error('STRIPE_SECRET_KEY environment variable is not set. Please add it to your .env file.');
+  }
+  return new Stripe(apiKey, {
+    apiVersion: '2025-04-30.basil'
+  });
+}
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+function getWebhookSecret(): string {
+  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!secret) {
+    throw new Error('STRIPE_WEBHOOK_SECRET environment variable is not set. Please add it to your .env file.');
+  }
+  return secret;
+}
 
 const relevantEvents = new Set([
   'checkout.session.completed',
@@ -112,6 +124,8 @@ export async function POST(req: Request) {
     let event: Stripe.Event
     try {
       console.log('🔍 Verifying webhook signature...');
+      const stripe = getStripe();
+      const webhookSecret = getWebhookSecret();
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
       console.log('✅ Webhook signature verified successfully');
     } catch (err: unknown) {
@@ -153,6 +167,7 @@ export async function POST(req: Request) {
         const session = event.data.object as Stripe.Checkout.Session
         
         if (session.mode === 'subscription' && session.subscription) {
+          const stripe = getStripe();
           const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
           
           await handleSubscriptionChange(
@@ -173,6 +188,7 @@ export async function POST(req: Request) {
         const invoice = event.data.object as Stripe.Invoice & { subscription?: string };
         
         if (invoice.subscription) {
+          const stripe = getStripe();
           const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
           
           await handleSubscriptionChange(

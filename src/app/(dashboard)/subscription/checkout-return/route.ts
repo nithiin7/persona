@@ -4,9 +4,13 @@ import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
-
-const apiKey = process.env.STRIPE_SECRET_KEY as string;
-const stripe = new Stripe(apiKey);
+function getStripe(): Stripe {
+  const apiKey = process.env.STRIPE_SECRET_KEY;
+  if (!apiKey) {
+    throw new Error('STRIPE_SECRET_KEY environment variable is not set. Please add it to your .env file.');
+  }
+  return new Stripe(apiKey);
+}
 
 export const GET = async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
@@ -17,6 +21,7 @@ export const GET = async (request: NextRequest) => {
   if (!stripeSessionId?.length)
     return redirect("/home");
 
+  const stripe = getStripe();
   const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
 
   if (session.status === "complete") {

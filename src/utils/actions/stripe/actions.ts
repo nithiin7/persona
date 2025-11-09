@@ -5,10 +5,21 @@ import { createClient, createServiceClient } from '@/utils/supabase/server';
 import { Subscription } from '@/lib/types';
 import { revalidatePath } from "next/cache";
 
-// Initialize stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-04-30.basil'
-});
+// Lazy initialization of Stripe client
+let stripeInstance: Stripe | null = null;
+
+function getStripe(): Stripe {
+  if (!stripeInstance) {
+    const apiKey = process.env.STRIPE_SECRET_KEY;
+    if (!apiKey) {
+      throw new Error('STRIPE_SECRET_KEY environment variable is not set. Please add it to your .env file.');
+    }
+    stripeInstance = new Stripe(apiKey, {
+      apiVersion: '2025-04-30.basil'
+    });
+  }
+  return stripeInstance;
+}
 
 // Create or retrieve a Stripe customer
 export async function createOrRetrieveCustomer({
@@ -40,6 +51,7 @@ export async function createOrRetrieveCustomer({
 
 // Create a new customer in Stripe
 async function createCustomerInStripe(uuid: string, email: string): Promise<string> {
+  const stripe = getStripe();
   const customer = await stripe.customers.create({
     email,
     metadata: {
@@ -88,6 +100,7 @@ export async function manageSubscriptionStatusChange(
 
   // Get customer's UUID from Stripe metadata
   console.log('🔍 Retrieving customer data from Stripe...');
+  const stripe = getStripe();
   const customerData = await stripe.customers.retrieve(customerId);
   if ('deleted' in customerData) {
     console.error('❌ Customer has been deleted');
@@ -192,6 +205,7 @@ export async function deleteCustomerAndData(uuid: string) {
 
   if (subscription?.stripe_customer_id) {
     // Delete customer in Stripe
+    const stripe = getStripe();
     await stripe.customers.del(subscription.stripe_customer_id);
   }
 

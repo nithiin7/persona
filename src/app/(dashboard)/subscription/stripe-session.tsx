@@ -4,8 +4,13 @@ import { Stripe } from "stripe";
 import { checkAuth } from "@/app/auth/login/actions";
 import { createOrRetrieveCustomer } from "@/utils/actions/stripe/actions";
 
-const apiKey = process.env.STRIPE_SECRET_KEY as string;
-const stripe = new Stripe(apiKey);
+function getStripe(): Stripe {
+  const apiKey = process.env.STRIPE_SECRET_KEY;
+  if (!apiKey) {
+    throw new Error('STRIPE_SECRET_KEY environment variable is not set. Please add it to your .env file.');
+  }
+  return new Stripe(apiKey);
+}
 
 interface NewSessionOptions {
     priceId: string;
@@ -29,6 +34,7 @@ export const postStripeSession = async ({ priceId }: NewSessionOptions) => {
 
         const returnUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/subscription/checkout-return?session_id={CHECKOUT_SESSION_ID}`;
 
+        const stripe = getStripe();
         const session = await stripe.checkout.sessions.create({
             customer: customerId,
             ui_mode: "embedded",
@@ -76,6 +82,7 @@ export const createPortalSession = async () => {
 
         const returnUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/subscription`;
 
+        const stripe = getStripe();
         const portalSession = await stripe.billingPortal.sessions.create({
             customer: customerId,
             return_url: returnUrl,
