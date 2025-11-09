@@ -26,6 +26,100 @@ interface SavedStyle {
   timestamp: number;
 }
 
+// Default styles to initialize if none exist
+const getDefaultStyles = (): SavedStyle[] => {
+    const now = Date.now();
+    return [
+      {
+        name: "Basic",
+        timestamp: now - 3,
+        settings: {
+          // Clean, minimal, standard spacing
+          document_font_size: 10,
+          document_line_height: 1.5,
+          document_margin_vertical: 36,
+          document_margin_horizontal: 36,
+          header_name_size: 24,
+          header_name_bottom_spacing: 24,
+          skills_margin_top: 2,
+          skills_margin_bottom: 2,
+          skills_margin_horizontal: 0,
+          skills_item_spacing: 2,
+          experience_margin_top: 2,
+          experience_margin_bottom: 2,
+          experience_margin_horizontal: 0,
+          experience_item_spacing: 4,
+          projects_margin_top: 2,
+          projects_margin_bottom: 2,
+          projects_margin_horizontal: 0,
+          projects_item_spacing: 4,
+          education_margin_top: 2,
+          education_margin_bottom: 2,
+          education_margin_horizontal: 0,
+          education_item_spacing: 4,
+        },
+      },
+      {
+        name: "Modern Design",
+        timestamp: now - 2,
+        settings: {
+          // Modern design with more spacing and emphasis
+          document_font_size: 10,
+          document_line_height: 1.6,
+          document_margin_vertical: 32,
+          document_margin_horizontal: 40,
+          header_name_size: 28,
+          header_name_bottom_spacing: 28,
+          skills_margin_top: 4,
+          skills_margin_bottom: 4,
+          skills_margin_horizontal: 0,
+          skills_item_spacing: 3,
+          experience_margin_top: 6,
+          experience_margin_bottom: 4,
+          experience_margin_horizontal: 0,
+          experience_item_spacing: 6,
+          projects_margin_top: 6,
+          projects_margin_bottom: 4,
+          projects_margin_horizontal: 0,
+          projects_item_spacing: 6,
+          education_margin_top: 6,
+          education_margin_bottom: 4,
+          education_margin_horizontal: 0,
+          education_item_spacing: 6,
+        },
+      },
+      {
+        name: "Compact Color",
+        timestamp: now - 1,
+        settings: {
+          // Compact style optimized for color printing/display
+          document_font_size: 9,
+          document_line_height: 1.4,
+          document_margin_vertical: 28,
+          document_margin_horizontal: 32,
+          header_name_size: 26,
+          header_name_bottom_spacing: 20,
+          skills_margin_top: 3,
+          skills_margin_bottom: 3,
+          skills_margin_horizontal: 0,
+          skills_item_spacing: 2.5,
+          experience_margin_top: 4,
+          experience_margin_bottom: 3,
+          experience_margin_horizontal: 0,
+          experience_item_spacing: 5,
+          projects_margin_top: 4,
+          projects_margin_bottom: 3,
+          projects_margin_horizontal: 0,
+          projects_item_spacing: 5,
+          education_margin_top: 4,
+          education_margin_bottom: 3,
+          education_margin_horizontal: 0,
+          education_item_spacing: 5,
+        },
+      },
+    ];
+};
+
 export function SavedStylesDialog({
   currentSettings,
   onApplyStyle,
@@ -35,11 +129,32 @@ export function SavedStylesDialog({
   const [newStyleName, setNewStyleName] = useState("");
   const [isAddingNew, setIsAddingNew] = useState(false);
 
-  // Load saved styles from localStorage on mount
+  // Load saved styles from localStorage on mount, or initialize with defaults
   useEffect(() => {
     const saved = localStorage.getItem("persona-saved-styles");
     if (saved) {
-      setSavedStyles(JSON.parse(saved));
+      try {
+        const parsed = JSON.parse(saved);
+        // Only use saved styles if they exist
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setSavedStyles(parsed);
+        } else {
+          // Initialize with defaults if empty
+          const defaults = getDefaultStyles();
+          setSavedStyles(defaults);
+          localStorage.setItem("persona-saved-styles", JSON.stringify(defaults));
+        }
+      } catch {
+        // If parsing fails, initialize with defaults
+        const defaults = getDefaultStyles();
+        setSavedStyles(defaults);
+        localStorage.setItem("persona-saved-styles", JSON.stringify(defaults));
+      }
+    } else {
+      // No saved styles, initialize with defaults
+      const defaults = getDefaultStyles();
+      setSavedStyles(defaults);
+      localStorage.setItem("persona-saved-styles", JSON.stringify(defaults));
     }
   }, []);
 
