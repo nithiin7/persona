@@ -5,6 +5,8 @@ import { VideoShowcase } from "@/components/landing/VideoShowcase";
 import { Footer } from "@/components/layout/footer";
 import { NavLinks } from "@/components/layout/nav-links";
 import { Logo } from "@/components/ui/logo";
+import { AuthDialog } from "@/components/auth/auth-dialog";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
@@ -78,7 +80,17 @@ export default async function Page() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <Logo />
-              <NavLinks />
+              <div className="flex items-center gap-6">
+                <NavLinks />
+                <AuthDialog>
+                  <Button
+                    size="sm"
+                    className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white"
+                  >
+                    Sign In
+                  </Button>
+                </AuthDialog>
+              </div>
             </div>
           </div>
         </nav>
