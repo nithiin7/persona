@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
-import Link from "next/link";
 import { SplitContent } from "../ui/split-content";
 import { AuthDialog } from "@/components/auth/auth-dialog";
 
@@ -179,7 +178,7 @@ const FeatureHighlights = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-50/30 to-transparent"></div>
 
         <SplitContent
-          imageSrc="/SS Chat.png"
+          imageSrc="/images/ss1.webp"
           heading="AI-Powered Resume Assistant"
           description="Get real-time feedback and suggestions from our advanced AI assistant. Optimize your resume content, improve your bullet points, and ensure your skills stand out to recruiters and ATS systems."
           imageOnLeft={false}
@@ -208,7 +207,7 @@ const FeatureHighlights = () => {
         />
 
         <SplitContent
-          imageSrc="/SS Score.png"
+          imageSrc="/images/ss3.webp"
           heading="Resume Performance Scoring"
           description="Get detailed insights into your resume's effectiveness with our comprehensive scoring system. Track key metrics, identify areas for improvement, and optimize your resume to stand out to employers and ATS systems."
           imageOnLeft={false}
@@ -223,7 +222,7 @@ const FeatureHighlights = () => {
         />
 
         <SplitContent
-          imageSrc="/SS Cover Letter.png"
+          imageSrc="/images/ss4.webp"
           heading="AI Cover Letter Generator"
           description="Create compelling, personalized cover letters in minutes with our AI-powered generator. Tailor your message to specific job opportunities while maintaining a professional and engaging tone that captures attention."
           imageOnLeft={true}

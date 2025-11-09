@@ -1,52 +1,7 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
-import { Play, Maximize2 } from "lucide-react";
+import Image from "next/image";
 
 export function VideoShowcase() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const toggleFullscreen = () => {
-    if (videoRef.current) {
-      if (!document.fullscreenElement) {
-        videoRef.current.requestFullscreen().catch((err) => {
-          console.error(
-            `Error attempting to enable fullscreen: ${err.message}`
-          );
-        });
-      } else {
-        document.exitFullscreen();
-      }
-    }
-  };
-
-  useEffect(() => {
-    const handleVideoEnd = () => {
-      setIsPlaying(false);
-    };
-
-    const video = videoRef.current;
-    if (video) {
-      video.addEventListener("ended", handleVideoEnd);
-    }
-
-    return () => {
-      if (video) {
-        video.removeEventListener("ended", handleVideoEnd);
-      }
-    };
-  }, []);
 
   return (
     <section
@@ -64,72 +19,37 @@ export function VideoShowcase() {
             See Persona in Action
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Watch how our AI-powered platform transforms your resume in minutes
+            See how our AI-powered platform transforms your resume in minutes
           </p>
         </div>
 
-        {/* Video container with simplified styling */}
+        {/* Image showcase container */}
         <div className="relative mx-auto group">
-          {/* Simplified card effect container */}
+          {/* Card effect container */}
           <div className="relative rounded-2xl bg-white border border-gray-200 shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg z-10">
-            {/* Video placeholder */}
-            <div
-              className="relative aspect-video w-full cursor-pointer"
-              onClick={togglePlay}
-            >
-              <video
-                ref={videoRef}
-                className="w-full h-full object-cover rounded-2xl"
-                src="/ResumeLM.mp4"
-                poster="/thumbnail.png"
-                onEnded={() => setIsPlaying(false)}
+            {/* Image showcase */}
+            <div className="relative aspect-video w-full overflow-hidden">
+              <Image
+                src="/images/ss2.webp"
+                alt="Persona Dashboard Showcase"
+                fill
+                className="object-cover rounded-2xl transition-transform duration-700 group-hover:scale-[1.02]"
+                sizes="(min-width: 1024px) 80vw, 100vw"
+                quality={100}
+                priority
               />
-
-              {/* Simplified overlay for thumbnail */}
-              {!isPlaying && (
-                <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
-              )}
-
-              {/* Play button - Only shows when video is paused */}
-              {!isPlaying && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    togglePlay();
-                  }}
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full bg-indigo-600 text-white transition-all duration-300 hover:scale-110 z-20"
-                  aria-label="Play video"
-                >
-                  <Play className="w-8 h-8 ml-1" />
-                </button>
-              )}
-
-              {/* Controls overlay - bottom */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-                <div className="text-sm bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-200">
-                  Persona Demo
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFullscreen();
-                  }}
-                  className="text-white bg-black/20 p-2 rounded-full border border-white/10 transition-all duration-300 hover:bg-black/30"
-                  aria-label="Toggle fullscreen"
-                >
-                  <Maximize2 className="w-4 h-4" />
-                </button>
-              </div>
+              {/* Subtle overlay on hover */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/0 via-transparent to-teal-500/0 opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none" />
             </div>
           </div>
 
-          {/* Feature badges below video */}
+          {/* Feature badges below image */}
           <div className="flex flex-wrap justify-center gap-3 mt-6">
             <span className="px-3 py-1 rounded-full bg-indigo-50 text-sm border border-indigo-200 text-indigo-700">
-              Interactive Demo
+              Intuitive Interface
             </span>
             <span className="px-3 py-1 rounded-full bg-indigo-50 text-sm border border-indigo-200 text-indigo-700">
-              User-friendly Interface
+              User-friendly Design
             </span>
             <span className="px-3 py-1 rounded-full bg-indigo-50 text-sm border border-indigo-200 text-indigo-700">
               Real-time AI Assistance
