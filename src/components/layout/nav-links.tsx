@@ -17,7 +17,7 @@ function NavLink({ href, children, className }: NavLinkProps) {
         target.scrollIntoView({ behavior: 'smooth' });
       }
     }
-    // For regular page routes (like /blog), let the browser handle navigation normally
+    // For regular page routes, let the browser handle navigation normally
   };
 
   return (
@@ -40,7 +40,6 @@ export function NavLinks() {
       <NavLink href="#features">Features</NavLink>
       <NavLink href="#how-it-works">How it Works</NavLink>
       <NavLink href="#pricing">Pricing</NavLink>
-      <NavLink href="/blog">Blog</NavLink>
     </div>
   );
 } 

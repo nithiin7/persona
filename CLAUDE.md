@@ -73,8 +73,7 @@ skills: Array<{
 app/
 ├── (dashboard)/    # Protected routes (home, profile, resumes, settings)
 ├── auth/          # Authentication flows
-├── api/           # API routes for AI chat and webhooks
-└── blog/          # MDX blog content
+└── api/           # API routes for AI chat and webhooks
 ```
 
 ### Component Organization
