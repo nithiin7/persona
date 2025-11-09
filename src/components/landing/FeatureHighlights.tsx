@@ -273,7 +273,7 @@ const FeatureHighlights = () => {
             </span>
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Join 50,000+ professionals who are getting more interviews with ResumeLM
+            Join 50,000+ professionals who are getting more interviews with Persona
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -284,16 +284,6 @@ const FeatureHighlights = () => {
                 Create Your Free Resume
               </button>
             </AuthDialog>
-            <Link 
-              href="https://github.com/olyaiy/resume-lm" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-4 rounded-lg bg-white/80 border border-purple-200/40 text-lg font-medium transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-            >
-              <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                Open Source on Github
-              </span>
-            </Link>
           </div>
           
           <p className="text-sm text-muted-foreground mt-6 flex items-center justify-center gap-2">

@@ -18,7 +18,7 @@ export function HeroVideoSection() {
       {/* Section Header */}
       <div className="text-center mb-12 max-w-3xl mx-auto">
         <h2 className="text-2xl sm:text-3xl font-semibold mb-4 bg-gradient-to-r from-violet-600 via-blue-600 to-violet-600 bg-clip-text text-transparent">
-          See ResumeLM in Action
+          See Persona in Action
         </h2>
         <p className="text-muted-foreground text-lg">
           Watch how our AI-powered platform transforms your resume in minutes
@@ -35,7 +35,7 @@ export function HeroVideoSection() {
               <div className="relative aspect-video">
                 <Image
                   src="/thumbnail.png"
-                  alt="ResumeLM Demo Video"
+                  alt="Persona Demo Video"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                   width={1000}
                   height={1000}
@@ -65,7 +65,7 @@ export function HeroVideoSection() {
         <DialogContent className="max-w-6xl border-0 bg-transparent p-0">
           <DialogTitle className="sr-only">Demo Video</DialogTitle>
           <DialogDescription className="sr-only">
-            Watch how ResumeLM transforms your resume with AI
+            Watch how Persona transforms your resume with AI
           </DialogDescription>
           <div className="aspect-video rounded-2xl overflow-hidden bg-black/95 shadow-2xl border border-white/10">
             <video

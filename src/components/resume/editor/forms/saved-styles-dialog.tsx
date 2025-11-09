@@ -34,7 +34,7 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
 
   // Load saved styles from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("resumelm-saved-styles");
+    const saved = localStorage.getItem("persona-saved-styles");
     if (saved) {
       setSavedStyles(JSON.parse(saved));
     }
@@ -52,7 +52,7 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
 
     const updatedStyles = [...savedStyles, newStyle];
     setSavedStyles(updatedStyles);
-    localStorage.setItem("resumelm-saved-styles", JSON.stringify(updatedStyles));
+    localStorage.setItem("persona-saved-styles", JSON.stringify(updatedStyles));
     setNewStyleName("");
     setIsAddingNew(false);
   };
@@ -61,7 +61,7 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
   const handleDeleteStyle = (timestamp: number) => {
     const updatedStyles = savedStyles.filter((style) => style.timestamp !== timestamp);
     setSavedStyles(updatedStyles);
-    localStorage.setItem("resumelm-saved-styles", JSON.stringify(updatedStyles));
+    localStorage.setItem("persona-saved-styles", JSON.stringify(updatedStyles));
   };
 
   // Apply a saved style

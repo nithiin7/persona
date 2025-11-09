@@ -8,7 +8,7 @@ import Link from "next/link"
 import { ProUpgradeButton } from "@/components/settings/pro-upgrade-button"
 
 function checkForApiKeys() {
-  const storedKeys = localStorage.getItem('resumelm-api-keys')
+  const storedKeys = localStorage.getItem('persona-api-keys')
   if (!storedKeys) return false
   
   try {

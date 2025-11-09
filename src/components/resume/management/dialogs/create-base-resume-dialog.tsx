@@ -159,8 +159,8 @@ export function CreateBaseResumeDialog({ children, profile }: CreateBaseResumeDi
         };
 
         // Get model and API key from local storage
-        const MODEL_STORAGE_KEY = 'resumelm-default-model';
-        const LOCAL_STORAGE_KEY = 'resumelm-api-keys';
+        const MODEL_STORAGE_KEY = 'persona-default-model';
+        const LOCAL_STORAGE_KEY = 'persona-api-keys';
         const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
         const storedKeys = localStorage.getItem(LOCAL_STORAGE_KEY);
         let apiKeys = [];

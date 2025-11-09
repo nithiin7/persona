@@ -28,7 +28,7 @@ export function AppHeader({ children, showUpgradeButton = true, isProPlan = fals
   // Load stored data on mount
   useEffect(() => {
     // Load API keys
-    const storedKeys = localStorage.getItem('resumelm-api-keys');
+    const storedKeys = localStorage.getItem('persona-api-keys');
     if (storedKeys) {
       try {
         setApiKeys(JSON.parse(storedKeys));
@@ -38,20 +38,20 @@ export function AppHeader({ children, showUpgradeButton = true, isProPlan = fals
     }
 
     // Load default model
-    const storedModel = localStorage.getItem('resumelm-default-model');
+    const storedModel = localStorage.getItem('persona-default-model');
     if (storedModel) {
       setDefaultModel(storedModel);
     } else {
       // Use centralized default model logic
       const defaultModelId = getDefaultModel(isProPlan);
       setDefaultModel(defaultModelId);
-      localStorage.setItem('resumelm-default-model', defaultModelId);
+      localStorage.setItem('persona-default-model', defaultModelId);
     }
   }, [isProPlan]);
 
   const handleModelChange = (modelId: string) => {
     setDefaultModel(modelId);
-    localStorage.setItem('resumelm-default-model', modelId);
+    localStorage.setItem('persona-default-model', modelId);
   };
 
   return (

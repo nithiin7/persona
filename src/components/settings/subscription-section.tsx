@@ -135,7 +135,7 @@ export function SubscriptionSection() {
               </Badge>
             </div>
             <h2 className="text-2xl font-bold text-gray-900">
-              Upgrade to ResumeLM Pro
+              Upgrade to Persona Pro
             </h2>
             <p className="text-gray-600 max-w-lg mx-auto">
               Join thousands of professionals landing more interviews with premium AI assistance.
@@ -223,7 +223,7 @@ export function SubscriptionSection() {
             
             <div className="text-center mb-6">
               <div className="flex items-center justify-center mb-2">
-                <h4 className="text-xl font-bold text-gray-900">ResumeLM Pro</h4>
+                <h4 className="text-xl font-bold text-gray-900">Persona Pro</h4>
                 {!isPro && (
                   <Badge className="ml-2 bg-blue-100 text-blue-700 text-xs">Most Popular</Badge>
                 )}

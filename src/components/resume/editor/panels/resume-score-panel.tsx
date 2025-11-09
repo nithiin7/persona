@@ -94,7 +94,7 @@ interface ResumeScorePanelProps {
   job?: JobType | null;
 }
 
-const LOCAL_STORAGE_KEY = 'resumelm-resume-scores';
+const LOCAL_STORAGE_KEY = 'persona-resume-scores';
 const MAX_SCORES = 10;
 
 // Helper function to convert camelCase to readable labels
@@ -155,8 +155,8 @@ export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps)
   const handleRecalculate = async () => {
     setIsCalculating(true);
     try {
-        const MODEL_STORAGE_KEY = 'resumelm-default-model';
-        // const LOCAL_STORAGE_KEY = 'resumelm-api-keys';
+        const MODEL_STORAGE_KEY = 'persona-default-model';
+        // const LOCAL_STORAGE_KEY = 'persona-api-keys';
   
         const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
         // const storedKeys = localStorage.getItem(LOCAL_STORAGE_KEY);

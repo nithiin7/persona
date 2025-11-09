@@ -39,8 +39,8 @@ import { getDefaultModel, type ApiKey } from '@/lib/ai-models';
 
 
 
-const LOCAL_STORAGE_KEY = 'resumelm-api-keys';
-const MODEL_STORAGE_KEY = 'resumelm-default-model';
+const LOCAL_STORAGE_KEY = 'persona-api-keys';
+const MODEL_STORAGE_KEY = 'persona-default-model';
 
 interface ChatBotProps {
   resume: Resume;

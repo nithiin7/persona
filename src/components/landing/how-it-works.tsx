@@ -47,7 +47,7 @@ export function HowItWorks() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold tracking-tight sm:text-5xl bg-gradient-to-r from-violet-600 via-blue-600 to-violet-600 bg-clip-text text-transparent">
-            How ResumeLM Works
+            How Persona Works
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Create tailored resumes in minutes with AI-powered optimization

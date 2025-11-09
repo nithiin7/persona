@@ -13,17 +13,17 @@ import { cookies } from "next/headers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://resumelm.com"),
+  metadataBase: new URL("https://persona.com"),
   title: {
-    default: "ResumeLM - AI-Powered Resume Builder",
-    template: "%s | ResumeLM"
+    default: "Persona - AI-Powered Resume Builder",
+    template: "%s | Persona"
   },
   description: "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
-  applicationName: "ResumeLM",
+  applicationName: "Persona",
   keywords: ["resume builder", "AI resume", "ATS optimization", "tech jobs", "career tools", "job application"],
-  authors: [{ name: "ResumeLM" }],
-  creator: "ResumeLM",
-  publisher: "ResumeLM",
+  authors: [{ name: "Persona" }],
+  creator: "Persona",
+  publisher: "Persona",
   formatDetection: {
     email: false,
     address: false,
@@ -37,24 +37,24 @@ export const metadata: Metadata = {
 
   openGraph: {
     type: "website",
-    siteName: "ResumeLM",
-    title: "ResumeLM - AI-Powered Resume Builder",
+    siteName: "Persona",
+    title: "Persona - AI-Powered Resume Builder",
     description: "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
     images: [
       {
         url: "/og.webp",
         width: 1200,
         height: 630,
-        alt: "ResumeLM - AI Resume Builder",
+        alt: "Persona - AI Resume Builder",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ResumeLM - AI-Powered Resume Builder",
+    title: "Persona - AI-Powered Resume Builder",
     description: "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
     images: ["/og.webp"],
-    creator: "@resumelm",
+    creator: "@persona",
   },
   robots: {
     index: true,

@@ -29,7 +29,7 @@ export function WelcomeDialog({ isOpen: initialIsOpen }: WelcomeDialogProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-            Welcome to ResumeLM! 🎉
+            Welcome to Persona! 🎉
           </DialogTitle>
         </DialogHeader>
         

@@ -40,7 +40,6 @@ export function NavLinks() {
       <NavLink href="#features">Features</NavLink>
       <NavLink href="#how-it-works">How it Works</NavLink>
       <NavLink href="#pricing">Pricing</NavLink>
-      <NavLink href="#creator-story">About</NavLink>
       <NavLink href="/blog">Blog</NavLink>
     </div>
   );
