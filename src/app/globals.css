@@ -7,7 +7,11 @@ html {
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 @layer base {
@@ -63,16 +67,17 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    background-image: radial-gradient(
-      circle at top right,
-      hsl(327 60% 92% / 0.2),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at bottom left,
-      hsl(270 60% 92% / 0.2),
-      transparent 40%
-    );
+    background-image:
+      radial-gradient(
+        circle at top right,
+        hsl(327 60% 92% / 0.2),
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at bottom left,
+        hsl(270 60% 92% / 0.2),
+        transparent 40%
+      );
     background-attachment: fixed;
   }
 }
@@ -81,21 +86,33 @@ body {
   .glass-card {
     @apply bg-white/40 backdrop-blur-md border border-white/20 shadow-lg relative overflow-hidden;
   }
-  
+
   .hover-card {
     @apply transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 hover:bg-white/50;
   }
 
   @keyframes float {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(-10px, -10px) rotate(1deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(-10px, -10px) rotate(1deg);
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
   }
 
   @keyframes float-delayed {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(10px, -5px) rotate(-1deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(10px, -5px) rotate(-1deg);
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
   }
 
   .animate-float {
@@ -109,8 +126,8 @@ body {
   .bg-radial-glow-purple {
     background: radial-gradient(
       circle at center,
-      theme('colors.purple.500/0.15') 0%,
-      theme('colors.purple.500/0.05') 45%,
+      theme("colors.purple.500/0.15") 0%,
+      theme("colors.purple.500/0.05") 45%,
       transparent 70%
     );
   }
@@ -137,8 +154,6 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #cbd5e1;
 }
-
-
 
 .buyButton {
   text-decoration: none;

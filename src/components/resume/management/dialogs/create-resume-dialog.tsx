@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { CreateBaseResumeDialog } from "./create-base-resume-dialog";
 import { CreateTailoredResumeDialog } from "./create-tailored-resume-dialog";
@@ -6,14 +6,23 @@ import { ResumeSummary, Profile } from "@/lib/types";
 
 interface CreateResumeDialogProps {
   children: React.ReactNode;
-  type: 'base' | 'tailored';
+  type: "base" | "tailored";
   baseResumes?: ResumeSummary[];
   profile: Profile;
 }
 
-export function CreateResumeDialog({ children, type, baseResumes, profile }: CreateResumeDialogProps) {
-  if (type === 'base') {
-    return <CreateBaseResumeDialog profile={profile}>{children}</CreateBaseResumeDialog>;
+export function CreateResumeDialog({
+  children,
+  type,
+  baseResumes,
+  profile,
+}: CreateResumeDialogProps) {
+  if (type === "base") {
+    return (
+      <CreateBaseResumeDialog profile={profile}>
+        {children}
+      </CreateBaseResumeDialog>
+    );
   }
 
   return (
@@ -21,4 +30,4 @@ export function CreateResumeDialog({ children, type, baseResumes, profile }: Cre
       {children}
     </CreateTailoredResumeDialog>
   );
-} 
+}

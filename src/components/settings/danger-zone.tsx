@@ -1,15 +1,25 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { Loader2 } from "lucide-react"
-import { useFormStatus } from 'react-dom'
-import { deleteUserAccount } from "@/app/auth/login/actions"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Loader2 } from "lucide-react";
+import { useFormStatus } from "react-dom";
+import { deleteUserAccount } from "@/app/auth/login/actions";
 
 function SubmitButton() {
-  const { pending } = useFormStatus()
+  const { pending } = useFormStatus();
 
   return (
     <AlertDialogAction
@@ -20,7 +30,7 @@ function SubmitButton() {
       {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
       Delete Account
     </AlertDialogAction>
-  )
+  );
 }
 
 export function DangerZone() {
@@ -35,7 +45,7 @@ export function DangerZone() {
         </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button 
+            <Button
               variant="destructive"
               className="bg-rose-500 hover:bg-rose-600"
             >
@@ -47,13 +57,15 @@ export function DangerZone() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete your account
-                  and remove your data from our servers.
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="confirm">Type &ldquo;DELETE&rdquo; to confirm</Label>
+                  <Label htmlFor="confirm">
+                    Type &ldquo;DELETE&rdquo; to confirm
+                  </Label>
                   <Input
                     id="confirm"
                     name="confirm"
@@ -72,5 +84,5 @@ export function DangerZone() {
         </AlertDialog>
       </div>
     </div>
-  )
-} 
+  );
+}

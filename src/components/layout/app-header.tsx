@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { LogoutButton } from "@/components/auth/logout-button";
 import { SettingsButton } from "@/components/settings/settings-button";
@@ -8,7 +8,13 @@ import Link from "next/link";
 import { Menu, User } from "lucide-react";
 import { PageTitle } from "./page-title";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
 import { ModelSelector } from "@/components/shared/model-selector";
 import { getDefaultModel, type ApiKey } from "@/lib/ai-models";
@@ -20,43 +26,43 @@ interface AppHeaderProps {
 
 export function AppHeader({ children, isProPlan = true }: AppHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [defaultModel, setDefaultModel] = useState<string>('');
+  const [defaultModel, setDefaultModel] = useState<string>("");
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
 
   // Load stored data on mount
   useEffect(() => {
     // Load API keys
-    const storedKeys = localStorage.getItem('persona-api-keys');
+    const storedKeys = localStorage.getItem("persona-api-keys");
     if (storedKeys) {
       try {
         setApiKeys(JSON.parse(storedKeys));
       } catch (error) {
-        console.error('Error loading API keys:', error);
+        console.error("Error loading API keys:", error);
       }
     }
 
     // Load default model
-    const storedModel = localStorage.getItem('persona-default-model');
+    const storedModel = localStorage.getItem("persona-default-model");
     if (storedModel) {
       setDefaultModel(storedModel);
     } else {
       // Use centralized default model logic
       const defaultModelId = getDefaultModel(isProPlan);
       setDefaultModel(defaultModelId);
-      localStorage.setItem('persona-default-model', defaultModelId);
+      localStorage.setItem("persona-default-model", defaultModelId);
     }
   }, [isProPlan]);
 
   const handleModelChange = (modelId: string) => {
     setDefaultModel(modelId);
-    localStorage.setItem('persona-default-model', modelId);
+    localStorage.setItem("persona-default-model", modelId);
   };
 
   return (
     <header className="h-14 border-b backdrop-blur-xl fixed top-0 left-0 right-0 z-40 shadow-md border-purple-200/50">
       {/* Gradient backdrop with blur */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-50/95 via-white/95 to-purple-50/95" />
-      
+
       {/* Gradient Overlays */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#f3e8ff30_0%,#ffffff40_50%,#f3e8ff30_100%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_-40%,#f3e8ff30_0%,transparent_100%)] pointer-events-none" />
@@ -83,7 +89,6 @@ export function AppHeader({ children, isProPlan = true }: AppHeaderProps) {
             <>
               {/* Desktop Navigation */}
               <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-                
                 {/* Model Selector - Responsive Width */}
                 <div className="mr-2 lg:mr-3">
                   <ModelSelector
@@ -97,10 +102,10 @@ export function AppHeader({ children, isProPlan = true }: AppHeaderProps) {
                   />
                 </div>
                 <div className="h-4 w-px bg-purple-200/50" />
-                
+
                 <div className="flex items-center px-2 lg:px-3 py-1">
-                  <Link 
-                    href="/profile" 
+                  <Link
+                    href="/profile"
                     className={cn(
                       "flex items-center gap-1.5 px-2 lg:px-3 py-1",
                       "text-sm font-medium text-purple-600/80 hover:text-purple-800",
@@ -141,7 +146,7 @@ export function AppHeader({ children, isProPlan = true }: AppHeaderProps) {
                         showToast={false}
                       />
                     </div>
-                    
+
                     <Link
                       href="/profile"
                       onClick={() => setIsOpen(false)}

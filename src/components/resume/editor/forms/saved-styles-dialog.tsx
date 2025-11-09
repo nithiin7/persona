@@ -26,7 +26,10 @@ interface SavedStyle {
   timestamp: number;
 }
 
-export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStylesDialogProps) {
+export function SavedStylesDialog({
+  currentSettings,
+  onApplyStyle,
+}: SavedStylesDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [savedStyles, setSavedStyles] = useState<SavedStyle[]>([]);
   const [newStyleName, setNewStyleName] = useState("");
@@ -59,7 +62,9 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
 
   // Delete a saved style
   const handleDeleteStyle = (timestamp: number) => {
-    const updatedStyles = savedStyles.filter((style) => style.timestamp !== timestamp);
+    const updatedStyles = savedStyles.filter(
+      (style) => style.timestamp !== timestamp
+    );
     setSavedStyles(updatedStyles);
     localStorage.setItem("persona-saved-styles", JSON.stringify(updatedStyles));
   };
@@ -85,12 +90,16 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
           Saved Styles
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-gradient-to-b from-white/95 to-white/90 
-        backdrop-blur-2xl border-white/60 shadow-2xl pt-12">
+      <DialogContent
+        className="sm:max-w-[425px] bg-gradient-to-b from-white/95 to-white/90 
+        backdrop-blur-2xl border-white/60 shadow-2xl pt-12"
+      >
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl bg-gradient-to-r from-teal-700 to-cyan-700 
-              bg-clip-text text-transparent font-semibold">
+            <DialogTitle
+              className="text-xl bg-gradient-to-r from-teal-700 to-cyan-700 
+              bg-clip-text text-transparent font-semibold"
+            >
               Saved Document Styles
             </DialogTitle>
             <Button
@@ -111,8 +120,10 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {isAddingNew && (
-            <div className="flex items-center gap-2 bg-gradient-to-r from-teal-50/50 to-cyan-50/50 
-              p-4 rounded-xl border border-teal-200/30 shadow-sm">
+            <div
+              className="flex items-center gap-2 bg-gradient-to-r from-teal-50/50 to-cyan-50/50 
+              p-4 rounded-xl border border-teal-200/30 shadow-sm"
+            >
               <Input
                 placeholder="Enter style name..."
                 value={newStyleName}
@@ -144,9 +155,13 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
             </div>
           )}
           <div className={isAddingNew ? "" : "border-t border-teal-100 pt-4"}>
-            <Label className="text-sm font-medium mb-2 block text-slate-700">Saved Styles</Label>
-            <ScrollArea className="h-[300px] rounded-xl border border-teal-200/30 bg-gradient-to-b 
-              from-white/50 to-white/30 backdrop-blur-sm">
+            <Label className="text-sm font-medium mb-2 block text-slate-700">
+              Saved Styles
+            </Label>
+            <ScrollArea
+              className="h-[300px] rounded-xl border border-teal-200/30 bg-gradient-to-b 
+              from-white/50 to-white/30 backdrop-blur-sm"
+            >
               <div className="p-4 space-y-3">
                 {savedStyles.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 text-slate-500">
@@ -162,7 +177,9 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
                         hover:to-cyan-50/50 transition-all duration-500 hover:-translate-y-[1px] 
                         hover:shadow-sm"
                     >
-                      <span className="text-sm font-medium text-slate-700">{style.name}</span>
+                      <span className="text-sm font-medium text-slate-700">
+                        {style.name}
+                      </span>
                       <div className="flex items-center gap-2">
                         <Button
                           variant="ghost"
@@ -193,8 +210,8 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
           </div>
         </div>
         <DialogFooter>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => setIsOpen(false)}
             className="border-teal-200/40 hover:border-teal-400 text-teal-700 
               hover:text-teal-800 hover:bg-gradient-to-r hover:from-teal-50 hover:to-cyan-50 
@@ -206,4 +223,4 @@ export function SavedStylesDialog({ currentSettings, onApplyStyle }: SavedStyles
       </DialogContent>
     </Dialog>
   );
-} 
+}

@@ -6,7 +6,11 @@ interface JobDescriptionInputProps {
   isInvalid: boolean;
 }
 
-export function JobDescriptionInput({ value, onChange, isInvalid }: JobDescriptionInputProps) {
+export function JobDescriptionInput({
+  value,
+  onChange,
+  isInvalid,
+}: JobDescriptionInputProps) {
   return (
     <div className="space-y-3">
       <textarea
@@ -25,4 +29,4 @@ export function JobDescriptionInput({ value, onChange, isInvalid }: JobDescripti
       />
     </div>
   );
-} 
+}

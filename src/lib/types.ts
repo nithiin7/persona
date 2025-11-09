@@ -31,9 +31,6 @@ export interface Skill {
   items: string[];
 }
 
-
-
-
 export interface Job {
   id: string;
   user_id: string;
@@ -44,8 +41,14 @@ export interface Job {
   location: string | null;
   salary_range: string | null;
   keywords: string[];
-  work_location: 'remote' | 'in_person' | 'hybrid' | null;
-  employment_type: 'full_time' | 'part_time' | 'co_op' | 'internship' | 'contract' | null;
+  work_location: "remote" | "in_person" | "hybrid" | null;
+  employment_type:
+    | "full_time"
+    | "part_time"
+    | "co_op"
+    | "internship"
+    | "contract"
+    | null;
   created_at: string;
   updated_at: string;
   is_active: boolean;
@@ -54,7 +57,7 @@ export interface Job {
 export interface SectionConfig {
   visible: boolean;
   max_items?: number | null;
-  style?: 'grouped' | 'list' | 'grid';
+  style?: "grouped" | "list" | "grid";
 }
 
 export interface Resume {
@@ -160,8 +163,8 @@ export interface Subscription {
   user_id: string;
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
-  subscription_plan: 'free' | 'pro';
-  subscription_status: 'active' | 'canceled';
+  subscription_plan: "free" | "pro";
+  subscription_status: "active" | "canceled";
   current_period_end: string | null;
   trial_end: string | null;
   created_at: string;
@@ -169,9 +172,9 @@ export interface Subscription {
 }
 
 export const AI_PROVIDERS = {
-  OPENAI: 'openai',
+  OPENAI: "openai",
   // AZURE: 'azure',
-  ANTHROPIC: 'anthropic',
+  ANTHROPIC: "anthropic",
   // BEDROCK: 'bedrock',
   // GOOGLE: 'google',
   // VERTEX: 'vertex',
@@ -182,33 +185,33 @@ export const AI_PROVIDERS = {
   // FIREWORKS: 'fireworks',
   // DEEPINFRA: 'deepinfra',
   // GROQ: 'groq'
-  DEEPSEEK: 'deepseek',
+  DEEPSEEK: "deepseek",
 } as const;
 
-export type AIProviderOld = typeof AI_PROVIDERS[keyof typeof AI_PROVIDERS];
+export type AIProviderOld = (typeof AI_PROVIDERS)[keyof typeof AI_PROVIDERS];
 
 // ServiceName is used across the app for API key management
-export type ServiceName = 
-  | 'openai'
+export type ServiceName =
+  | "openai"
   // | 'azure'
-  | 'anthropic'
-  | 'openrouter';
-  // | 'bedrock'
-  // | 'google'
-  // | 'vertex'
-  // | 'mistral'
-  // | 'xai'
-  // | 'together'
-  // | 'cohere'
-  // | 'fireworks'
-  // | 'deepinfra'
-  // | 'groq'
-  // | 'deepseek';
+  | "anthropic"
+  | "openrouter";
+// | 'bedrock'
+// | 'google'
+// | 'vertex'
+// | 'mistral'
+// | 'xai'
+// | 'together'
+// | 'cohere'
+// | 'fireworks'
+// | 'deepinfra'
+// | 'groq'
+// | 'deepseek';
 
 // Re-export AI model types from centralized location (except AIProvider to avoid conflict)
-export type { AIModel, ApiKey, AIConfig } from './ai-models';
+export type { AIModel, ApiKey, AIConfig } from "./ai-models";
 
-export type SortDirection = 'ascending' | 'descending';
+export type SortDirection = "ascending" | "descending";
 
 export interface SortDescriptor<T> {
   column: T;

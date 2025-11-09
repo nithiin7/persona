@@ -1,22 +1,22 @@
-'use client'
+"use client";
 
-import { useCallback, useMemo, useEffect } from 'react'
-import { useEditor, EditorContent } from '@tiptap/react'
-import Document from '@tiptap/extension-document'
-import Text from '@tiptap/extension-text'
-import Paragraph from '@tiptap/extension-paragraph'
-import debounce from 'lodash/debounce'
-import Bold from '@tiptap/extension-bold'
-import History from '@tiptap/extension-history'
-import { memo } from 'react'
-import { cn } from '@/lib/utils'
+import { useCallback, useMemo, useEffect } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import Document from "@tiptap/extension-document";
+import Text from "@tiptap/extension-text";
+import Paragraph from "@tiptap/extension-paragraph";
+import debounce from "lodash/debounce";
+import Bold from "@tiptap/extension-bold";
+import History from "@tiptap/extension-history";
+import { memo } from "react";
+import { cn } from "@/lib/utils";
 
 interface TiptapProps {
   content: string;
   onChange: (content: string) => void;
   className?: string;
   readOnly?: boolean;
-  variant?: 'default' | 'skill';
+  variant?: "default" | "skill";
   editorProps?: {
     attributes?: {
       class?: string;
@@ -26,17 +26,25 @@ interface TiptapProps {
 }
 
 const Tiptap = memo(
-  ({ content, onChange, className, readOnly, variant = 'default', editorProps: customEditorProps }: TiptapProps) => {
+  ({
+    content,
+    onChange,
+    className,
+    readOnly,
+    variant = "default",
+    editorProps: customEditorProps,
+  }: TiptapProps) => {
     // Transform content to HTML before loading
     const transformContent = useCallback((content: string) => {
-      return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      return content.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     }, []);
 
     // Debounce the onChange callback
     const debouncedOnChange = useMemo(
-      () => debounce((text: string) => {
-        onChange(text);
-      }, 300),
+      () =>
+        debounce((text: string) => {
+          onChange(text);
+        }, 300),
       [onChange]
     );
 
@@ -55,11 +63,11 @@ const Tiptap = memo(
             "focus-visible:ring-ring focus-visible:ring-offset-2",
             "disabled:cursor-not-allowed disabled:opacity-50",
             // Apply different styles based on variant
-            variant === 'default' && "min-h-[80px] px-3 py-2",
-            variant === 'skill' && "px-3",
+            variant === "default" && "min-h-[80px] px-3 py-2",
+            variant === "skill" && "px-3",
             className
           ),
-          ...customEditorProps?.attributes
+          ...customEditorProps?.attributes,
         },
       }),
       [className, customEditorProps?.attributes, variant]
@@ -74,9 +82,9 @@ const Tiptap = memo(
         const html = editor.getHTML();
         // Convert <strong> tags back to asterisks
         const textWithAsterisks = html
-          .replace(/<strong>(.*?)<\/strong>/g, '**$1**')
-          .replace(/<p>/g, '')
-          .replace(/<\/p>/g, '')
+          .replace(/<strong>(.*?)<\/strong>/g, "**$1**")
+          .replace(/<p>/g, "")
+          .replace(/<\/p>/g, "")
           .trim();
         debouncedOnChange(textWithAsterisks);
       },
@@ -85,7 +93,11 @@ const Tiptap = memo(
 
     // Sync editor content when content prop changes
     useEffect(() => {
-      if (editor && content !== editor.getHTML().replace(/<p>/g, '').replace(/<\/p>/g, '').trim()) {
+      if (
+        editor &&
+        content !==
+          editor.getHTML().replace(/<p>/g, "").replace(/<\/p>/g, "").trim()
+      ) {
         editor.commands.setContent(transformContent(content));
       }
     }, [content, editor, transformContent]);
@@ -104,6 +116,6 @@ const Tiptap = memo(
 );
 
 // Add display name for debugging
-Tiptap.displayName = 'Tiptap';
+Tiptap.displayName = "Tiptap";
 
 export default Tiptap;

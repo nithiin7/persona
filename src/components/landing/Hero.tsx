@@ -14,35 +14,54 @@ export function Hero() {
           <span className="block text-indigo-600">AI Resume Builder</span>
           <span className="block">that lands you tech jobs</span>
         </h1>
-        
+
         {/* Description with quantifiable benefits */}
         <p className="text-lg md:text-xl text-muted-foreground max-w-md">
-          Create ATS-optimized tech resumes in under 10 minutes. 3x your interview chances with AI-powered resume tailoring.
+          Create ATS-optimized tech resumes in under 10 minutes. 3x your
+          interview chances with AI-powered resume tailoring.
         </p>
-        
+
         {/* CTAs with simplified effects */}
         <div className="flex flex-col sm:flex-row gap-4 mt-8">
           <AuthDialog>
-            <button 
+            <button
               className="px-6 py-3 rounded-lg bg-indigo-600 text-white font-medium transition-all duration-300 hover:-translate-y-1 flex items-center justify-center"
               aria-label="Create your resume now"
             >
               <span>Create Resume</span>
-              <svg className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <svg
+                className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
               </svg>
             </button>
           </AuthDialog>
         </div>
-        
+
         {/* Feature badges with simplified styling */}
         <div className="flex flex-wrap gap-3 mt-6">
-          <span className="px-3 py-1 rounded-full bg-indigo-50 text-sm border border-indigo-200 text-indigo-700">AI-Powered</span>
-          <span className="px-3 py-1 rounded-full bg-teal-50 text-sm border border-teal-200 text-teal-700">ATS-Optimized</span>
-          <span className="px-3 py-1 rounded-full bg-emerald-50 text-sm border border-emerald-200 text-emerald-700">100% Free</span>
-          <span className="px-3 py-1 rounded-full bg-blue-50 text-sm border border-blue-200 text-blue-700">Privacy-First</span>
+          <span className="px-3 py-1 rounded-full bg-indigo-50 text-sm border border-indigo-200 text-indigo-700">
+            AI-Powered
+          </span>
+          <span className="px-3 py-1 rounded-full bg-teal-50 text-sm border border-teal-200 text-teal-700">
+            ATS-Optimized
+          </span>
+          <span className="px-3 py-1 rounded-full bg-emerald-50 text-sm border border-emerald-200 text-emerald-700">
+            100% Free
+          </span>
+          <span className="px-3 py-1 rounded-full bg-blue-50 text-sm border border-blue-200 text-blue-700">
+            Privacy-First
+          </span>
         </div>
-        
+
         {/* Simplified social proof section */}
         <div className="mt-8">
           <div className="flex items-center p-4 rounded-xl bg-white border border-gray-200 shadow-sm transition-all duration-300 hover:-translate-y-1">
@@ -52,40 +71,59 @@ export function Hero() {
                 <span className="text-2xl font-bold text-indigo-600">500+</span>
               </div>
             </div>
-            
+
             {/* Text content with testimonial */}
             <div className="flex-1">
-              <h3 className="font-semibold text-base">Join our growing community</h3>
-              <p className="text-sm text-muted-foreground">Trusted by over 500 tech professionals</p>
-              
-              <p className="text-xs italic mt-1 text-indigo-600">&ldquo;Landed 3 interviews in my first week using Persona&rdquo; — Sarah K.</p>
-              
+              <h3 className="font-semibold text-base">
+                Join our growing community
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Trusted by over 500 tech professionals
+              </p>
+
+              <p className="text-xs italic mt-1 text-indigo-600">
+                &ldquo;Landed 3 interviews in my first week using Persona&rdquo;
+                — Sarah K.
+              </p>
+
               {/* Shadcn Avatar stack */}
               <div className="flex items-center mt-3">
                 <div className="flex -space-x-2 mr-3">
                   <Avatar className="h-7 w-7 border-2 border-background">
-                    <AvatarFallback className="bg-indigo-500 text-white text-xs">JD</AvatarFallback>
+                    <AvatarFallback className="bg-indigo-500 text-white text-xs">
+                      JD
+                    </AvatarFallback>
                   </Avatar>
                   <Avatar className="h-7 w-7 border-2 border-background">
-                    <AvatarFallback className="bg-pink-500 text-white text-xs">SR</AvatarFallback>
+                    <AvatarFallback className="bg-pink-500 text-white text-xs">
+                      SR
+                    </AvatarFallback>
                   </Avatar>
                   <Avatar className="h-7 w-7 border-2 border-background">
-                    <AvatarFallback className="bg-teal-500 text-white text-xs">KL</AvatarFallback>
+                    <AvatarFallback className="bg-teal-500 text-white text-xs">
+                      KL
+                    </AvatarFallback>
                   </Avatar>
                   <Avatar className="h-7 w-7 border-2 border-background">
-                    <AvatarFallback className="bg-amber-500 text-white text-xs">MP</AvatarFallback>
+                    <AvatarFallback className="bg-amber-500 text-white text-xs">
+                      MP
+                    </AvatarFallback>
                   </Avatar>
                   <Avatar className="h-7 w-7 border-2 border-background">
-                    <AvatarFallback className="bg-white text-xs text-indigo-600 font-medium">496+</AvatarFallback>
+                    <AvatarFallback className="bg-white text-xs text-indigo-600 font-medium">
+                      496+
+                    </AvatarFallback>
                   </Avatar>
                 </div>
-                <span className="text-xs text-muted-foreground">Active this month</span>
+                <span className="text-xs text-muted-foreground">
+                  Active this month
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
+
       {/* Right Content - Simplified resume mockups */}
       <div className="w-full lg:w-1/2 relative">
         {/* Main resume mockup with simplified visuals */}
@@ -95,18 +133,18 @@ export function Hero() {
             <div className="absolute top-6 left-8 w-[50%] h-[20%] bg-white/90 rounded-sm"></div>
             <div className="absolute bottom-0 left-8 w-[30%] h-[20%] bg-white/80 rounded-t-lg"></div>
           </div>
-          
+
           {/* Resume content with simplified styling */}
           <div className="absolute top-[20%] left-8 w-[80%] h-[4%] bg-slate-200 rounded-md"></div>
           <div className="absolute top-[26%] left-8 w-[60%] h-[3%] bg-slate-200 rounded-md"></div>
           <div className="absolute top-[30%] left-8 w-[70%] h-[3%] bg-slate-200 rounded-md"></div>
-          
+
           {/* Experience Section */}
           <div className="absolute top-[36%] left-8 w-[35%] h-[4%] bg-indigo-100 rounded-md"></div>
           <div className="absolute top-[42%] left-8 w-[80%] h-[3%] bg-slate-200 rounded-md"></div>
           <div className="absolute top-[46%] left-8 w-[75%] h-[3%] bg-slate-200 rounded-md"></div>
           <div className="absolute top-[50%] left-8 w-[70%] h-[3%] bg-slate-200 rounded-md"></div>
-          
+
           {/* Skills Section */}
           <div className="absolute top-[56%] left-8 w-[35%] h-[4%] bg-indigo-100 rounded-md"></div>
           <div className="absolute top-[62%] right-8 flex flex-wrap gap-2 w-[80%]">
@@ -116,19 +154,19 @@ export function Hero() {
             <div className="h-[12px] w-[80px] bg-teal-100 rounded-full"></div>
             <div className="h-[12px] w-[65px] bg-cyan-100 rounded-full"></div>
           </div>
-          
+
           {/* Education Section */}
           <div className="absolute top-[70%] left-8 w-[35%] h-[4%] bg-indigo-100 rounded-md"></div>
           <div className="absolute top-[76%] left-8 w-[80%] h-[3%] bg-slate-200 rounded-md"></div>
           <div className="absolute top-[80%] left-8 w-[75%] h-[3%] bg-slate-200 rounded-md"></div>
           <div className="absolute top-[84%] left-8 w-[70%] h-[3%] bg-slate-200 rounded-md"></div>
-          
+
           {/* AI optimization indicator */}
           <div className="absolute bottom-4 right-4 px-2 py-1 rounded-md bg-indigo-50 border border-indigo-200 text-[10px] text-indigo-700">
             AI Optimized
           </div>
         </div>
-        
+
         {/* Tailored resume variant - simplified */}
         <div className="absolute -bottom-12 -left-8 w-[40%] aspect-[3/4] rounded-xl bg-white border border-gray-200 shadow-md overflow-hidden rotate-[-8deg] z-10 transition-all duration-300 hover:rotate-[-4deg]">
           <div className="w-full h-[10%] bg-pink-600">
@@ -145,7 +183,7 @@ export function Hero() {
             Tailored
           </div>
         </div>
-        
+
         {/* Technical role variant - simplified */}
         <div className="absolute -top-10 -right-6 w-[40%] aspect-[3/4] rounded-xl bg-white border border-gray-200 shadow-md overflow-hidden rotate-[8deg] z-10 transition-all duration-300 hover:rotate-[4deg]">
           <div className="w-full h-[10%] bg-teal-600">
@@ -165,4 +203,4 @@ export function Hero() {
       </div>
     </section>
   );
-} 
+}

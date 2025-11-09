@@ -1,7 +1,12 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 import { Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AIGenerationSettings } from "../../shared/ai-generation-settings";
@@ -33,7 +38,7 @@ export function AIGenerationSettingsTooltip({
   aiConfig,
   onNumPointsChange,
   onCustomPromptChange,
-  colorClass
+  colorClass,
 }: AIGenerationTooltipProps) {
   return (
     <TooltipProvider delayDuration={0}>
@@ -58,11 +63,11 @@ export function AIGenerationSettingsTooltip({
             ) : (
               <Sparkles className="h-4 w-4 mr-1" />
             )}
-            {loadingAI ? 'Generating...' : 'Write points with AI'}
+            {loadingAI ? "Generating..." : "Write points with AI"}
           </Button>
         </TooltipTrigger>
-        <TooltipContent 
-          side="bottom" 
+        <TooltipContent
+          side="bottom"
           align="start"
           sideOffset={2}
           className={cn(
@@ -74,7 +79,7 @@ export function AIGenerationSettingsTooltip({
         >
           <AIGenerationSettings
             numPoints={aiConfig?.numPoints || 3}
-            customPrompt={aiConfig?.customPrompt || ''}
+            customPrompt={aiConfig?.customPrompt || ""}
             onNumPointsChange={onNumPointsChange}
             onCustomPromptChange={onCustomPromptChange}
           />
@@ -82,4 +87,4 @@ export function AIGenerationSettingsTooltip({
       </Tooltip>
     </TooltipProvider>
   );
-} 
+}

@@ -1,155 +1,171 @@
-'use server'
+"use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { Profile, Resume, WorkExperience, Education, Skill, Project, Job } from "@/lib/types";
-import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import {
+  Profile,
+  Resume,
+  WorkExperience,
+  Education,
+  Skill,
+  Project,
+  Job,
+} from "@/lib/types";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { simplifiedResumeSchema, Job as ZodJob } from "@/lib/zod-schemas";
 import { AIConfig } from "@/utils/ai-tools";
 import { generateObject } from "ai";
 import { initializeAIClient } from "@/utils/ai-tools";
 import { resumeScoreSchema } from "@/lib/zod-schemas";
 
-
 //  SUPABASE ACTIONS
-export async function getResumeById(resumeId: string): Promise<{ resume: Resume; profile: Profile; job: Job | null }> {
+export async function getResumeById(
+  resumeId: string
+): Promise<{ resume: Resume; profile: Profile; job: Job | null }> {
   const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
   if (error || !user) {
-    throw new Error('User not authenticated');
+    throw new Error("User not authenticated");
   }
 
   try {
     const [resumeResult, profileResult] = await Promise.all([
       supabase
-        .from('resumes')
-        .select('*')
-        .eq('id', resumeId)
-        .eq('user_id', user.id)
+        .from("resumes")
+        .select("*")
+        .eq("id", resumeId)
+        .eq("user_id", user.id)
         .single(),
-      supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .single()
+      supabase.from("profiles").select("*").eq("user_id", user.id).single(),
     ]);
 
     if (resumeResult.error || !resumeResult.data) {
-      throw new Error('Resume not found');
+      throw new Error("Resume not found");
     }
 
     if (profileResult.error || !profileResult.data) {
-      throw new Error('Profile not found');
+      throw new Error("Profile not found");
     }
 
     let job: Job | null = null;
 
     if (resumeResult.data.job_id) {
       const { data: jobData, error: jobError } = await supabase
-        .from('jobs')
-        .select('*')
-        .eq('id', resumeResult.data.job_id)
-        .eq('user_id', user.id)
+        .from("jobs")
+        .select("*")
+        .eq("id", resumeResult.data.job_id)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (jobError) {
-        console.error('Failed to fetch associated job:', jobError);
+        console.error("Failed to fetch associated job:", jobError);
       } else {
         job = jobData;
       }
     }
 
-    return { 
-      resume: resumeResult.data, 
+    return {
+      resume: resumeResult.data,
       profile: profileResult.data,
-      job
+      job,
     };
   } catch (error) {
     throw error;
   }
 }
 
-export async function updateResume(resumeId: string, data: Partial<Resume>): Promise<Resume> {
+export async function updateResume(
+  resumeId: string,
+  data: Partial<Resume>
+): Promise<Resume> {
   const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
   if (error || !user) {
-    throw new Error('User not authenticated');
+    throw new Error("User not authenticated");
   }
 
   const { data: resume, error: updateError } = await supabase
-    .from('resumes')
+    .from("resumes")
     .update(data)
-    .eq('id', resumeId)
-    .eq('user_id', user.id)
+    .eq("id", resumeId)
+    .eq("user_id", user.id)
     .select()
     .single();
 
   if (updateError) {
-    throw new Error('Failed to update resume');
+    throw new Error("Failed to update resume");
   }
 
   return resume;
 }
 
 export async function deleteResume(resumeId: string): Promise<void> {
-    const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
   if (error || !user) {
-    throw new Error('User not authenticated');
+    throw new Error("User not authenticated");
   }
 
   try {
     const { data: resume, error: fetchError } = await supabase
-      .from('resumes')
-      .select('id, name, job_id, is_base_resume')
-      .eq('id', resumeId)
-      .eq('user_id', user.id)
+      .from("resumes")
+      .select("id, name, job_id, is_base_resume")
+      .eq("id", resumeId)
+      .eq("user_id", user.id)
       .single();
 
     if (fetchError || !resume) {
-      throw new Error('Resume not found or access denied');
+      throw new Error("Resume not found or access denied");
     }
 
     if (!resume.is_base_resume && resume.job_id) {
       const { error: jobDeleteError } = await supabase
-        .from('jobs')
+        .from("jobs")
         .delete()
-        .eq('id', resume.job_id)
-        .eq('user_id', user.id);
+        .eq("id", resume.job_id)
+        .eq("user_id", user.id);
 
       if (jobDeleteError) {
-        console.error('Failed to delete associated job:', jobDeleteError);
+        console.error("Failed to delete associated job:", jobDeleteError);
       }
     }
 
     const { error: deleteError } = await supabase
-      .from('resumes')
+      .from("resumes")
       .delete()
-      .eq('id', resumeId)
-      .eq('user_id', user.id);
+      .eq("id", resumeId)
+      .eq("user_id", user.id);
 
     if (deleteError) {
-      throw new Error('Failed to delete resume');
+      throw new Error("Failed to delete resume");
     }
 
-    revalidatePath('/', 'layout');
-    revalidatePath('/resumes', 'layout');
-    revalidatePath('/dashboard', 'layout');
-    revalidatePath('/resumes/base', 'layout');
-    revalidatePath('/resumes/tailored', 'layout');
-    revalidatePath('/jobs', 'layout');
-
+    revalidatePath("/", "layout");
+    revalidatePath("/resumes", "layout");
+    revalidatePath("/dashboard", "layout");
+    revalidatePath("/resumes/base", "layout");
+    revalidatePath("/resumes/tailored", "layout");
+    revalidatePath("/jobs", "layout");
   } catch (error) {
-    throw error instanceof Error ? error : new Error('Failed to delete resume');
+    throw error instanceof Error ? error : new Error("Failed to delete resume");
   }
 }
 
 export async function createBaseResume(
-  name: string, 
-  importOption: 'import-profile' | 'fresh' | 'import-resume' = 'import-profile',
+  name: string,
+  importOption: "import-profile" | "fresh" | "import-resume" = "import-profile",
   selectedContent?: {
     first_name?: string;
     last_name?: string;
@@ -166,22 +182,25 @@ export async function createBaseResume(
   }
 ): Promise<Resume> {
   const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
   if (error || !user) {
-    throw new Error('User not authenticated');
+    throw new Error("User not authenticated");
   }
 
   let profile = null;
-  if (importOption !== 'fresh') {
+  if (importOption !== "fresh") {
     const { data, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', user.id)
+      .from("profiles")
+      .select("*")
+      .eq("user_id", user.id)
       .single();
-    
+
     if (profileError) {
-      console.error('Profile fetch error:', profileError);
+      console.error("Profile fetch error:", profileError);
     }
     profile = data;
   }
@@ -191,34 +210,79 @@ export async function createBaseResume(
     name,
     target_role: name,
     is_base_resume: true,
-    first_name: importOption === 'import-resume' ? selectedContent?.first_name || '' : importOption === 'fresh' ? '' : profile?.first_name || '',
-    last_name: importOption === 'import-resume' ? selectedContent?.last_name || '' : importOption === 'fresh' ? '' : profile?.last_name || '',
-    email: importOption === 'import-resume' ? selectedContent?.email || '' : importOption === 'fresh' ? '' : profile?.email || '',
-    phone_number: importOption === 'import-resume' ? selectedContent?.phone_number || '' : importOption === 'fresh' ? '' : profile?.phone_number || '',
-    location: importOption === 'import-resume' ? selectedContent?.location || '' : importOption === 'fresh' ? '' : profile?.location || '',
-    website: importOption === 'import-resume' ? selectedContent?.website || '' : importOption === 'fresh' ? '' : profile?.website || '',
-    linkedin_url: importOption === 'import-resume' ? selectedContent?.linkedin_url || '' : importOption === 'fresh' ? '' : profile?.linkedin_url || '',
-    github_url: importOption === 'import-resume' ? selectedContent?.github_url || '' : importOption === 'fresh' ? '' : profile?.github_url || '',
-    work_experience: (importOption === 'import-profile' || importOption === 'import-resume') && selectedContent 
-      ? selectedContent.work_experience
-      : [],
-    education: (importOption === 'import-profile' || importOption === 'import-resume') && selectedContent
-      ? selectedContent.education
-      : [],
-    skills: (importOption === 'import-profile' || importOption === 'import-resume') && selectedContent
-      ? selectedContent.skills
-      : [],
-    projects: (importOption === 'import-profile' || importOption === 'import-resume') && selectedContent
-      ? selectedContent.projects
-      : [],
-    section_order: [
-      'work_experience',
-      'education',
-      'skills',
-      'projects',
-    ],
+    first_name:
+      importOption === "import-resume"
+        ? selectedContent?.first_name || ""
+        : importOption === "fresh"
+          ? ""
+          : profile?.first_name || "",
+    last_name:
+      importOption === "import-resume"
+        ? selectedContent?.last_name || ""
+        : importOption === "fresh"
+          ? ""
+          : profile?.last_name || "",
+    email:
+      importOption === "import-resume"
+        ? selectedContent?.email || ""
+        : importOption === "fresh"
+          ? ""
+          : profile?.email || "",
+    phone_number:
+      importOption === "import-resume"
+        ? selectedContent?.phone_number || ""
+        : importOption === "fresh"
+          ? ""
+          : profile?.phone_number || "",
+    location:
+      importOption === "import-resume"
+        ? selectedContent?.location || ""
+        : importOption === "fresh"
+          ? ""
+          : profile?.location || "",
+    website:
+      importOption === "import-resume"
+        ? selectedContent?.website || ""
+        : importOption === "fresh"
+          ? ""
+          : profile?.website || "",
+    linkedin_url:
+      importOption === "import-resume"
+        ? selectedContent?.linkedin_url || ""
+        : importOption === "fresh"
+          ? ""
+          : profile?.linkedin_url || "",
+    github_url:
+      importOption === "import-resume"
+        ? selectedContent?.github_url || ""
+        : importOption === "fresh"
+          ? ""
+          : profile?.github_url || "",
+    work_experience:
+      (importOption === "import-profile" || importOption === "import-resume") &&
+      selectedContent
+        ? selectedContent.work_experience
+        : [],
+    education:
+      (importOption === "import-profile" || importOption === "import-resume") &&
+      selectedContent
+        ? selectedContent.education
+        : [],
+    skills:
+      (importOption === "import-profile" || importOption === "import-resume") &&
+      selectedContent
+        ? selectedContent.skills
+        : [],
+    projects:
+      (importOption === "import-profile" || importOption === "import-resume") &&
+      selectedContent
+        ? selectedContent.projects
+        : [],
+    section_order: ["work_experience", "education", "skills", "projects"],
     section_configs: {
-      work_experience: { visible: (selectedContent?.work_experience?.length ?? 0) > 0 },
+      work_experience: {
+        visible: (selectedContent?.work_experience?.length ?? 0) > 0,
+      },
       education: { visible: (selectedContent?.education?.length ?? 0) > 0 },
       skills: { visible: (selectedContent?.skills?.length ?? 0) > 0 },
       projects: { visible: (selectedContent?.projects?.length ?? 0) > 0 },
@@ -247,29 +311,29 @@ export async function createBaseResume(
       header_name_bottom_spacing: 16,
       projects_margin_horizontal: 0,
       education_margin_horizontal: 0,
-      experience_margin_horizontal: 0
-    }
+      experience_margin_horizontal: 0,
+    },
   };
 
   const { data: resume, error: createError } = await supabase
-    .from('resumes')
+    .from("resumes")
     .insert([newResume])
     .select()
     .single();
 
   if (createError) {
-    console.error('\nDatabase Insert Error:', {
+    console.error("\nDatabase Insert Error:", {
       code: createError.code,
       message: createError.message,
       details: createError.details,
-      hint: createError.hint
+      hint: createError.hint,
     });
     throw new Error(`Failed to create resume: ${createError.message}`);
   }
 
   if (!resume) {
-    console.error('\nNo resume data returned after insert');
-    throw new Error('Resume creation failed: No data returned');
+    console.error("\nNo resume data returned after insert");
+    throw new Error("Resume creation failed: No data returned");
   }
 
   return resume;
@@ -282,15 +346,23 @@ export async function createTailoredResume(
   companyName: string,
   tailoredContent: z.infer<typeof simplifiedResumeSchema>
 ) {
-  console.log('[createTailoredResume] Received jobId:', jobId);
-  console.log('[createTailoredResume] baseResume ID:', baseResume?.id);
-  console.log('[createTailoredResume] Is jobId valid UUID?:', /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(jobId || ''));
+  console.log("[createTailoredResume] Received jobId:", jobId);
+  console.log("[createTailoredResume] baseResume ID:", baseResume?.id);
+  console.log(
+    "[createTailoredResume] Is jobId valid UUID?:",
+    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      jobId || ""
+    )
+  );
 
   const supabase = await createClient();
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
   if (userError || !user) {
-    throw new Error('User not authenticated');
+    throw new Error("User not authenticated");
   }
 
   const newResume = {
@@ -316,7 +388,7 @@ export async function createTailoredResume(
   };
 
   const { data, error } = await supabase
-    .from('resumes')
+    .from("resumes")
     .insert([newResume])
     .select()
     .single();
@@ -327,26 +399,34 @@ export async function createTailoredResume(
 
 export async function copyResume(resumeId: string): Promise<Resume> {
   const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
   if (error || !user) {
-    throw new Error('User not authenticated');
+    throw new Error("User not authenticated");
   }
 
   const { data: sourceResume, error: fetchError } = await supabase
-    .from('resumes')
-    .select('*')
-    .eq('id', resumeId)
-    .eq('user_id', user.id)
+    .from("resumes")
+    .select("*")
+    .eq("id", resumeId)
+    .eq("user_id", user.id)
     .single();
 
   if (fetchError || !sourceResume) {
-    throw new Error('Resume not found or access denied');
+    throw new Error("Resume not found or access denied");
   }
 
   // Exclude auto-generated fields that shouldn't be copied
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id: _id, created_at: _created_at, updated_at: _updated_at, ...resumeDataToCopy } = sourceResume;
+  const {
+    id: _id,
+    created_at: _created_at,
+    updated_at: _updated_at,
+    ...resumeDataToCopy
+  } = sourceResume;
 
   const newResume = {
     ...resumeDataToCopy,
@@ -357,7 +437,7 @@ export async function copyResume(resumeId: string): Promise<Resume> {
   };
 
   const { data: copiedResume, error: createError } = await supabase
-    .from('resumes')
+    .from("resumes")
     .insert([newResume])
     .select()
     .single();
@@ -367,47 +447,51 @@ export async function copyResume(resumeId: string): Promise<Resume> {
   }
 
   if (!copiedResume) {
-    throw new Error('Resume creation failed: No data returned');
+    throw new Error("Resume creation failed: No data returned");
   }
 
-  revalidatePath('/', 'layout');
-  revalidatePath('/resumes', 'layout');
-  revalidatePath('/dashboard', 'layout');
-  revalidatePath('/resumes/base', 'layout');
-  revalidatePath('/resumes/tailored', 'layout');
+  revalidatePath("/", "layout");
+  revalidatePath("/resumes", "layout");
+  revalidatePath("/dashboard", "layout");
+  revalidatePath("/resumes/base", "layout");
+  revalidatePath("/resumes/tailored", "layout");
 
   return copiedResume;
 }
 
-export async function countResumes(type: 'base' | 'tailored' | 'all'): Promise<number> {
+export async function countResumes(
+  type: "base" | "tailored" | "all"
+): Promise<number> {
   const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
   if (error || !user) {
-    throw new Error('User not authenticated');
+    throw new Error("User not authenticated");
   }
 
   let query = supabase
-    .from('resumes')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user.id);
+    .from("resumes")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user.id);
 
-  if (type !== 'all') {
-    query = query.eq('is_base_resume', type === 'base');
+  if (type !== "all") {
+    query = query.eq("is_base_resume", type === "base");
   }
 
   const { count, error: countError } = await query;
 
   if (countError) {
-    throw new Error('Failed to count resumes');
+    throw new Error("Failed to count resumes");
   }
 
   return count || -1;
 }
 
-
 export async function generateResumeScore(
-  resume: Resume, 
+  resume: Resume,
   job?: ZodJob | null,
   config?: AIConfig
 ) {
@@ -477,13 +561,13 @@ export async function generateResumeScore(
     const { object } = await generateObject({
       model: aiClient,
       schema: resumeScoreSchema,
-      prompt
+      prompt,
     });
 
     // console.log("THE OUTPUTTED object", object);
-    return object
+    return object;
   } catch (error) {
-    console.error('Error SCORING resume:', error);
+    console.error("Error SCORING resume:", error);
     throw error;
   }
 }

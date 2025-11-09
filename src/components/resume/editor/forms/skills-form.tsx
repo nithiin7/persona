@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Skill, Profile } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +8,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ImportFromProfileDialog } from "../../management/dialogs/import-from-profile-dialog";
-import { useState, KeyboardEvent } from 'react';
+import { useState, KeyboardEvent } from "react";
 
 interface SkillsFormProps {
   skills: Skill[];
@@ -16,21 +16,24 @@ interface SkillsFormProps {
   profile: Profile;
 }
 
-export function SkillsForm({
-  skills,
-  onChange,
-  profile
-}: SkillsFormProps) {
+export function SkillsForm({ skills, onChange, profile }: SkillsFormProps) {
   const [newSkills, setNewSkills] = useState<{ [key: number]: string }>({});
 
   const addSkillCategory = () => {
-    onChange([{
-      category: "",
-      items: []
-    }, ...skills]);
+    onChange([
+      {
+        category: "",
+        items: [],
+      },
+      ...skills,
+    ]);
   };
 
-  const updateSkillCategory = (index: number, field: keyof Skill, value: string | string[]) => {
+  const updateSkillCategory = (
+    index: number,
+    field: keyof Skill,
+    value: string | string[]
+  ) => {
     const updated = [...skills];
     updated[index] = { ...updated[index], [field]: value };
     onChange(updated);
@@ -49,15 +52,18 @@ export function SkillsForm({
     if (!currentItems.includes(skillToAdd)) {
       updated[categoryIndex] = {
         ...updated[categoryIndex],
-        items: [...currentItems, skillToAdd]
+        items: [...currentItems, skillToAdd],
       };
       onChange(updated);
     }
-    setNewSkills({ ...newSkills, [categoryIndex]: '' });
+    setNewSkills({ ...newSkills, [categoryIndex]: "" });
   };
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>, categoryIndex: number) => {
-    if (e.key === 'Enter') {
+  const handleKeyPress = (
+    e: KeyboardEvent<HTMLInputElement>,
+    categoryIndex: number
+  ) => {
+    if (e.key === "Enter") {
       e.preventDefault();
       addSkill(categoryIndex);
     }
@@ -68,7 +74,7 @@ export function SkillsForm({
       if (idx === categoryIndex) {
         return {
           ...skill,
-          items: skill.items.filter((_, i) => i !== skillIndex)
+          items: skill.items.filter((_, i) => i !== skillIndex),
         };
       }
       return skill;
@@ -83,12 +89,14 @@ export function SkillsForm({
   return (
     <div className="space-y-2 sm:space-y-3">
       <div className="@container">
-        <div className={cn(
-          "flex flex-col @[400px]:flex-row gap-2",
-          "transition-all duration-300 ease-in-out"
-        )}>
-          <Button 
-            variant="outline" 
+        <div
+          className={cn(
+            "flex flex-col @[400px]:flex-row gap-2",
+            "transition-all duration-300 ease-in-out"
+          )}
+        >
+          <Button
+            variant="outline"
             className={cn(
               "flex-1 h-9 min-w-[120px]",
               "bg-gradient-to-r from-rose-500/5 via-rose-500/10 to-pink-500/5",
@@ -122,8 +130,8 @@ export function SkillsForm({
       </div>
 
       {skills.map((skill, index) => (
-        <Card 
-          key={index} 
+        <Card
+          key={index}
           className={cn(
             "relative group transition-all duration-300",
             "bg-gradient-to-r from-rose-500/5 via-rose-500/10 to-pink-500/5",
@@ -138,7 +146,9 @@ export function SkillsForm({
                 <div className="relative group flex-1">
                   <Input
                     value={skill.category}
-                    onChange={(e) => updateSkillCategory(index, 'category', e.target.value)}
+                    onChange={(e) =>
+                      updateSkillCategory(index, "category", e.target.value)
+                    }
                     className={cn(
                       "text-sm font-medium h-9",
                       "bg-white/50 border-gray-200 rounded-lg",
@@ -152,8 +162,8 @@ export function SkillsForm({
                     CATEGORY
                   </div>
                 </div>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="icon"
                   onClick={() => removeSkillCategory(index)}
                   className="text-gray-400 hover:text-red-500 transition-colors duration-300"
@@ -188,8 +198,10 @@ export function SkillsForm({
                 {/* New Skill Input */}
                 <div className="relative group flex gap-2">
                   <Input
-                    value={newSkills[index] || ''}
-                    onChange={(e) => setNewSkills({ ...newSkills, [index]: e.target.value })}
+                    value={newSkills[index] || ""}
+                    onChange={(e) =>
+                      setNewSkills({ ...newSkills, [index]: e.target.value })
+                    }
                     onKeyPress={(e) => handleKeyPress(e, index)}
                     className={cn(
                       "h-9 bg-white/50 border-gray-200 rounded-lg",
@@ -219,4 +231,4 @@ export function SkillsForm({
       ))}
     </div>
   );
-} 
+}

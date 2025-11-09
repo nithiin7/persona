@@ -70,7 +70,8 @@ export function PricingSection() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground hover:text-violet-600 transition-colors duration-300">
-              Persona is open source and free to use. Pro version with managed API keys coming soon!
+              Persona is open source and free to use. Pro version with managed
+              API keys coming soon!
             </p>
           </div>
         </div>
@@ -93,44 +94,60 @@ export function PricingSection() {
 
               <div className="h-full rounded-2xl border border-white/40 bg-white/40 backdrop-blur-xl p-10 relative overflow-hidden group hover:shadow-2xl hover:shadow-violet-600/10 hover:-translate-y-1 transition-all duration-500">
                 {/* Background gradient effect */}
-                <div className={cn(
-                  "absolute inset-0 bg-gradient-to-br opacity-[0.08] -z-10 transition-opacity duration-500",
-                  tier.gradient,
-                  "group-hover:opacity-[0.12]"
-                )} />
+                <div
+                  className={cn(
+                    "absolute inset-0 bg-gradient-to-br opacity-[0.08] -z-10 transition-opacity duration-500",
+                    tier.gradient,
+                    "group-hover:opacity-[0.12]"
+                  )}
+                />
 
                 <div className="mb-10">
                   <h3 className="text-2xl font-bold">{tier.name}</h3>
                   <div className="mt-5 flex items-baseline">
-                    <span className={cn(
-                      "text-6xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
-                      tier.gradient
-                    )}>
+                    <span
+                      className={cn(
+                        "text-6xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
+                        tier.gradient
+                      )}
+                    >
                       {tier.price}
                     </span>
                     {tier.price !== "$0" && (
                       <span className="ml-2 text-muted-foreground">/month</span>
                     )}
                   </div>
-                  <p className="mt-3 text-muted-foreground">{tier.description}</p>
+                  <p className="mt-3 text-muted-foreground">
+                    {tier.description}
+                  </p>
                 </div>
 
                 <ul className="space-y-5 mb-10">
                   {tier.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-4">
-                      <div className={cn(
-                        "rounded-full p-1 bg-gradient-to-r",
-                        feature.included ? tier.gradient : "from-gray-200 to-gray-300"
-                      )}>
-                        <Check className={cn(
-                          "h-4 w-4",
-                          feature.included ? "text-white" : "text-gray-400"
-                        )} />
+                      <div
+                        className={cn(
+                          "rounded-full p-1 bg-gradient-to-r",
+                          feature.included
+                            ? tier.gradient
+                            : "from-gray-200 to-gray-300"
+                        )}
+                      >
+                        <Check
+                          className={cn(
+                            "h-4 w-4",
+                            feature.included ? "text-white" : "text-gray-400"
+                          )}
+                        />
                       </div>
-                      <span className={cn(
-                        "text-sm",
-                        feature.included ? "text-foreground" : "text-muted-foreground/50"
-                      )}>
+                      <span
+                        className={cn(
+                          "text-sm",
+                          feature.included
+                            ? "text-foreground"
+                            : "text-muted-foreground/50"
+                        )}
+                      >
                         {feature.text}
                       </span>
                     </li>
@@ -154,4 +171,4 @@ export function PricingSection() {
       </div>
     </section>
   );
-} 
+}

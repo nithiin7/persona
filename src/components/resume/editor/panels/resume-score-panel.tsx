@@ -17,7 +17,7 @@ export interface ResumeScoreMetrics {
     score: number;
     reason: string;
   };
-  
+
   completeness: {
     contactInformation: {
       score: number;
@@ -28,7 +28,7 @@ export interface ResumeScoreMetrics {
       reason: string;
     };
   };
-  
+
   impactScore: {
     activeVoiceUsage: {
       score: number;
@@ -94,27 +94,29 @@ interface ResumeScorePanelProps {
   job?: JobType | null;
 }
 
-const LOCAL_STORAGE_KEY = 'persona-resume-scores';
+const LOCAL_STORAGE_KEY = "persona-resume-scores";
 const MAX_SCORES = 10;
 
 // Helper function to convert camelCase to readable labels
 function camelCaseToReadable(text: string): string {
-  return text
-    // Insert space before uppercase letters
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    // Capitalize first letter
-    .replace(/^./, str => str.toUpperCase());
+  return (
+    text
+      // Insert space before uppercase letters
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      // Capitalize first letter
+      .replace(/^./, (str) => str.toUpperCase())
+  );
 }
 
 function getStoredScores(resumeId: string): ResumeScoreMetrics | null {
   try {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!stored) return null;
-    
+
     const scores = new Map(JSON.parse(stored));
     return scores.get(resumeId) as ResumeScoreMetrics | null;
   } catch (error) {
-    console.error('Error reading stored scores:', error);
+    console.error("Error reading stored scores:", error);
     return null;
   }
 }
@@ -133,11 +135,14 @@ function updateStoredScores(resumeId: string, score: ResumeScoreMetrics) {
     scores.set(resumeId, score);
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(Array.from(scores)));
   } catch (error) {
-    console.error('Error storing score:', error);
+    console.error("Error storing score:", error);
   }
 }
 
-export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps) {
+export default function ResumeScorePanel({
+  resume,
+  job,
+}: ResumeScorePanelProps) {
   const [isCalculating, setIsCalculating] = useState(false);
   const [scoreData, setScoreData] = useState<ResumeScoreMetrics | null>(() => {
     // Initialize with stored score if available
@@ -155,28 +160,34 @@ export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps)
   const handleRecalculate = async () => {
     setIsCalculating(true);
     try {
-        const MODEL_STORAGE_KEY = 'persona-default-model';
-        // const LOCAL_STORAGE_KEY = 'persona-api-keys';
-  
-        const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
-        // const storedKeys = localStorage.getItem(LOCAL_STORAGE_KEY);
-        const apiKeys: string[] = [];
-        
+      const MODEL_STORAGE_KEY = "persona-default-model";
+      // const LOCAL_STORAGE_KEY = 'persona-api-keys';
+
+      const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+      // const storedKeys = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const apiKeys: string[] = [];
+
       // Convert job type to match the expected schema
-      const jobForScoring = job ? {
-        ...job,
-        employment_type: job.employment_type || undefined
-      } : null;
+      const jobForScoring = job
+        ? {
+            ...job,
+            employment_type: job.employment_type || undefined,
+          }
+        : null;
 
       // Call the generateResumeScore action with current resume
-      const newScore = await generateResumeScore({
-        ...resume,
-        section_configs: undefined,
-        section_order: undefined
-      }, jobForScoring, {
-        model: selectedModel || '',
-        apiKeys: apiKeys as unknown as ApiKey[]
-      });
+      const newScore = await generateResumeScore(
+        {
+          ...resume,
+          section_configs: undefined,
+          section_order: undefined,
+        },
+        jobForScoring,
+        {
+          model: selectedModel || "",
+          apiKeys: apiKeys as unknown as ApiKey[],
+        }
+      );
 
       // Update state and storage
       setScoreData(newScore as ResumeScoreMetrics);
@@ -199,19 +210,20 @@ export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps)
             </div>
             <div>
               <h3 className="font-semibold mb-2">Resume Score Analysis</h3>
-                             <p className="text-sm text-muted-foreground mb-4">
-                 Generate a comprehensive analysis of your resume&apos;s effectiveness
-               </p>
+              <p className="text-sm text-muted-foreground mb-4">
+                Generate a comprehensive analysis of your resume&apos;s
+                effectiveness
+              </p>
               <Button
                 onClick={handleRecalculate}
                 disabled={isCalculating}
                 className="w-full sm:w-auto"
               >
-                <RefreshCw 
+                <RefreshCw
                   className={cn(
                     "mr-2 h-4 w-4",
                     isCalculating && "animate-spin"
-                  )} 
+                  )}
                 />
                 {isCalculating ? "Analyzing..." : "Generate Score"}
               </Button>
@@ -234,11 +246,8 @@ export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps)
           variant="outline"
           size="sm"
         >
-          <RefreshCw 
-            className={cn(
-              "mr-2 h-3 w-3",
-              isCalculating && "animate-spin"
-            )} 
+          <RefreshCw
+            className={cn("mr-2 h-3 w-3", isCalculating && "animate-spin")}
           />
           Recalculate
         </Button>
@@ -253,17 +262,24 @@ export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps)
                 value={scoreData.overallScore.score}
                 text={`${scoreData.overallScore.score}%`}
                 styles={buildStyles({
-                  pathColor: scoreData.overallScore.score >= 70 ? '#10b981' : scoreData.overallScore.score >= 50 ? '#f59e0b' : '#ef4444',
-                  textColor: '#374151',
-                  trailColor: '#e5e7eb',
+                  pathColor:
+                    scoreData.overallScore.score >= 70
+                      ? "#10b981"
+                      : scoreData.overallScore.score >= 50
+                        ? "#f59e0b"
+                        : "#ef4444",
+                  textColor: "#374151",
+                  trailColor: "#e5e7eb",
                   pathTransitionDuration: 1,
-                  textSize: '24px'
+                  textSize: "24px",
                 })}
               />
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="font-medium mb-1">Overall Score</h4>
-              <p className="text-sm text-muted-foreground">{scoreData.overallScore.reason}</p>
+              <p className="text-sm text-muted-foreground">
+                {scoreData.overallScore.reason}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -279,34 +295,9 @@ export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps)
         </CardHeader>
         <CardContent className="pt-0">
           <div className="space-y-2">
-            {scoreData.overallImprovements.slice(0, 5).map((improvement, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="flex items-start gap-2 text-sm"
-              >
-                <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
-                <p className="text-muted-foreground">{improvement}</p>
-              </motion.div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Job-Specific Improvements for Tailored Resumes */}
-      {scoreData.isTailoredResume && scoreData.jobSpecificImprovements && scoreData.jobSpecificImprovements.length > 0 && (
-        <Card className="border-blue-200 bg-blue-50/50">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2 text-blue-700">
-              <Award className="h-4 w-4" />
-              Job-Specific Improvements
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="space-y-2">
-              {scoreData.jobSpecificImprovements.slice(0, 5).map((improvement, index) => (
+            {scoreData.overallImprovements
+              .slice(0, 5)
+              .map((improvement, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -10 }}
@@ -314,14 +305,45 @@ export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps)
                   transition={{ delay: index * 0.05 }}
                   className="flex items-start gap-2 text-sm"
                 >
-                  <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-500 flex-shrink-0" />
-                  <p className="text-blue-700">{improvement}</p>
+                  <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                  <p className="text-muted-foreground">{improvement}</p>
                 </motion.div>
               ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Job-Specific Improvements for Tailored Resumes */}
+      {scoreData.isTailoredResume &&
+        scoreData.jobSpecificImprovements &&
+        scoreData.jobSpecificImprovements.length > 0 && (
+          <Card className="border-blue-200 bg-blue-50/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2 text-blue-700">
+                <Award className="h-4 w-4" />
+                Job-Specific Improvements
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="space-y-2">
+                {scoreData.jobSpecificImprovements
+                  .slice(0, 5)
+                  .map((improvement, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="flex items-start gap-2 text-sm"
+                    >
+                      <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-500 flex-shrink-0" />
+                      <p className="text-blue-700">{improvement}</p>
+                    </motion.div>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
       {/* Job Alignment Section for Tailored Resumes */}
       {scoreData.isTailoredResume && scoreData.jobAlignment && (
@@ -346,7 +368,7 @@ export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps)
       {Object.entries({
         Completeness: { icon: Award, metrics: scoreData.completeness },
         "Impact Score": { icon: TrendingUp, metrics: scoreData.impactScore },
-        "Role Match": { icon: Target, metrics: scoreData.roleMatch }
+        "Role Match": { icon: Target, metrics: scoreData.roleMatch },
       }).map(([title, { icon: Icon, metrics }]) => (
         <Card key={title}>
           <CardHeader className="pb-3">
@@ -368,7 +390,15 @@ export default function ResumeScorePanel({ resume, job }: ResumeScorePanelProps)
   );
 }
 
-function ScoreItem({ label, score, reason }: { label: string; score: number; reason: string }) {
+function ScoreItem({
+  label,
+  score,
+  reason,
+}: {
+  label: string;
+  score: number;
+  reason: string;
+}) {
   const getScoreColor = (score: number) => {
     if (score >= 70) return "bg-green-500";
     if (score >= 50) return "bg-yellow-500";
@@ -382,13 +412,19 @@ function ScoreItem({ label, score, reason }: { label: string; score: number; rea
       className="space-y-2"
     >
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium">{camelCaseToReadable(label)}</span>
-        <span className={cn(
-          "text-xs px-2 py-1 rounded-full font-medium",
-          score >= 70 ? "bg-green-100 text-green-700" : 
-          score >= 50 ? "bg-yellow-100 text-yellow-700" : 
-          "bg-red-100 text-red-700"
-        )}>
+        <span className="text-sm font-medium">
+          {camelCaseToReadable(label)}
+        </span>
+        <span
+          className={cn(
+            "text-xs px-2 py-1 rounded-full font-medium",
+            score >= 70
+              ? "bg-green-100 text-green-700"
+              : score >= 50
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
+          )}
+        >
           {score}/100
         </span>
       </div>
@@ -405,11 +441,11 @@ function ScoreItem({ label, score, reason }: { label: string; score: number; rea
   );
 }
 
-function JobAlignmentItem({ 
-  label, 
-  data 
-}: { 
-  label: string; 
+function JobAlignmentItem({
+  label,
+  data,
+}: {
+  label: string;
   data: {
     score: number;
     reason: string;
@@ -433,13 +469,19 @@ function JobAlignmentItem({
       className="space-y-3"
     >
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium text-blue-700">{camelCaseToReadable(label)}</span>
-        <span className={cn(
-          "text-xs px-2 py-1 rounded-full font-medium",
-          data.score >= 70 ? "bg-blue-100 text-blue-700" : 
-          data.score >= 50 ? "bg-yellow-100 text-yellow-700" : 
-          "bg-red-100 text-red-700"
-        )}>
+        <span className="text-sm font-medium text-blue-700">
+          {camelCaseToReadable(label)}
+        </span>
+        <span
+          className={cn(
+            "text-xs px-2 py-1 rounded-full font-medium",
+            data.score >= 70
+              ? "bg-blue-100 text-blue-700"
+              : data.score >= 50
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
+          )}
+        >
           {data.score}/100
         </span>
       </div>
@@ -452,39 +494,49 @@ function JobAlignmentItem({
         />
       </div>
       <p className="text-xs text-blue-600">{data.reason}</p>
-      
+
       {/* Show matched keywords */}
       {data.matchedKeywords && data.matchedKeywords.length > 0 && (
         <div className="space-y-1">
-          <p className="text-xs font-medium text-green-600">Matched Keywords:</p>
+          <p className="text-xs font-medium text-green-600">
+            Matched Keywords:
+          </p>
           <div className="flex flex-wrap gap-1">
             {data.matchedKeywords.slice(0, 5).map((keyword, index) => (
-              <span key={index} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">
+              <span
+                key={index}
+                className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full"
+              >
                 {keyword}
               </span>
             ))}
           </div>
         </div>
       )}
-      
+
       {/* Show missing keywords */}
       {data.missingKeywords && data.missingKeywords.length > 0 && (
         <div className="space-y-1">
           <p className="text-xs font-medium text-red-600">Missing Keywords:</p>
           <div className="flex flex-wrap gap-1">
             {data.missingKeywords.slice(0, 5).map((keyword, index) => (
-              <span key={index} className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded-full">
+              <span
+                key={index}
+                className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded-full"
+              >
                 {keyword}
               </span>
             ))}
           </div>
         </div>
       )}
-      
+
       {/* Show gap analysis */}
       {data.gapAnalysis && data.gapAnalysis.length > 0 && (
         <div className="space-y-1">
-          <p className="text-xs font-medium text-orange-600">Areas to Address:</p>
+          <p className="text-xs font-medium text-orange-600">
+            Areas to Address:
+          </p>
           <div className="space-y-1">
             {data.gapAnalysis.slice(0, 3).map((gap, index) => (
               <div key={index} className="flex items-start gap-2 text-xs">

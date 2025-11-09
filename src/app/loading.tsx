@@ -97,7 +97,10 @@ export default function Loading() {
                     {/* Resume Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       {[...Array(3)].map((_, i) => (
-                        <Card key={i} className="p-4 space-y-4 bg-white/60 border-purple-200/30">
+                        <Card
+                          key={i}
+                          className="p-4 space-y-4 bg-white/60 border-purple-200/30"
+                        >
                           <div className="space-y-2">
                             <Skeleton className="h-6 w-3/4" />
                             <Skeleton className="h-4 w-1/2" />
@@ -144,7 +147,10 @@ export default function Loading() {
                 {/* Resume Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[...Array(3)].map((_, i) => (
-                    <Card key={i} className="p-4 space-y-4 bg-white/60 border-pink-200/30">
+                    <Card
+                      key={i}
+                      className="p-4 space-y-4 bg-white/60 border-pink-200/30"
+                    >
                       <div className="space-y-2">
                         <Skeleton className="h-6 w-3/4" />
                         <Skeleton className="h-4 w-1/2" />
@@ -173,4 +179,4 @@ export default function Loading() {
       </div>
     </main>
   );
-} 
+}

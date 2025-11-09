@@ -1,16 +1,16 @@
-'use server';
+"use server";
 
-import { LanguageModelV1, streamText } from 'ai';
-import { createStreamableValue } from 'ai/rsc';
-import { initializeAIClient, type AIConfig } from '@/utils/ai-tools';
+import { LanguageModelV1, streamText } from "ai";
+import { createStreamableValue } from "ai/rsc";
+import { initializeAIClient, type AIConfig } from "@/utils/ai-tools";
 
 export async function generate(input: string, config?: AIConfig) {
   try {
-    const stream = createStreamableValue('');
+    const stream = createStreamableValue("");
     const isPro = true;
     const aiClient = initializeAIClient(config, isPro);
 
-   const system = `
+    const system = `
    
    You are a professional cover letter writer with expertise in crafting compelling, personalized cover letters. Your goal is to produce a cover letter that is clear, concise, and tailored to the job and candidate data provided. The final cover letter should be between 600-700 words and written in a consistent, professional tone that seamlessly blends technical details with personal enthusiasm.
 
@@ -92,29 +92,26 @@ export async function generate(input: string, config?: AIConfig) {
         system,
         prompt: input,
         onFinish: ({ usage }) => {
-         const { promptTokens, completionTokens, totalTokens } = usage;
-  
-         // your own logic, e.g. for saving the chat history or recording usage
-         console.log('----------Usage:----------');
-         console.log('Prompt tokens:', promptTokens);
-         console.log('Completion tokens:', completionTokens);
-         console.log('Total tokens:', totalTokens);
-       },
- 
+          const { promptTokens, completionTokens, totalTokens } = usage;
+
+          // your own logic, e.g. for saving the chat history or recording usage
+          console.log("----------Usage:----------");
+          console.log("Prompt tokens:", promptTokens);
+          console.log("Completion tokens:", completionTokens);
+          console.log("Total tokens:", totalTokens);
+        },
       });
 
       for await (const delta of textStream) {
         stream.update(delta);
       }
 
-     
       stream.done();
     })();
 
     return { output: stream.value };
   } catch (error) {
-    console.error('Error generating cover letter:', error);
+    console.error("Error generating cover letter:", error);
     throw error;
   }
 }
-

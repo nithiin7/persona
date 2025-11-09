@@ -26,14 +26,14 @@ export function ResetPasswordForm() {
 
     try {
       const formData = new FormData();
-      formData.append('email', email);
+      formData.append("email", email);
       const result = await resetPasswordForEmail(formData);
-      
+
       if (!result.success) {
         setFormState({ error: result.error || "Failed to send reset email" });
         return;
       }
-      
+
       setEmail("");
       setFormState({ success: true });
     } catch (error: unknown) {
@@ -47,11 +47,14 @@ export function ResetPasswordForm() {
   return (
     <div className="grid gap-6">
       {formState.error && (
-        <Alert variant="destructive" className="bg-red-50/50 text-red-900 border-red-200/50">
+        <Alert
+          variant="destructive"
+          className="bg-red-50/50 text-red-900 border-red-200/50"
+        >
           <AlertDescription>{formState.error}</AlertDescription>
         </Alert>
       )}
-      
+
       {formState.success ? (
         <Alert className="bg-emerald-50/50 text-emerald-900 border-emerald-200/50">
           <CheckCircle2 className="h-4 w-4 text-emerald-500" />
@@ -78,8 +81,8 @@ export function ResetPasswordForm() {
             </div>
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={isLoading}
             className="w-full bg-gradient-to-r from-violet-600 via-blue-600 to-violet-600 hover:from-violet-500 hover:via-blue-500 hover:to-violet-500 shadow-lg shadow-violet-500/25 transition-all duration-500 animate-gradient-x"
           >
@@ -94,7 +97,7 @@ export function ResetPasswordForm() {
           </Button>
 
           <div className="text-center text-sm">
-            <Link 
+            <Link
               href="/"
               className="text-muted-foreground hover:text-violet-600 transition-colors"
             >
@@ -105,4 +108,4 @@ export function ResetPasswordForm() {
       )}
     </div>
   );
-} 
+}

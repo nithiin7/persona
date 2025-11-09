@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Profile } from "@/lib/types";
 import { User, Briefcase, GraduationCap, Code, Pencil } from "lucide-react";
@@ -15,7 +15,7 @@ export function ProfileRow({ profile }: ProfileRowProps) {
     <div className="group relative">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-100/20 via-rose-100/20 to-teal-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-xl" />
-      
+
       <div className="relative rounded-xl bg-gradient-to-br from-white/60 to-white/30 hover:from-white/70 hover:to-white/40 backdrop-blur-xl border border-white/40 shadow-lg transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-0.5">
         <div className="px-4 sm:px-6 py-3">
           {/* Main container - stack on mobile, row on desktop */}
@@ -40,42 +40,42 @@ export function ProfileRow({ profile }: ProfileRowProps) {
               {/* Stats Row - hidden on mobile, visible on sm and up */}
               <div className="hidden sm:flex items-center gap-3">
                 {[
-                  { 
-                    icon: Briefcase, 
-                    label: "Experience", 
+                  {
+                    icon: Briefcase,
+                    label: "Experience",
                     count: profile.work_experience.length,
                     colors: {
                       bg: "from-cyan-50/50 to-cyan-100/50",
                       text: "text-cyan-700",
                       iconBg: "bg-cyan-100",
-                      border: "border-cyan-200"
-                    }
+                      border: "border-cyan-200",
+                    },
                   },
-                  { 
-                    icon: GraduationCap, 
-                    label: "Education", 
+                  {
+                    icon: GraduationCap,
+                    label: "Education",
                     count: profile.education.length,
                     colors: {
                       bg: "from-indigo-50/50 to-indigo-100/50",
                       text: "text-indigo-700",
                       iconBg: "bg-indigo-100",
-                      border: "border-indigo-200"
-                    }
+                      border: "border-indigo-200",
+                    },
                   },
-                  { 
-                    icon: Code, 
-                    label: "Projects", 
+                  {
+                    icon: Code,
+                    label: "Projects",
                     count: profile.projects.length,
                     colors: {
                       bg: "from-violet-50/50 to-violet-100/50",
                       text: "text-violet-700",
                       iconBg: "bg-violet-100",
-                      border: "border-violet-200"
-                    }
+                      border: "border-violet-200",
+                    },
                   },
                 ].map((stat) => (
-                  <div 
-                    key={stat.label} 
+                  <div
+                    key={stat.label}
                     className={cn(
                       "flex items-center gap-2 px-2.5 py-1 rounded-full",
                       "bg-gradient-to-r border backdrop-blur-sm",
@@ -85,16 +85,22 @@ export function ProfileRow({ profile }: ProfileRowProps) {
                       stat.colors.border
                     )}
                   >
-                    <div className={cn(
-                      "p-1 rounded-full transition-transform duration-300",
-                      stat.colors.iconBg,
-                      "group-hover:scale-110"
-                    )}>
+                    <div
+                      className={cn(
+                        "p-1 rounded-full transition-transform duration-300",
+                        stat.colors.iconBg,
+                        "group-hover:scale-110"
+                      )}
+                    >
                       <stat.icon className={cn("h-3 w-3", stat.colors.text)} />
                     </div>
                     <span className="text-sm whitespace-nowrap">
-                      <span className={cn("font-semibold", stat.colors.text)}>{stat.count}</span>
-                      <span className="text-muted-foreground ml-1.5">{stat.label}</span>
+                      <span className={cn("font-semibold", stat.colors.text)}>
+                        {stat.count}
+                      </span>
+                      <span className="text-muted-foreground ml-1.5">
+                        {stat.label}
+                      </span>
                     </span>
                   </div>
                 ))}
@@ -102,7 +108,7 @@ export function ProfileRow({ profile }: ProfileRowProps) {
             </div>
 
             {/* Edit Button with enhanced styling */}
-            <Link href="/profile" className="shrink-0">  
+            <Link href="/profile" className="shrink-0">
               <Button
                 variant="outline"
                 size="sm"
@@ -119,4 +125,4 @@ export function ProfileRow({ profile }: ProfileRowProps) {
       </div>
     </div>
   );
-} 
+}

@@ -1,57 +1,62 @@
-"use client"
-import { useRef, useState, useEffect } from "react"
-import { Play, Maximize2 } from "lucide-react"
+"use client";
+import { useRef, useState, useEffect } from "react";
+import { Play, Maximize2 } from "lucide-react";
 
 export function VideoShowcase() {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const togglePlay = () => {
     if (videoRef.current) {
       if (isPlaying) {
-        videoRef.current.pause()
+        videoRef.current.pause();
       } else {
-        videoRef.current.play()
+        videoRef.current.play();
       }
-      setIsPlaying(!isPlaying)
+      setIsPlaying(!isPlaying);
     }
-  }
+  };
 
   const toggleFullscreen = () => {
     if (videoRef.current) {
       if (!document.fullscreenElement) {
-        videoRef.current.requestFullscreen().catch(err => {
-          console.error(`Error attempting to enable fullscreen: ${err.message}`)
-        })
+        videoRef.current.requestFullscreen().catch((err) => {
+          console.error(
+            `Error attempting to enable fullscreen: ${err.message}`
+          );
+        });
       } else {
-        document.exitFullscreen()
+        document.exitFullscreen();
       }
     }
-  }
+  };
 
   useEffect(() => {
     const handleVideoEnd = () => {
-      setIsPlaying(false)
-    }
-    
-    const video = videoRef.current
+      setIsPlaying(false);
+    };
+
+    const video = videoRef.current;
     if (video) {
-      video.addEventListener('ended', handleVideoEnd)
+      video.addEventListener("ended", handleVideoEnd);
     }
-    
+
     return () => {
       if (video) {
-        video.removeEventListener('ended', handleVideoEnd)
+        video.removeEventListener("ended", handleVideoEnd);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   return (
-    <section className="py-16 md:py-24 px-4 relative overflow-hidden" id="how-it-works">
+    <section
+      className="py-16 md:py-24 px-4 relative overflow-hidden"
+      id="how-it-works"
+    >
       {/* Simplified background elements */}
       <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-teal-100/10"></div>
       <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full bg-indigo-100/10"></div>
-      
+
       <div className="container mx-auto max-w-6xl">
         {/* Section header */}
         <div className="text-center mb-12 relative z-10">
@@ -62,32 +67,32 @@ export function VideoShowcase() {
             Watch how our AI-powered platform transforms your resume in minutes
           </p>
         </div>
-        
+
         {/* Video container with simplified styling */}
         <div className="relative mx-auto group">
           {/* Simplified card effect container */}
           <div className="relative rounded-2xl bg-white border border-gray-200 shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg z-10">
             {/* Video placeholder */}
-            <div 
-              className="relative aspect-video w-full cursor-pointer" 
+            <div
+              className="relative aspect-video w-full cursor-pointer"
               onClick={togglePlay}
             >
-              <video 
+              <video
                 ref={videoRef}
                 className="w-full h-full object-cover rounded-2xl"
                 src="/ResumeLM.mp4"
                 poster="/thumbnail.png"
                 onEnded={() => setIsPlaying(false)}
               />
-              
+
               {/* Simplified overlay for thumbnail */}
               {!isPlaying && (
                 <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
               )}
-              
+
               {/* Play button - Only shows when video is paused */}
               {!isPlaying && (
-                <button 
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     togglePlay();
@@ -98,7 +103,7 @@ export function VideoShowcase() {
                   <Play className="w-8 h-8 ml-1" />
                 </button>
               )}
-              
+
               {/* Controls overlay - bottom */}
               <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
                 <div className="text-sm bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-200">
@@ -117,7 +122,7 @@ export function VideoShowcase() {
               </div>
             </div>
           </div>
-          
+
           {/* Feature badges below video */}
           <div className="flex flex-wrap justify-center gap-3 mt-6">
             <span className="px-3 py-1 rounded-full bg-indigo-50 text-sm border border-indigo-200 text-indigo-700">
@@ -133,5 +138,5 @@ export function VideoShowcase() {
         </div>
       </div>
     </section>
-  )
-} 
+  );
+}

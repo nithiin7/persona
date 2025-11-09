@@ -6,38 +6,46 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { MiniResumePreview } from "@/components/resume/shared/mini-resume-preview";
 import { ResumeSortControls } from "@/components/resume/management/resume-sort-controls";
-import type { SortOption, SortDirection } from "@/components/resume/management/resume-sort-controls";
+import type {
+  SortOption,
+  SortDirection,
+} from "@/components/resume/management/resume-sort-controls";
 
 const RESUMES_PER_PAGE = 12;
 
-type SearchParams = { [key: string]: string | string[] | undefined }
+type SearchParams = { [key: string]: string | string[] | undefined };
 
 export default async function ResumesPage({
   searchParams,
 }: {
-  searchParams: Promise<SearchParams>
+  searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-  
+
   const { baseResumes, tailoredResumes } = await getDashboardData();
-  
+
   // Combine and sort resumes
   const allResumes = [...baseResumes, ...tailoredResumes];
   const currentPage = Number(params.page) || 1;
-  const sort = (params.sort as SortOption) || 'createdAt';
-  const direction = (params.direction as SortDirection) || 'desc';
+  const sort = (params.sort as SortOption) || "createdAt";
+  const direction = (params.direction as SortDirection) || "desc";
 
   // Sort resumes
   const sortedResumes = allResumes.sort((a, b) => {
-    const modifier = direction === 'asc' ? 1 : -1;
+    const modifier = direction === "asc" ? 1 : -1;
     switch (sort) {
-      case 'name':
+      case "name":
         return modifier * a.name.localeCompare(b.name);
-      case 'jobTitle':
-        return modifier * (a.target_role?.localeCompare(b.target_role || '') || 0);
-      case 'createdAt':
+      case "jobTitle":
+        return (
+          modifier * (a.target_role?.localeCompare(b.target_role || "") || 0)
+        );
+      case "createdAt":
       default:
-        return modifier * (new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        return (
+          modifier *
+          (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        );
     }
   });
 
@@ -50,8 +58,6 @@ export default async function ResumesPage({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50/50 via-sky-50/50 to-violet-50/50">
-
-      
       <div className="container max-w-7xl mx-auto p-6 space-y-8">
         {/* Header with controls */}
         <div className="flex items-center justify-between">
@@ -63,7 +69,7 @@ export default async function ResumesPage({
               Manage all your resumes in one place
             </p>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <Suspense>
               <ResumeSortControls />
@@ -93,7 +99,7 @@ export default async function ResumesPage({
                 <Link href={`/resumes/${resume.id}`} key={resume.id}>
                   <MiniResumePreview
                     name={resume.name}
-                    type={resume.is_base_resume ? 'base' : 'tailored'}
+                    type={resume.is_base_resume ? "base" : "tailored"}
                     target_role={resume.target_role}
                     updatedAt={resume.updated_at}
                     className="hover:-translate-y-1 transition-transform duration-300"
@@ -132,9 +138,9 @@ function ResumesLoadingSkeleton() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
       {[...Array(8)].map((_, i) => (
-        <Skeleton 
-          key={i} 
-          className="w-full aspect-[8.5/11] rounded-lg bg-gradient-to-r from-gray-200/50 to-gray-100/50" 
+        <Skeleton
+          key={i}
+          className="w-full aspect-[8.5/11] rounded-lg bg-gradient-to-r from-gray-200/50 to-gray-100/50"
         />
       ))}
     </div>

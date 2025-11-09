@@ -11,6 +11,11 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    ignores: ["node_modules/**", ".next/**", "out/**", "dist/**"],
+  },
+  // Prettier must be last to override other configs
+  ...compat.extends("prettier"),
 ];
 
 export default eslintConfig;

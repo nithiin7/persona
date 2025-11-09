@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/footer";
 import { AppHeader } from "@/components/layout/app-header";
 import { createClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 import Link from "next/link";
 import { cookies } from "next/headers";
 
@@ -15,11 +15,19 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://persona.com"),
   title: {
     default: "Persona - AI-Powered Resume Builder",
-    template: "%s | Persona"
+    template: "%s | Persona",
   },
-  description: "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
+  description:
+    "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
   applicationName: "Persona",
-  keywords: ["resume builder", "AI resume", "ATS optimization", "tech jobs", "career tools", "job application"],
+  keywords: [
+    "resume builder",
+    "AI resume",
+    "ATS optimization",
+    "tech jobs",
+    "career tools",
+    "job application",
+  ],
   authors: [{ name: "Persona" }],
   creator: "Persona",
   publisher: "Persona",
@@ -38,7 +46,8 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Persona",
     title: "Persona - AI-Powered Resume Builder",
-    description: "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
+    description:
+      "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
     images: [
       {
         url: "/og.webp",
@@ -51,7 +60,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Persona - AI-Powered Resume Builder",
-    description: "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
+    description:
+      "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
     images: ["/og.webp"],
     creator: "@persona",
   },
@@ -77,11 +87,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Detect impersonation via cookie set during /admin/impersonate flow
   const cookieStore = await cookies();
-  const isImpersonating = cookieStore.get('is_impersonating')?.value === 'true';
+  const isImpersonating = cookieStore.get("is_impersonating")?.value === "true";
 
   const isProPlan = true;
 
@@ -90,7 +102,9 @@ export default async function RootLayout({
       <body className={inter.className}>
         {isImpersonating && user && (
           <div className="bg-amber-500 text-white text-center text-sm py-2">
-            Impersonating&nbsp;<span className="font-semibold">{user.email ?? user.id}</span>.&nbsp;
+            Impersonating&nbsp;
+            <span className="font-semibold">{user.email ?? user.id}</span>
+            .&nbsp;
             <Link href="/stop-impersonation" className="underline font-medium">
               Stop impersonating
             </Link>
@@ -103,19 +117,19 @@ export default async function RootLayout({
             {children}
             <Analytics />
           </main>
-          {user && <Footer /> }
+          {user && <Footer />}
         </div>
-        <Toaster 
-          richColors 
-          position="top-right" 
-          closeButton 
+        <Toaster
+          richColors
+          position="top-right"
+          closeButton
           toastOptions={{
             style: {
-              fontSize: '1rem',
-              padding: '16px',
-              minWidth: '400px',
-              maxWidth: '500px'
-            }
+              fontSize: "1rem",
+              padding: "16px",
+              minWidth: "400px",
+              maxWidth: "500px",
+            },
           }}
         />
       </body>

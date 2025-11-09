@@ -1,16 +1,27 @@
-'use client';
+"use client";
 
 import { Profile } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, MapPin, Globe, Linkedin, Github, User } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Globe,
+  Linkedin,
+  Github,
+  User,
+} from "lucide-react";
 
 interface ProfileBasicInfoFormProps {
   profile: Profile;
   onChange: (field: keyof Profile, value: string) => void;
 }
 
-export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoFormProps) {
+export function ProfileBasicInfoForm({
+  profile,
+  onChange,
+}: ProfileBasicInfoFormProps) {
   return (
     <div className="space-y-6">
       {/* Personal Details */}
@@ -26,8 +37,8 @@ export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoForm
                   </div>
                 </div>
                 <Input
-                  value={profile.first_name || ''}
-                  onChange={(e) => onChange('first_name', e.target.value)}
+                  value={profile.first_name || ""}
+                  onChange={(e) => onChange("first_name", e.target.value)}
                   className="pr-12 text-lg font-semibold bg-white/50 border-gray-200 rounded-lg
                     focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
                     hover:border-teal-500/30 hover:bg-white/60 transition-colors
@@ -45,8 +56,8 @@ export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoForm
                   </div>
                 </div>
                 <Input
-                  value={profile.last_name || ''}
-                  onChange={(e) => onChange('last_name', e.target.value)}
+                  value={profile.last_name || ""}
+                  onChange={(e) => onChange("last_name", e.target.value)}
                   className="pr-12 text-lg font-semibold bg-white/50 border-gray-200 rounded-lg
                     focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
                     hover:border-teal-500/30 hover:bg-white/60 transition-colors
@@ -69,8 +80,8 @@ export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoForm
                 </div>
                 <Input
                   type="email"
-                  value={profile.email || ''}
-                  onChange={(e) => onChange('email', e.target.value)}
+                  value={profile.email || ""}
+                  onChange={(e) => onChange("email", e.target.value)}
                   className="pr-12 bg-white/50 border-gray-200 rounded-lg
                     focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
                     hover:border-teal-500/30 hover:bg-white/60 transition-colors
@@ -89,8 +100,8 @@ export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoForm
                 </div>
                 <Input
                   type="tel"
-                  value={profile.phone_number || ''}
-                  onChange={(e) => onChange('phone_number', e.target.value)}
+                  value={profile.phone_number || ""}
+                  onChange={(e) => onChange("phone_number", e.target.value)}
                   className="pr-12 bg-white/50 border-gray-200 rounded-lg
                     focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
                     hover:border-teal-500/30 hover:bg-white/60 transition-colors
@@ -111,8 +122,8 @@ export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoForm
                 </div>
               </div>
               <Input
-                value={profile.location || ''}
-                onChange={(e) => onChange('location', e.target.value)}
+                value={profile.location || ""}
+                onChange={(e) => onChange("location", e.target.value)}
                 className="pr-12 bg-white/50 border-gray-200 rounded-lg
                   focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
                   hover:border-teal-500/30 hover:bg-white/60 transition-colors
@@ -141,8 +152,8 @@ export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoForm
                 </div>
                 <Input
                   type="url"
-                  value={profile.website || ''}
-                  onChange={(e) => onChange('website', e.target.value)}
+                  value={profile.website || ""}
+                  onChange={(e) => onChange("website", e.target.value)}
                   className="pr-12 bg-white/50 border-gray-200 rounded-lg
                     focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
                     hover:border-teal-500/30 hover:bg-white/60 transition-colors
@@ -161,8 +172,8 @@ export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoForm
                 </div>
                 <Input
                   type="url"
-                  value={profile.linkedin_url || ''}
-                  onChange={(e) => onChange('linkedin_url', e.target.value)}
+                  value={profile.linkedin_url || ""}
+                  onChange={(e) => onChange("linkedin_url", e.target.value)}
                   className="pr-12 bg-white/50 border-gray-200 rounded-lg
                     focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
                     hover:border-teal-500/30 hover:bg-white/60 transition-colors
@@ -184,8 +195,8 @@ export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoForm
               </div>
               <Input
                 type="url"
-                value={profile.github_url || ''}
-                onChange={(e) => onChange('github_url', e.target.value)}
+                value={profile.github_url || ""}
+                onChange={(e) => onChange("github_url", e.target.value)}
                 className="pr-12 bg-white/50 border-gray-200 rounded-lg
                   focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
                   hover:border-teal-500/30 hover:bg-white/60 transition-colors
@@ -201,4 +212,4 @@ export function ProfileBasicInfoForm({ profile, onChange }: ProfileBasicInfoForm
       </Card>
     </div>
   );
-} 
+}

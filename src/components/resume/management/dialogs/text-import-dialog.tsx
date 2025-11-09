@@ -1,7 +1,15 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Upload, AlertTriangle } from "lucide-react";
@@ -21,7 +29,7 @@ interface TextImportDialogProps {
 export function TextImportDialog({
   resume,
   onResumeChange,
-  trigger
+  trigger,
 }: TextImportDialogProps) {
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState("");
@@ -51,17 +59,18 @@ export function TextImportDialog({
     setIsDragging(false);
 
     const files = Array.from(e.dataTransfer.files);
-    const pdfFile = files.find(file => file.type === "application/pdf");
+    const pdfFile = files.find((file) => file.type === "application/pdf");
 
     if (pdfFile) {
       try {
         const text = await pdfToText(pdfFile);
-        setContent(prev => prev + (prev ? "\n\n" : "") + text);
+        setContent((prev) => prev + (prev ? "\n\n" : "") + text);
       } catch (err) {
-        console.error('PDF processing error:', err);
+        console.error("PDF processing error:", err);
         toast({
           title: "PDF Processing Error",
-          description: "Failed to extract text from the PDF. Please try again or paste the content manually.",
+          description:
+            "Failed to extract text from the PDF. Please try again or paste the content manually.",
           variant: "destructive",
         });
       }
@@ -79,12 +88,13 @@ export function TextImportDialog({
     if (file && file.type === "application/pdf") {
       try {
         const text = await pdfToText(file);
-        setContent(prev => prev + (prev ? "\n\n" : "") + text);
+        setContent((prev) => prev + (prev ? "\n\n" : "") + text);
       } catch (err) {
-        console.error('PDF processing error:', err);
+        console.error("PDF processing error:", err);
         toast({
           title: "PDF Processing Error",
-          description: "Failed to extract text from the PDF. Please try again or paste the content manually.",
+          description:
+            "Failed to extract text from the PDF. Please try again or paste the content manually.",
           variant: "destructive",
         });
       }
@@ -105,7 +115,7 @@ export function TextImportDialog({
     setIsProcessing(true);
     try {
       const updatedResume = await addTextToResume(content, resume);
-      
+
       // Update each field of the resume
       (Object.keys(updatedResume) as Array<keyof Resume>).forEach((key) => {
         onResumeChange(key, updatedResume[key] as Resume[keyof Resume]);
@@ -118,11 +128,12 @@ export function TextImportDialog({
       setOpen(false);
       setContent("");
     } catch (error) {
-      console.error('Import error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      if (errorMessage.includes('API key')) {
+      console.error("Import error:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      if (errorMessage.includes("API key")) {
         setApiKeyError(
-          'API key required. Please add your OpenAI API key in settings or upgrade to our Pro Plan.'
+          "API key required. Please add your OpenAI API key in settings or upgrade to our Pro Plan."
         );
       } else {
         toast({
@@ -138,9 +149,7 @@ export function TextImportDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[600px] bg-white/95 backdrop-blur-xl border-white/40 shadow-2xl">
         <DialogHeader>
           <DialogTitle className="text-2xl bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
@@ -148,9 +157,14 @@ export function TextImportDialog({
           </DialogTitle>
           <DialogDescription asChild>
             <div className="space-y-2 text-base text-muted-foreground/80">
-              <p className="font-medium text-foreground">Choose one of these options:</p>
+              <p className="font-medium text-foreground">
+                Choose one of these options:
+              </p>
               <ol className="list-decimal list-inside space-y-1 ml-1">
-                <li>Upload your PDF resume by dropping it below or clicking to browse</li>
+                <li>
+                  Upload your PDF resume by dropping it below or clicking to
+                  browse
+                </li>
                 <li>Paste your resume text directly into the text area</li>
               </ol>
             </div>
@@ -210,7 +224,7 @@ export function TextImportDialog({
                   variant="outline"
                   size="sm"
                   className="text-red-600 border-red-200 hover:bg-red-50/50 w-auto mx-auto"
-                  onClick={() => window.location.href = '/settings'}
+                  onClick={() => (window.location.href = "/settings")}
                 >
                   Set API Keys in Settings
                 </Button>
@@ -237,11 +251,11 @@ export function TextImportDialog({
                 Processing...
               </>
             ) : (
-              'Import'
+              "Import"
             )}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-} 
+}

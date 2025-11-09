@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   ContextMenu,
@@ -14,10 +14,10 @@ interface CoverLetterContextMenuProps {
   onCopyToClipboard: () => Promise<void>;
 }
 
-export function CoverLetterContextMenu({ 
+export function CoverLetterContextMenu({
   children,
   onDownloadPDF,
-  onCopyToClipboard
+  onCopyToClipboard,
 }: CoverLetterContextMenuProps) {
   return (
     <ContextMenu>
@@ -42,4 +42,4 @@ export function CoverLetterContextMenu({
       </ContextMenuContent>
     </ContextMenu>
   );
-} 
+}

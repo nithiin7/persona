@@ -17,12 +17,21 @@ import { ModelShowcase } from "@/components/landing/model-showcase";
 
 export const metadata: Metadata = {
   title: "Login | Persona - AI-Powered Resume Builder",
-  description: "Create tailored, ATS-optimized resumes powered by AI. Persona helps you land your dream tech job with personalized resume optimization.",
-  keywords: ["resume builder", "AI resume", "ATS optimization", "tech jobs", "career tools", "job application"],
+  description:
+    "Create tailored, ATS-optimized resumes powered by AI. Persona helps you land your dream tech job with personalized resume optimization.",
+  keywords: [
+    "resume builder",
+    "AI resume",
+    "ATS optimization",
+    "tech jobs",
+    "career tools",
+    "job application",
+  ],
   authors: [{ name: "Persona" }],
   openGraph: {
     title: "Persona - AI-Powered Resume Builder",
-    description: "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
+    description:
+      "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
     url: "https://persona.com//",
     siteName: "Persona",
     images: [
@@ -39,7 +48,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Persona - AI-Powered Resume Builder",
-    description: "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
+    description:
+      "Create tailored, ATS-optimized resumes powered by AI. Land your dream tech job with personalized resume optimization.",
     images: ["/og.webp"],
     creator: "@persona",
   },
@@ -65,15 +75,15 @@ export default async function LoginPage({
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const params = await searchParams;
-  const showErrorDialog = params?.error === 'email_confirmation' || params?.error === 'auth_code_missing';
+  const showErrorDialog =
+    params?.error === "email_confirmation" ||
+    params?.error === "auth_code_missing";
 
   return (
     <>
       <main className="relative overflow-x-hidden selection:bg-violet-200/50 ">
         {/* Error Dialog */}
         <ErrorDialog isOpen={!!showErrorDialog} />
-
-       
 
         {/* Enhanced Navigation with backdrop blur and border */}
         <nav className="border-b border-white/50 backdrop-blur-xl shadow-md fixed top-0 w-full bg-white/20 z-[1000] transition-all duration-500">
@@ -87,7 +97,6 @@ export default async function LoginPage({
 
         {/* Enhanced Content with better spacing and animations */}
         <div className="relative z-10">
-          
           {/* Hero Section with Split Layout */}
           <div className="mb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 py-12 lg:py-24 items-center">
@@ -107,7 +116,7 @@ export default async function LoginPage({
                         <div className="absolute -bottom-2 left-0 w-24 sm:w-32 h-1.5 bg-gradient-to-r from-violet-500 to-blue-500 rounded-full" />
                       </span>
                     </h1>
-                    
+
                     <p className="text-xl sm:text-2xl text-muted-foreground/90 leading-relaxed max-w-2xl font-medium">
                       Create tailored, ATS-optimized resumes powered by AI.
                     </p>
@@ -115,7 +124,7 @@ export default async function LoginPage({
 
                   <BenefitsList />
                 </div>
-                
+
                 <ActionButtons />
               </div>
 
@@ -127,14 +136,14 @@ export default async function LoginPage({
                     {/* Decorative Elements - Enhanced gradients for mobile */}
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-blue-500/5 rounded-sm transform rotate-3 scale-[1.03] shadow-xl" />
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-blue-500/5 rounded-sm transform -rotate-3 scale-[1.03] shadow-xl" />
-                    
+
                     {/* Stacked Resume Previews - Mobile Optimized */}
                     <div className="relative">
                       {/* Background Resume - Third Layer */}
                       <div className="absolute -right-5 top-3 opacity-80 scale-[0.98] rotate-[-8deg] shadow-lg">
                         <MockResumeMobile />
                       </div>
-                      
+
                       {/* Middle Resume - Second Layer */}
                       <div className="absolute -right-2.5 top-1.5 opacity-90 scale-[0.99] rotate-[-4deg] origin-center shadow-lg">
                         <MockResumeMobile />
@@ -153,17 +162,17 @@ export default async function LoginPage({
                   {/* Decorative Elements */}
                   <div className="absolute inset-0 bg-gradient-to-br from-violet-500/8 to-blue-500/8 rounded-3xl transform rotate-6 scale-110 shadow-xl" />
                   <div className="absolute inset-0 bg-gradient-to-br from-violet-500/8 to-blue-500/8 rounded-3xl transform -rotate-6 scale-110 shadow-xl" />
-                  
+
                   {/* Enhanced glow effect */}
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-500/20 via-blue-500/20 to-violet-500/20 rounded-3xl blur-xl opacity-70 group-hover:opacity-100 transition duration-1000"></div>
-                  
+
                   {/* Stacked Resume Previews with improved positioning and effects */}
                   <div className="relative">
                     {/* Background Resume - Third Layer */}
                     <div className="absolute -right-14 top-6 opacity-70 blur-[0.5px] scale-[0.96] rotate-[-10deg] origin-bottom-right shadow-xl">
                       <MockResume />
                     </div>
-                    
+
                     {/* Middle Resume - Second Layer */}
                     <div className="absolute -right-7 top-3 opacity-85 scale-[0.98] rotate-[-5deg] origin-bottom-right shadow-xl">
                       <MockResume />
@@ -178,13 +187,13 @@ export default async function LoginPage({
               </div>
             </div>
           </div>
-          
+
           {/* Enhanced Hero Video Section with better framing */}
           <div className="relative py-16">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-50/30 to-transparent"></div>
             <HeroVideoSection />
           </div>
-          
+
           {/* Enhanced Model Showcase with better spacing */}
           <div className="py-16 relative">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/30 to-transparent"></div>
@@ -194,7 +203,7 @@ export default async function LoginPage({
           {/* Enhanced Features Section with improved card styling */}
           <div className="flex flex-col gap-24 py-24 relative" id="features">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-50/30 to-transparent"></div>
-            
+
             <SplitContent
               imageSrc="/SS Chat.png"
               heading="AI-Powered Resume Assistant"
@@ -237,10 +246,9 @@ export default async function LoginPage({
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-50/30 to-transparent"></div>
             <PricingSection />
           </div>
-
         </div>
       </main>
-      <Footer variant="static"/>
+      <Footer variant="static" />
     </>
   );
 }

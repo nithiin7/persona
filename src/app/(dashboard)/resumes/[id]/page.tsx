@@ -14,20 +14,23 @@ function normalizeResumeData(resume: Resume): Resume {
   return {
     ...resume,
     // Normalize work experience dates
-    work_experience: resume.work_experience?.map(exp => ({
-      ...exp,
-      date: exp.date || ''
-    })) || [],
+    work_experience:
+      resume.work_experience?.map((exp) => ({
+        ...exp,
+        date: exp.date || "",
+      })) || [],
     // Normalize education dates
-    education: resume.education?.map(edu => ({
-      ...edu,
-      date: edu.date || ''
-    })) || [],
+    education:
+      resume.education?.map((edu) => ({
+        ...edu,
+        date: edu.date || "",
+      })) || [],
     // Normalize project dates
-    projects: resume.projects?.map(project => ({
-      ...project,
-      date: project.date || ''
-    })) || [],
+    projects:
+      resume.projects?.map((project) => ({
+        ...project,
+        date: project.date || "",
+      })) || [],
     // Initialize document settings with defaults if not present
     document_settings: resume.document_settings || {
       document_font_size: 10,
@@ -51,8 +54,8 @@ function normalizeResumeData(resume: Resume): Resume {
       education_margin_top: 2,
       education_margin_bottom: 2,
       education_margin_horizontal: 0,
-      education_item_spacing: 4
-    }
+      education_item_spacing: 4,
+    },
   };
 }
 
@@ -71,8 +74,8 @@ export async function generateMetadata({
   } catch (error) {
     void error;
     return {
-      title: 'Resume Editor | Persona',
-      description: 'AI-powered resume editor',
+      title: "Resume Editor | Persona",
+      description: "AI-powered resume editor",
     };
   }
 }
@@ -82,29 +85,32 @@ export default async function Page({
 }: {
   params: Promise<{ id: string }>;
 }) {
-
-  
   try {
     const { id } = await params;
     const { resume: rawResume, profile, job } = await getResumePageData(id);
     const normalizedResume = normalizeResumeData(rawResume);
     const component = (
-      <div 
+      <div
         className="h-full flex flex-col "
         data-page-title={normalizedResume.name}
-        data-resume-type={normalizedResume.is_base_resume ? "Base Resume" : "Tailored Resume"}
+        data-resume-type={
+          normalizedResume.is_base_resume ? "Base Resume" : "Tailored Resume"
+        }
       >
-        <ResumeEditorClient initialResume={normalizedResume} profile={profile} initialJob={job} />
+        <ResumeEditorClient
+          initialResume={normalizedResume}
+          profile={profile}
+          initialJob={job}
+        />
       </div>
     );
-  
-    
+
     return component;
   } catch (error) {
-    console.error('❌ [Error]:', error);
-    if (error instanceof Error && error.message === 'User not authenticated') {
+    console.error("❌ [Error]:", error);
+    if (error instanceof Error && error.message === "User not authenticated") {
       redirect("/");
     }
     redirect("/");
   }
-} 
+}

@@ -1,11 +1,18 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
 
 export default function ResumeEditorLoading() {
   return (
     <div className="h-[calc(100vh-4rem)] overflow-hidden relative">
       <div className="max-w-[2000px] mx-auto h-[calc(100vh-120px)] pt-4 px-6 md:px-8 lg:px-12">
-        <ResizablePanelGroup direction="horizontal" className="h-full rounded-lg border-purple-200/40">
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="h-full rounded-lg border-purple-200/40"
+        >
           {/* Editor Panel */}
           <ResizablePanel defaultSize={40}>
             <div className="flex flex-col h-full mr-4">
@@ -28,7 +35,10 @@ export default function ResumeEditorLoading() {
               {/* Form Fields Skeleton */}
               <div className="flex-1 overflow-hidden mt-4 space-y-8">
                 {[...Array(4)].map((_, i) => (
-                  <div key={i} className="space-y-4 bg-purple-50/30 p-4 rounded-lg">
+                  <div
+                    key={i}
+                    className="space-y-4 bg-purple-50/30 p-4 rounded-lg"
+                  >
                     <Skeleton className="h-6 w-32" />
                     <div className="space-y-2">
                       <Skeleton className="h-10 w-full" />
@@ -52,7 +62,10 @@ export default function ResumeEditorLoading() {
           </ResizablePanel>
 
           {/* Resize Handle */}
-          <ResizableHandle withHandle className="bg-purple-100/50 hover:bg-purple-200/50" />
+          <ResizableHandle
+            withHandle
+            className="bg-purple-100/50 hover:bg-purple-200/50"
+          />
 
           {/* Preview Panel */}
           <ResizablePanel defaultSize={60}>
@@ -110,4 +123,4 @@ export default function ResumeEditorLoading() {
       </div>
     </div>
   );
-} 
+}

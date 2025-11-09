@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { PlayCircle, Sparkles } from 'lucide-react';
-import Image from 'next/image';
+} from "@/components/ui/dialog";
+import { PlayCircle, Sparkles } from "lucide-react";
+import Image from "next/image";
 export function HeroVideoSection() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,11 +40,11 @@ export function HeroVideoSection() {
                   width={1000}
                   height={1000}
                 />
-                
+
                 {/* Enhanced Gradient Overlays */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-transparent to-blue-500/20 mix-blend-overlay" />
-                
+
                 {/* Improved Play Button */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
                   <div className="relative group-hover:scale-105 transition-transform duration-500">
@@ -87,4 +87,4 @@ export function HeroVideoSection() {
       </div>
     </section>
   );
-} 
+}

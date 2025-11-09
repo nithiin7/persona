@@ -1,5 +1,4 @@
-'use client'
-
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
@@ -42,8 +41,10 @@ export function LogoutButton({ className }: LogoutButtonProps) {
       onClick={handleLogout}
       disabled={isLoading}
     >
-      <LogOut className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-      <span className="hidden sm:inline">{isLoading ? 'Signing out...' : 'Logout'}</span>
+      <LogOut className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+      <span className="hidden sm:inline">
+        {isLoading ? "Signing out..." : "Logout"}
+      </span>
     </Button>
   );
-} 
+}

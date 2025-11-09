@@ -12,13 +12,21 @@ interface FlowCardProps {
   className?: string;
 }
 
-function FlowArrow({ direction = "right", className }: { direction?: "right" | "down"; className?: string }) {
+function FlowArrow({
+  direction = "right",
+  className,
+}: {
+  direction?: "right" | "down";
+  className?: string;
+}) {
   return (
-    <div className={cn(
-      "flex items-center justify-center w-12",
-      direction === "down" && "rotate-90",
-      className
-    )}>
+    <div
+      className={cn(
+        "flex items-center justify-center w-12",
+        direction === "down" && "rotate-90",
+        className
+      )}
+    >
       <div className="flex items-center w-full">
         <div className="h-[2px] flex-1 bg-muted-foreground -mr-2" />
         <ArrowRight className="w-6 h-6 text-muted-foreground flex-shrink-0" />
@@ -27,18 +35,23 @@ function FlowArrow({ direction = "right", className }: { direction?: "right" | "
   );
 }
 
-function FlowCard({ title, description, type = "base", className }: FlowCardProps) {
+function FlowCard({
+  title,
+  description,
+  type = "base",
+  className,
+}: FlowCardProps) {
   if (type === "profile") {
-    return <ProfileCard title={title} description={description} className={className} />;
+    return (
+      <ProfileCard
+        title={title}
+        description={description}
+        className={className}
+      />
+    );
   }
 
-  return (
-    <MiniResumePreview
-      name={title}
-      type={type}
-      className={className}
-    />
-  );
+  return <MiniResumePreview name={title} type={type} className={className} />;
 }
 
 export function HowItWorks() {
@@ -71,7 +84,7 @@ export function HowItWorks() {
             <div className="hidden lg:block">
               <FlowArrow />
             </div>
-            
+
             {/* Arrow Down for Mobile */}
             <div className="block lg:hidden">
               <FlowArrow direction="down" />
@@ -95,13 +108,12 @@ export function HowItWorks() {
 
             {/* Arrow Right */}
             <div className="hidden lg:block">
-            <div className="flex flex-col items-center gap-52">
-
-              <FlowArrow />
-              <FlowArrow />
+              <div className="flex flex-col items-center gap-52">
+                <FlowArrow />
+                <FlowArrow />
               </div>
             </div>
-            
+
             {/* Arrow Down for Mobile */}
             <div className="block lg:hidden">
               <FlowArrow direction="down" />
@@ -147,4 +159,4 @@ export function HowItWorks() {
       </div>
     </section>
   );
-} 
+}

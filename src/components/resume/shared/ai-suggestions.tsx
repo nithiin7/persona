@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,28 +16,34 @@ interface AISuggestionsProps {
   onDelete: (suggestionId: string) => void;
 }
 
-export function AISuggestions({ suggestions, onApprove, onDelete }: AISuggestionsProps) {
+export function AISuggestions({
+  suggestions,
+  onApprove,
+  onDelete,
+}: AISuggestionsProps) {
   if (suggestions.length === 0) return null;
 
   return (
-    <div className={cn(
-      "relative group/suggestions",
-      "p-6 mt-4",
-      "rounded-xl",
-      "bg-gradient-to-br from-purple-50/95 via-purple-50/90 to-indigo-50/95",
-      "border border-purple-200/60",
-      "shadow-lg shadow-purple-500/5",
-      "transition-all duration-500",
-      "hover:shadow-xl hover:shadow-purple-500/10",
-      "overflow-hidden"
-    )}>
+    <div
+      className={cn(
+        "relative group/suggestions",
+        "p-6 mt-4",
+        "rounded-xl",
+        "bg-gradient-to-br from-purple-50/95 via-purple-50/90 to-indigo-50/95",
+        "border border-purple-200/60",
+        "shadow-lg shadow-purple-500/5",
+        "transition-all duration-500",
+        "hover:shadow-xl hover:shadow-purple-500/10",
+        "overflow-hidden"
+      )}
+    >
       {/* Animated Background Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:24px_24px] opacity-10" />
-      
+
       {/* Floating Gradient Orbs */}
       <div className="absolute -top-1/2 -right-1/2 w-full h-full rounded-full bg-gradient-to-br from-purple-200/20 to-indigo-200/20 blur-3xl animate-float opacity-70" />
       <div className="absolute -bottom-1/2 -left-1/2 w-full h-full rounded-full bg-gradient-to-br from-indigo-200/20 to-purple-200/20 blur-3xl animate-float-delayed opacity-70" />
-      
+
       {/* Content */}
       <div className="relative">
         <div className="flex items-center gap-2 mb-4">
@@ -46,11 +52,11 @@ export function AISuggestions({ suggestions, onApprove, onDelete }: AISuggestion
           </div>
           <span className="font-semibold text-purple-600">AI Suggestions</span>
         </div>
-        
+
         <div className="space-y-4">
           {suggestions.map((suggestion) => (
-            <div 
-              key={suggestion.id} 
+            <div
+              key={suggestion.id}
               className={cn(
                 "group/item relative",
                 "animate-in fade-in-50 duration-500",
@@ -118,4 +124,4 @@ export function AISuggestions({ suggestions, onApprove, onDelete }: AISuggestion
       </div>
     </div>
   );
-} 
+}

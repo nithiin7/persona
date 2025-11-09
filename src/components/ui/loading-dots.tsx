@@ -20,4 +20,4 @@ export function LoadingDots({ className }: LoadingDotsProps) {
       ))}
     </span>
   );
-} 
+}

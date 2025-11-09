@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Education, Profile } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,10 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { ImportFromProfileDialog } from "../../management/dialogs/import-from-profile-dialog";
-import { memo } from 'react';
+import { memo } from "react";
 import { cn } from "@/lib/utils";
 import Tiptap from "@/components/ui/tiptap";
-
 
 interface EducationFormProps {
   education: Education[];
@@ -23,7 +22,8 @@ function areEducationPropsEqual(
   nextProps: EducationFormProps
 ) {
   return (
-    JSON.stringify(prevProps.education) === JSON.stringify(nextProps.education) &&
+    JSON.stringify(prevProps.education) ===
+      JSON.stringify(nextProps.education) &&
     prevProps.profile.id === nextProps.profile.id
   );
 }
@@ -31,21 +31,28 @@ function areEducationPropsEqual(
 export const EducationForm = memo(function EducationFormComponent({
   education,
   onChange,
-  profile
+  profile,
 }: EducationFormProps) {
   const addEducation = () => {
-    onChange([{
-      school: "",
-      degree: "",
-      field: "",
-      location: "",
-      date: "",
-      gpa: undefined,
-      achievements: []
-    }, ...education]);
+    onChange([
+      {
+        school: "",
+        degree: "",
+        field: "",
+        location: "",
+        date: "",
+        gpa: undefined,
+        achievements: [],
+      },
+      ...education,
+    ]);
   };
 
-  const updateEducation = (index: number, field: keyof Education, value: Education[keyof Education]) => {
+  const updateEducation = (
+    index: number,
+    field: keyof Education,
+    value: Education[keyof Education]
+  ) => {
     const updated = [...education];
     updated[index] = { ...updated[index], [field]: value };
     onChange(updated);
@@ -62,12 +69,14 @@ export const EducationForm = memo(function EducationFormComponent({
   return (
     <div className="space-y-2 sm:space-y-3">
       <div className="@container">
-        <div className={cn(
-          "flex flex-col @[400px]:flex-row gap-2",
-          "transition-all duration-300 ease-in-out"
-        )}>
-          <Button 
-            variant="outline" 
+        <div
+          className={cn(
+            "flex flex-col @[400px]:flex-row gap-2",
+            "transition-all duration-300 ease-in-out"
+          )}
+        >
+          <Button
+            variant="outline"
             className={cn(
               "flex-1 h-9 min-w-[120px]",
               "bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-blue-500/5",
@@ -101,8 +110,8 @@ export const EducationForm = memo(function EducationFormComponent({
       </div>
 
       {education.map((edu, index) => (
-        <Card 
-          key={index} 
+        <Card
+          key={index}
           className={cn(
             "relative group transition-all duration-300",
             "bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-blue-500/5",
@@ -117,7 +126,9 @@ export const EducationForm = memo(function EducationFormComponent({
                 <div className="relative group flex-1 min-w-0">
                   <Input
                     value={edu.school}
-                    onChange={(e) => updateEducation(index, 'school', e.target.value)}
+                    onChange={(e) =>
+                      updateEducation(index, "school", e.target.value)
+                    }
                     className={cn(
                       "text-sm font-semibold h-9",
                       "bg-white/50 border-gray-200 rounded-lg",
@@ -131,8 +142,8 @@ export const EducationForm = memo(function EducationFormComponent({
                     INSTITUTION
                   </div>
                 </div>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="icon"
                   onClick={() => removeEducation(index)}
                   className="text-gray-400 hover:text-red-500 transition-colors duration-300"
@@ -145,7 +156,9 @@ export const EducationForm = memo(function EducationFormComponent({
               <div className="relative group">
                 <Input
                   value={edu.location}
-                  onChange={(e) => updateEducation(index, 'location', e.target.value)}
+                  onChange={(e) =>
+                    updateEducation(index, "location", e.target.value)
+                  }
                   className={cn(
                     "h-9 bg-white/50 border-gray-200 rounded-lg",
                     "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
@@ -165,7 +178,9 @@ export const EducationForm = memo(function EducationFormComponent({
                 <div className="relative group">
                   <Input
                     value={edu.degree}
-                    onChange={(e) => updateEducation(index, 'degree', e.target.value)}
+                    onChange={(e) =>
+                      updateEducation(index, "degree", e.target.value)
+                    }
                     className={cn(
                       "h-9 bg-white/50 border-gray-200 rounded-lg",
                       "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
@@ -182,7 +197,9 @@ export const EducationForm = memo(function EducationFormComponent({
                 <div className="relative group">
                   <Input
                     value={edu.field}
-                    onChange={(e) => updateEducation(index, 'field', e.target.value)}
+                    onChange={(e) =>
+                      updateEducation(index, "field", e.target.value)
+                    }
                     className={cn(
                       "h-9 bg-white/50 border-gray-200 rounded-lg",
                       "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
@@ -203,14 +220,16 @@ export const EducationForm = memo(function EducationFormComponent({
                 <Input
                   type="text"
                   value={edu.date}
-                  onChange={(e) => updateEducation(index, 'date', e.target.value)}
+                  onChange={(e) =>
+                    updateEducation(index, "date", e.target.value)
+                  }
                   className={cn(
                     "w-full h-9 bg-white/50 border-gray-200 rounded-lg",
                     "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
                     "hover:border-indigo-500/30 hover:bg-white/60 transition-colors",
                     "text-[10px] sm:text-xs"
                   )}
-                  placeholder="e.g., &apos;2019 - 2023&apos; or &apos;2020 - Present&apos;"
+                  placeholder="e.g., '2019 - 2023' or '2020 - Present'"
                 />
                 <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-indigo-700">
                   DATE
@@ -219,7 +238,10 @@ export const EducationForm = memo(function EducationFormComponent({
 
               {/* Current Status Note */}
               <div className="flex items-center space-x-2 -mt-1">
-                <span className="text-[8px] sm:text-[10px] text-gray-500">Use &apos;Present&apos; in the date field for current education</span>
+                <span className="text-[8px] sm:text-[10px] text-gray-500">
+                  Use &apos;Present&apos; in the date field for current
+                  education
+                </span>
               </div>
 
               {/* GPA */}
@@ -229,8 +251,14 @@ export const EducationForm = memo(function EducationFormComponent({
                   step="0.01"
                   min="0"
                   max="4.0"
-                  value={edu.gpa || ''}
-                  onChange={(e) => updateEducation(index, 'gpa', e.target.value ? parseFloat(e.target.value) : undefined)}
+                  value={edu.gpa || ""}
+                  onChange={(e) =>
+                    updateEducation(
+                      index,
+                      "gpa",
+                      e.target.value ? parseFloat(e.target.value) : undefined
+                    )
+                  }
                   className={cn(
                     "h-9 bg-white/50 border-gray-200 rounded-lg",
                     "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
@@ -248,18 +276,27 @@ export const EducationForm = memo(function EducationFormComponent({
               {/* Achievements */}
               <div className="space-y-1.5">
                 <div className="flex justify-between items-baseline">
-                  <Label className="text-[10px] sm:text-xs font-medium text-indigo-700">Achievements & Activities</Label>
-                  <span className="text-[8px] sm:text-[10px] text-gray-500">One achievement per line</span>
+                  <Label className="text-[10px] sm:text-xs font-medium text-indigo-700">
+                    Achievements & Activities
+                  </Label>
+                  <span className="text-[8px] sm:text-[10px] text-gray-500">
+                    One achievement per line
+                  </span>
                 </div>
                 <Tiptap
-                  content={(edu.achievements || []).join('\n')}
-                  onChange={(newContent) => updateEducation(index, 'achievements', 
-                    newContent.split('\n').filter(Boolean)
-                  )}
+                  content={(edu.achievements || []).join("\n")}
+                  onChange={(newContent) =>
+                    updateEducation(
+                      index,
+                      "achievements",
+                      newContent.split("\n").filter(Boolean)
+                    )
+                  }
                   editorProps={{
                     attributes: {
-                      placeholder: "• Dean's List 2020-2021\n• President of Computer Science Club\n• First Place in Hackathon 2022"
-                    }
+                      placeholder:
+                        "• Dean's List 2020-2021\n• President of Computer Science Club\n• First Place in Hackathon 2022",
+                    },
                   }}
                   className={cn(
                     "min-h-[120px] bg-white/50 border-gray-200 rounded-lg",
@@ -276,4 +313,4 @@ export const EducationForm = memo(function EducationFormComponent({
       ))}
     </div>
   );
-}, areEducationPropsEqual); 
+}, areEducationPropsEqual);

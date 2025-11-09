@@ -85,7 +85,7 @@ Output Requirements:
 - For array fields, use empty arrays ([]) when no data exists
 - For object fields, use empty objects ({}) when no data exists
 
-Remember: Your primary role is to ensure COMPLETE preservation of ALL content while enhancing presentation. You are a professional formatter who must retain every single detail from the original content.`
+Remember: Your primary role is to ensure COMPLETE preservation of ALL content while enhancing presentation. You are a professional formatter who must retain every single detail from the original content.`,
 };
 
 export const RESUME_IMPORTER_SYSTEM_MESSAGE: ChatCompletionMessageParam = {
@@ -129,7 +129,7 @@ Output Requirements:
 - Preserve all formatting within selected items
 - Ensure education section is never empty
 
-Remember: Your role is purely SELECTIVE. You are choosing which complete, unmodified items to include from the original resume. Think of yourself as a curator who can only select and display existing pieces, never modify them. Always include educational background, with preference for relevant degrees when multiple exist, but never exclude education entirely.`
+Remember: Your role is purely SELECTIVE. You are choosing which complete, unmodified items to include from the original resume. Think of yourself as a curator who can only select and display existing pieces, never modify them. Always include educational background, with preference for relevant degrees when multiple exist, but never exclude education entirely.`,
 };
 
 export const WORK_EXPERIENCE_GENERATOR_MESSAGE: ChatCompletionMessageParam = {
@@ -199,7 +199,7 @@ RESPONSE REQUIREMENTS:
 3. Maintain professional tone and clarity
 4. Use **bold** syntax for important keywords
 
-Remember: Each bullet point should tell a compelling story of achievement and impact while remaining truthful and verifiable. Use bold formatting (**keyword**) to emphasize key technologies, metrics, and achievements.`
+Remember: Each bullet point should tell a compelling story of achievement and impact while remaining truthful and verifiable. Use bold formatting (**keyword**) to emphasize key technologies, metrics, and achievements.`,
 };
 
 export const WORK_EXPERIENCE_IMPROVER_MESSAGE: ChatCompletionMessageParam = {
@@ -241,7 +241,7 @@ Better: "**Engineered** **15+** responsive web features using **React.js**, impr
 Original: "Responsible for managing customer service"
 Better: "**Managed** **4-person** customer service team, achieving **98%** satisfaction rate and reducing response time by **50%**"
 
-Remember: Your goal is to enhance clarity and impact while maintaining absolute truthfulness. When in doubt, be conservative with improvements. Always use **keyword** syntax to bold important terms, metrics, and achievements.`
+Remember: Your goal is to enhance clarity and impact while maintaining absolute truthfulness. When in doubt, be conservative with improvements. Always use **keyword** syntax to bold important terms, metrics, and achievements.`,
 };
 
 export const PROJECT_GENERATOR_MESSAGE: ChatCompletionMessageParam = {
@@ -304,7 +304,7 @@ OPTIMIZATION RULES:
    - **Bold** performance metrics
    - **Bold** scale indicators
 
-Remember: Each bullet point should demonstrate technical expertise and problem-solving ability while remaining truthful and verifiable. Use **keyword** syntax to emphasize important technical terms, metrics, and achievements.`
+Remember: Each bullet point should demonstrate technical expertise and problem-solving ability while remaining truthful and verifiable. Use **keyword** syntax to emphasize important technical terms, metrics, and achievements.`,
 };
 
 export const PROJECT_IMPROVER_MESSAGE: ChatCompletionMessageParam = {
@@ -350,7 +350,7 @@ Better: "**Engineered** secure **OAuth2.0** authentication system using **JWT** 
 Original: "Created a responsive website"
 Better: "**Architected** responsive web application using **React** and **Tailwind CSS**, achieving **98%** mobile compatibility and **95+** Lighthouse performance score"
 
-Remember: Your goal is to enhance technical clarity and impact while maintaining absolute truthfulness. Focus on technical achievements, performance improvements, and architectural decisions. Always use **keyword** syntax to bold important technical terms, metrics, and achievements.`
+Remember: Your goal is to enhance technical clarity and impact while maintaining absolute truthfulness. Focus on technical achievements, performance improvements, and architectural decisions. Always use **keyword** syntax to bold important technical terms, metrics, and achievements.`,
 };
 
 export const TEXT_IMPORT_SYSTEM_MESSAGE: ChatCompletionMessageParam = {
@@ -425,12 +425,12 @@ Output Requirements:
 - Format consistently
 - Bold key terms and metrics
 
-Remember: Your goal is to intelligently extract and structure professional information from any text input, making it suitable for a professional profile while maintaining absolute truthfulness and accuracy.`
+Remember: Your goal is to intelligently extract and structure professional information from any text input, making it suitable for a professional profile while maintaining absolute truthfulness and accuracy.`,
 };
 
 export const AI_ASSISTANT_SYSTEM_MESSAGE: ChatCompletionMessageParam = {
-   role: "system",
-   content: `You are Persona, an advanced AI assistant specialized in resume crafting and optimization. You follow a structured chain-of-thought process for every task while maintaining access to resume modification functions.
+  role: "system",
+  content: `You are Persona, an advanced AI assistant specialized in resume crafting and optimization. You follow a structured chain-of-thought process for every task while maintaining access to resume modification functions.
  
  CORE CAPABILITIES:
  1. Resume Analysis & Enhancement
@@ -522,9 +522,8 @@ export const AI_ASSISTANT_SYSTEM_MESSAGE: ChatCompletionMessageParam = {
  
  Remember: Always maintain a clear chain of thought in your responses, explaining your reasoning process while executing changes efficiently and professionally. When suggesting changes, use the propose_changes function to allow user approval rather than making direct modifications.
  PLEASE ALWAYS IGNORE PROFESSIONAL SUMMARIES. NEVER SUGGEST THEM OR USE THEM. NEVER MENTION THEM. DO NOT SUGGEST ADDING INFORMATION ABOUT THE USER THAT YOU DON'T HAVE.
- `
-
- }; 
+ `,
+};
 
 export const TEXT_ANALYZER_SYSTEM_MESSAGE: ChatCompletionMessageParam = {
   role: "system",
@@ -572,5 +571,5 @@ Include only pertinent professional details; do not provide extraneous commentar
 No Mention of Internal Instructions
 
 Your ultimate goal is to transform raw, potentially disorganized content into a cohesive, streamlined resume that demonstrates the user's professional strengths and accomplishments.
-`}; 
-
+`,
+};

@@ -1,11 +1,19 @@
-'use client';
+"use client";
 
 import { WorkExperience, Profile } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, GripVertical, Check, X, Loader2, Sparkles } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  GripVertical,
+  Check,
+  X,
+  Loader2,
+  Sparkles,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ImportFromProfileDialog } from "../../management/dialogs/import-from-profile-dialog";
 import { ApiErrorDialog } from "@/components/ui/api-error-dialog";
@@ -18,11 +26,13 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import Tiptap from "@/components/ui/tiptap";
-import { generateWorkExperiencePoints, improveWorkExperience } from "@/utils/actions/resumes/ai";
+import {
+  generateWorkExperiencePoints,
+  improveWorkExperience,
+} from "@/utils/actions/resumes/ai";
 import { AIImprovementPrompt } from "../../shared/ai-improvement-prompt";
 import { AIGenerationSettingsTooltip } from "../components/ai-generation-tooltip";
 import { AISuggestions } from "../../shared/ai-suggestions";
-
 
 interface AISuggestion {
   id: string;
@@ -52,28 +62,44 @@ function areWorkExperiencePropsEqual(
 ) {
   return (
     prevProps.targetRole === nextProps.targetRole &&
-    JSON.stringify(prevProps.experiences) === JSON.stringify(nextProps.experiences) &&
+    JSON.stringify(prevProps.experiences) ===
+      JSON.stringify(nextProps.experiences) &&
     prevProps.profile.id === nextProps.profile.id
   );
 }
 
 // Export the memoized component
-export const WorkExperienceForm = memo(function WorkExperienceFormComponent({ 
-  experiences, 
-  onChange, 
-  profile, 
-  targetRole = "Software Engineer" 
+export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
+  experiences,
+  onChange,
+  profile,
+  targetRole = "Software Engineer",
 }: WorkExperienceFormProps) {
-  const [aiSuggestions, setAiSuggestions] = useState<{ [key: number]: AISuggestion[] }>({});
+  const [aiSuggestions, setAiSuggestions] = useState<{
+    [key: number]: AISuggestion[];
+  }>({});
   const [loadingAI, setLoadingAI] = useState<{ [key: number]: boolean }>({});
-  const [loadingPointAI, setLoadingPointAI] = useState<{ [key: number]: { [key: number]: boolean } }>({});
-  const [aiConfig, setAiConfig] = useState<{ [key: number]: { numPoints: number; customPrompt: string } }>({});
-  const [popoverOpen, setPopoverOpen] = useState<{ [key: number]: boolean }>({});
+  const [loadingPointAI, setLoadingPointAI] = useState<{
+    [key: number]: { [key: number]: boolean };
+  }>({});
+  const [aiConfig, setAiConfig] = useState<{
+    [key: number]: { numPoints: number; customPrompt: string };
+  }>({});
+  const [popoverOpen, setPopoverOpen] = useState<{ [key: number]: boolean }>(
+    {}
+  );
   const textareaRefs = useRef<{ [key: number]: HTMLTextAreaElement }>({});
-  const [improvedPoints, setImprovedPoints] = useState<{ [key: number]: { [key: number]: ImprovedPoint } }>({});
-  const [improvementConfig, setImprovementConfig] = useState<ImprovementConfig>({});
+  const [improvedPoints, setImprovedPoints] = useState<{
+    [key: number]: { [key: number]: ImprovedPoint };
+  }>({});
+  const [improvementConfig, setImprovementConfig] = useState<ImprovementConfig>(
+    {}
+  );
   const [showErrorDialog, setShowErrorDialog] = useState(false);
-  const [errorMessage, setErrorMessage] = useState({ title: '', description: '' });
+  const [errorMessage, setErrorMessage] = useState({
+    title: "",
+    description: "",
+  });
 
   // Effect to focus textarea when popover opens
   useEffect(() => {
@@ -88,17 +114,24 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
   }, [popoverOpen]);
 
   const addExperience = () => {
-    onChange([{
-      company: "",
-      position: "",
-      location: "",
-      date: "",
-      description: [],
-      technologies: []
-    }, ...experiences]);
+    onChange([
+      {
+        company: "",
+        position: "",
+        location: "",
+        date: "",
+        description: [],
+        technologies: [],
+      },
+      ...experiences,
+    ]);
   };
 
-  const updateExperience = (index: number, field: keyof WorkExperience, value: string | string[]) => {
+  const updateExperience = (
+    index: number,
+    field: keyof WorkExperience,
+    value: string | string[]
+  ) => {
     const updated = [...experiences];
     updated[index] = { ...updated[index], [field]: value };
     onChange(updated);
@@ -114,14 +147,14 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
 
   const generateAIPoints = async (index: number) => {
     const exp = experiences[index];
-    const config = aiConfig[index] || { numPoints: 3, customPrompt: '' };
-    setLoadingAI(prev => ({ ...prev, [index]: true }));
-    setPopoverOpen(prev => ({ ...prev, [index]: false }));
-    
+    const config = aiConfig[index] || { numPoints: 3, customPrompt: "" };
+    setLoadingAI((prev) => ({ ...prev, [index]: true }));
+    setPopoverOpen((prev) => ({ ...prev, [index]: false }));
+
     try {
       // Get model and API key from local storage
-      const MODEL_STORAGE_KEY = 'persona-default-model';
-      const LOCAL_STORAGE_KEY = 'persona-api-keys';
+      const MODEL_STORAGE_KEY = "persona-default-model";
+      const LOCAL_STORAGE_KEY = "persona-api-keys";
 
       const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
       const storedKeys = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -130,7 +163,7 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
       try {
         apiKeys = storedKeys ? JSON.parse(storedKeys) : [];
       } catch (error) {
-        console.error('Error parsing API keys:', error);
+        console.error("Error parsing API keys:", error);
       }
 
       const result = await generateWorkExperiencePoints(
@@ -141,59 +174,64 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
         config.numPoints,
         config.customPrompt,
         {
-          model: selectedModel || '',
-          apiKeys
+          model: selectedModel || "",
+          apiKeys,
         }
       );
-      
+
       const suggestions = result.points.map((point: string) => ({
         id: Math.random().toString(36).substr(2, 9),
-        point
+        point,
       }));
-      
-      setAiSuggestions(prev => ({
+
+      setAiSuggestions((prev) => ({
         ...prev,
-        [index]: suggestions
+        [index]: suggestions,
       }));
     } catch (error: Error | unknown) {
-      if (error instanceof Error && (
-          error.message.toLowerCase().includes('api key') || 
-          error.message.toLowerCase().includes('unauthorized') ||
-          error.message.toLowerCase().includes('invalid key') ||
-          error.message.toLowerCase().includes('invalid x-api-key'))
+      if (
+        error instanceof Error &&
+        (error.message.toLowerCase().includes("api key") ||
+          error.message.toLowerCase().includes("unauthorized") ||
+          error.message.toLowerCase().includes("invalid key") ||
+          error.message.toLowerCase().includes("invalid x-api-key"))
       ) {
         setErrorMessage({
           title: "API Key Error",
-          description: "There was an issue with your API key. Please check your settings and try again."
+          description:
+            "There was an issue with your API key. Please check your settings and try again.",
         });
       } else {
         setErrorMessage({
           title: "Error",
-          description: "Failed to generate AI points. Please try again."
+          description: "Failed to generate AI points. Please try again.",
         });
       }
       setShowErrorDialog(true);
     } finally {
-      setLoadingAI(prev => ({ ...prev, [index]: false }));
+      setLoadingAI((prev) => ({ ...prev, [index]: false }));
     }
   };
 
   const approveSuggestion = (expIndex: number, suggestion: AISuggestion) => {
     const updated = [...experiences];
-    updated[expIndex].description = [...updated[expIndex].description, suggestion.point];
+    updated[expIndex].description = [
+      ...updated[expIndex].description,
+      suggestion.point,
+    ];
     onChange(updated);
-    
+
     // Remove the suggestion after approval
-    setAiSuggestions(prev => ({
+    setAiSuggestions((prev) => ({
       ...prev,
-      [expIndex]: prev[expIndex].filter(s => s.id !== suggestion.id)
+      [expIndex]: prev[expIndex].filter((s) => s.id !== suggestion.id),
     }));
   };
 
   const deleteSuggestion = (expIndex: number, suggestionId: string) => {
-    setAiSuggestions(prev => ({
+    setAiSuggestions((prev) => ({
       ...prev,
-      [expIndex]: prev[expIndex].filter(s => s.id !== suggestionId)
+      [expIndex]: prev[expIndex].filter((s) => s.id !== suggestionId),
     }));
   };
 
@@ -201,16 +239,16 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
     const exp = experiences[expIndex];
     const point = exp.description[pointIndex];
     const customPrompt = improvementConfig[expIndex]?.[pointIndex];
-    
-    setLoadingPointAI(prev => ({
+
+    setLoadingPointAI((prev) => ({
       ...prev,
-      [expIndex]: { ...(prev[expIndex] || {}), [pointIndex]: true }
+      [expIndex]: { ...(prev[expIndex] || {}), [pointIndex]: true },
     }));
-    
+
     try {
       // Get model and API key from local storage
-      const MODEL_STORAGE_KEY = 'persona-default-model';
-      const LOCAL_STORAGE_KEY = 'persona-api-keys';
+      const MODEL_STORAGE_KEY = "persona-default-model";
+      const LOCAL_STORAGE_KEY = "persona-api-keys";
 
       const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
       const storedKeys = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -219,24 +257,24 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
       try {
         apiKeys = storedKeys ? JSON.parse(storedKeys) : [];
       } catch (error) {
-        console.error('Error parsing API keys:', error);
+        console.error("Error parsing API keys:", error);
       }
 
       const improvedPoint = await improveWorkExperience(point, customPrompt, {
-        model: selectedModel || '',
-        apiKeys
+        model: selectedModel || "",
+        apiKeys,
       });
 
       // Store both original and improved versions
-      setImprovedPoints(prev => ({
+      setImprovedPoints((prev) => ({
         ...prev,
         [expIndex]: {
           ...(prev[expIndex] || {}),
           [pointIndex]: {
             original: point,
-            improved: improvedPoint
-          }
-        }
+            improved: improvedPoint,
+          },
+        },
       }));
 
       // Update the experience with the improved version
@@ -244,27 +282,29 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
       updated[expIndex].description[pointIndex] = improvedPoint;
       onChange(updated);
     } catch (error: Error | unknown) {
-      if (error instanceof Error && (
-          error.message.toLowerCase().includes('api key') || 
-          error.message.toLowerCase().includes('unauthorized') ||
-          error.message.toLowerCase().includes('invalid key') ||
-          error.message.toLowerCase().includes('invalid x-api-key'))
+      if (
+        error instanceof Error &&
+        (error.message.toLowerCase().includes("api key") ||
+          error.message.toLowerCase().includes("unauthorized") ||
+          error.message.toLowerCase().includes("invalid key") ||
+          error.message.toLowerCase().includes("invalid x-api-key"))
       ) {
         setErrorMessage({
           title: "API Key Error",
-          description: "There was an issue with your API key. Please check your settings and try again."
+          description:
+            "There was an issue with your API key. Please check your settings and try again.",
         });
       } else {
         setErrorMessage({
           title: "Error",
-          description: "Failed to improve point. Please try again."
+          description: "Failed to improve point. Please try again.",
         });
       }
       setShowErrorDialog(true);
     } finally {
-      setLoadingPointAI(prev => ({
+      setLoadingPointAI((prev) => ({
         ...prev,
-        [expIndex]: { ...(prev[expIndex] || {}), [pointIndex]: false }
+        [expIndex]: { ...(prev[expIndex] || {}), [pointIndex]: false },
       }));
     }
   };
@@ -275,9 +315,9 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
       const updated = [...experiences];
       updated[expIndex].description[pointIndex] = improvedPoint.original;
       onChange(updated);
-      
+
       // Remove the improvement from state
-      setImprovedPoints(prev => {
+      setImprovedPoints((prev) => {
         const newState = { ...prev };
         if (newState[expIndex]) {
           delete newState[expIndex][pointIndex];
@@ -294,12 +334,14 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
     <>
       <div className="space-y-2 sm:space-y-3">
         <div className="@container">
-          <div className={cn(
-            "flex flex-col @[400px]:flex-row gap-2",
-            "transition-all duration-300 ease-in-out"
-          )}>
-            <Button 
-              variant="outline" 
+          <div
+            className={cn(
+              "flex flex-col @[400px]:flex-row gap-2",
+              "transition-all duration-300 ease-in-out"
+            )}
+          >
+            <Button
+              variant="outline"
               onClick={addExperience}
               className={cn(
                 "flex-1 h-9 min-w-[120px]",
@@ -329,8 +371,8 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
         </div>
 
         {experiences.map((exp, index) => (
-          <Card 
-            key={index} 
+          <Card
+            key={index}
             className={cn(
               "relative group transition-all duration-300",
               "bg-gradient-to-r from-cyan-500/5 via-cyan-500/10 to-blue-500/5",
@@ -343,7 +385,7 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                 <GripVertical className="h-4 w-4 text-cyan-600" />
               </div>
             </div>
-            
+
             <CardContent className="p-3 sm:p-4 space-y-3 sm:space-y-4">
               {/* Header with Delete Button */}
               <div className="space-y-2 sm:space-y-3">
@@ -352,7 +394,9 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                   <div className="relative flex-1">
                     <Input
                       value={exp.position}
-                      onChange={(e) => updateExperience(index, 'position', e.target.value)}
+                      onChange={(e) =>
+                        updateExperience(index, "position", e.target.value)
+                      }
                       className={cn(
                         "text-sm font-semibold tracking-tight h-9",
                         "bg-white/50 border-gray-200 rounded-lg",
@@ -366,8 +410,8 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                       POSITION
                     </div>
                   </div>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     size="icon"
                     onClick={() => removeExperience(index)}
                     className="text-gray-400 hover:text-red-500 transition-colors duration-300"
@@ -381,7 +425,9 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                   <div className="relative">
                     <Input
                       value={exp.company}
-                      onChange={(e) => updateExperience(index, 'company', e.target.value)}
+                      onChange={(e) =>
+                        updateExperience(index, "company", e.target.value)
+                      }
                       className={cn(
                         "text-sm font-medium bg-white/50 border-gray-200 rounded-lg h-9",
                         "focus:border-cyan-500/40 focus:ring-2 focus:ring-cyan-500/20",
@@ -397,7 +443,9 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                   <div className="relative">
                     <Input
                       value={exp.location}
-                      onChange={(e) => updateExperience(index, 'location', e.target.value)}
+                      onChange={(e) =>
+                        updateExperience(index, "location", e.target.value)
+                      }
                       className={cn(
                         "bg-white/50 border-gray-200 rounded-lg h-9",
                         "focus:border-cyan-500/40 focus:ring-2 focus:ring-cyan-500/20",
@@ -417,18 +465,23 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                   <Input
                     type="text"
                     value={exp.date}
-                    onChange={(e) => updateExperience(index, 'date', e.target.value)}
+                    onChange={(e) =>
+                      updateExperience(index, "date", e.target.value)
+                    }
                     className={cn(
                       "w-full bg-white/50 border-gray-200 rounded-lg h-9",
                       "focus:border-cyan-500/40 focus:ring-2 focus:ring-cyan-500/20",
                       "hover:border-cyan-500/30 hover:bg-white/60 transition-colors"
                     )}
-                    placeholder="e.g., &apos;Jan 2023 - Present&apos; or &apos;2020 - 2022&apos;"
+                    placeholder="e.g., 'Jan 2023 - Present' or '2020 - 2022'"
                   />
                   <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-gray-500">
                     DATE
                   </div>
-                  <span className="ml-2 text-[8px] sm:text-[10px] text-gray-500">Use &apos;Present&apos; in the date field for current positions</span>
+                  <span className="ml-2 text-[8px] sm:text-[10px] text-gray-500">
+                    Use &apos;Present&apos; in the date field for current
+                    positions
+                  </span>
                 </div>
 
                 {/* Description Section */}
@@ -438,21 +491,27 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                   </Label>
                   <div className="space-y-2 pl-0">
                     {exp.description.map((desc, descIndex) => (
-                      <div key={descIndex} className="flex gap-1 items-start group/item">
+                      <div
+                        key={descIndex}
+                        className="flex gap-1 items-start group/item"
+                      >
                         <div className="flex-1">
                           <Tiptap
-                            content={desc} 
+                            content={desc}
                             onChange={(newContent) => {
                               const updated = [...experiences];
-                              updated[index].description[descIndex] = newContent;
+                              updated[index].description[descIndex] =
+                                newContent;
                               onChange(updated);
 
                               if (improvedPoints[index]?.[descIndex]) {
-                                setImprovedPoints(prev => {
+                                setImprovedPoints((prev) => {
                                   const newState = { ...prev };
                                   if (newState[index]) {
                                     delete newState[index][descIndex];
-                                    if (Object.keys(newState[index]).length === 0) {
+                                    if (
+                                      Object.keys(newState[index]).length === 0
+                                    ) {
                                       delete newState[index];
                                     }
                                   }
@@ -469,7 +528,7 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                 "border-purple-400",
                                 "bg-gradient-to-r from-purple-50/80 to-indigo-50/80",
                                 "shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]",
-                                "hover:bg-gradient-to-r hover:from-purple-50/90 hover:to-indigo-50/90"
+                                "hover:bg-gradient-to-r hover:from-purple-50/90 hover:to-indigo-50/90",
                               ]
                             )}
                           />
@@ -491,11 +550,14 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                 size="icon"
                                 onClick={() => {
                                   // Remove the improvement state after accepting
-                                  setImprovedPoints(prev => {
+                                  setImprovedPoints((prev) => {
                                     const newState = { ...prev };
                                     if (newState[index]) {
                                       delete newState[index][descIndex];
-                                      if (Object.keys(newState[index]).length === 0) {
+                                      if (
+                                        Object.keys(newState[index]).length ===
+                                        0
+                                      ) {
                                         delete newState[index];
                                       }
                                     }
@@ -519,7 +581,9 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => undoImprovement(index, descIndex)}
+                                onClick={() =>
+                                  undoImprovement(index, descIndex)
+                                }
                                 className={cn(
                                   "p-0 group-hover/item:opacity-100",
                                   "h-8 w-8 rounded-lg",
@@ -542,7 +606,11 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                 size="icon"
                                 onClick={() => {
                                   const updated = [...experiences];
-                                  updated[index].description = updated[index].description.filter((_, i) => i !== descIndex);
+                                  updated[index].description = updated[
+                                    index
+                                  ].description.filter(
+                                    (_, i) => i !== descIndex
+                                  );
                                   onChange(updated);
                                 }}
                                 className="p-0 group-hover/item:opacity-100 text-gray-400 hover:text-red-500 transition-all duration-300"
@@ -557,8 +625,12 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      onClick={() => rewritePoint(index, descIndex)}
-                                      disabled={loadingPointAI[index]?.[descIndex]}
+                                      onClick={() =>
+                                        rewritePoint(index, descIndex)
+                                      }
+                                      disabled={
+                                        loadingPointAI[index]?.[descIndex]
+                                      }
                                       className={cn(
                                         "p-0 group-hover/item:opacity-100",
                                         "h-8 w-8 rounded-lg",
@@ -578,8 +650,8 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                       )}
                                     </Button>
                                   </TooltipTrigger>
-                                  <TooltipContent 
-                                    side="bottom" 
+                                  <TooltipContent
+                                    side="bottom"
                                     align="start"
                                     sideOffset={2}
                                     className={cn(
@@ -591,16 +663,25 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                     )}
                                   >
                                     <AIImprovementPrompt
-                                      value={improvementConfig[index]?.[descIndex] || ''}
-                                      onChange={(value) => setImprovementConfig(prev => ({
-                                        ...prev,
-                                        [index]: {
-                                          ...(prev[index] || {}),
-                                          [descIndex]: value
-                                        }
-                                      }))}
-                                      onSubmit={() => rewritePoint(index, descIndex)}
-                                      isLoading={loadingPointAI[index]?.[descIndex]}
+                                      value={
+                                        improvementConfig[index]?.[descIndex] ||
+                                        ""
+                                      }
+                                      onChange={(value) =>
+                                        setImprovementConfig((prev) => ({
+                                          ...prev,
+                                          [index]: {
+                                            ...(prev[index] || {}),
+                                            [descIndex]: value,
+                                          },
+                                        }))
+                                      }
+                                      onSubmit={() =>
+                                        rewritePoint(index, descIndex)
+                                      }
+                                      isLoading={
+                                        loadingPointAI[index]?.[descIndex]
+                                      }
                                     />
                                   </TooltipContent>
                                 </Tooltip>
@@ -610,19 +691,25 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                         </div>
                       </div>
                     ))}
-                    
+
                     {/* AI Suggestions */}
                     <AISuggestions
                       suggestions={aiSuggestions[index] || []}
-                      onApprove={(suggestion) => approveSuggestion(index, suggestion)}
-                      onDelete={(suggestionId) => deleteSuggestion(index, suggestionId)}
+                      onApprove={(suggestion) =>
+                        approveSuggestion(index, suggestion)
+                      }
+                      onDelete={(suggestionId) =>
+                        deleteSuggestion(index, suggestionId)
+                      }
                     />
 
-                    {exp.description.length === 0 && !aiSuggestions[index]?.length && (
-                      <div className="text-[11px] md:text-xs text-gray-500 italic px-4 py-3 bg-gray-50/50 rounded-lg">
-                        Add points to describe your responsibilities and achievements
-                      </div>
-                    )}
+                    {exp.description.length === 0 &&
+                      !aiSuggestions[index]?.length && (
+                        <div className="text-[11px] md:text-xs text-gray-500 italic px-4 py-3 bg-gray-50/50 rounded-lg">
+                          Add points to describe your responsibilities and
+                          achievements
+                        </div>
+                      )}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full">
                     <Button
@@ -630,7 +717,10 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                       size="sm"
                       onClick={() => {
                         const updated = [...experiences];
-                        updated[index].description = [...updated[index].description, ""];
+                        updated[index].description = [
+                          ...updated[index].description,
+                          "",
+                        ];
                         onChange(updated);
                       }}
                       className={cn(
@@ -642,21 +732,26 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                       Add Point
                     </Button>
 
-
                     {/* AI GENERATION SETTINGS */}
                     <AIGenerationSettingsTooltip
                       index={index}
                       loadingAI={loadingAI[index]}
                       generateAIPoints={generateAIPoints}
-                      aiConfig={aiConfig[index] || { numPoints: 3, customPrompt: '' }}
-                      onNumPointsChange={(value) => setAiConfig(prev => ({
-                        ...prev,
-                        [index]: { ...prev[index], numPoints: value }
-                      }))}
-                      onCustomPromptChange={(value) => setAiConfig(prev => ({
-                        ...prev,
-                        [index]: { ...prev[index], customPrompt: value }
-                      }))}
+                      aiConfig={
+                        aiConfig[index] || { numPoints: 3, customPrompt: "" }
+                      }
+                      onNumPointsChange={(value) =>
+                        setAiConfig((prev) => ({
+                          ...prev,
+                          [index]: { ...prev[index], numPoints: value },
+                        }))
+                      }
+                      onCustomPromptChange={(value) =>
+                        setAiConfig((prev) => ({
+                          ...prev,
+                          [index]: { ...prev[index], customPrompt: value },
+                        }))
+                      }
                       colorClass={{
                         button: "text-purple-600",
                         border: "border-purple-200",
@@ -666,7 +761,7 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                         tooltipBorder: "border-2 border-purple-300",
                         tooltipShadow: "shadow-lg shadow-purple-100/50",
                         text: "text-purple-600",
-                        hoverText: "hover:text-purple-700"
+                        hoverText: "hover:text-purple-700",
                       }}
                     />
                   </div>
@@ -676,7 +771,7 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
           </Card>
         ))}
       </div>
-      
+
       {/* Add Error Alert Dialog at the end */}
       <ApiErrorDialog
         open={showErrorDialog}
@@ -684,13 +779,13 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
         errorMessage={errorMessage}
         onUpgrade={() => {
           setShowErrorDialog(false);
-          window.location.href = '/subscription';
+          window.location.href = "/subscription";
         }}
         onSettings={() => {
           setShowErrorDialog(false);
-          window.location.href = '/settings';
+          window.location.href = "/settings";
         }}
       />
     </>
   );
-}, areWorkExperiencePropsEqual); 
+}, areWorkExperiencePropsEqual);

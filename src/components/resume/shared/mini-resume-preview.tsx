@@ -1,10 +1,8 @@
-
-
 import { cn } from "@/lib/utils";
 
 interface MiniResumePreviewProps {
   name: string;
-  type: 'base' | 'tailored';
+  type: "base" | "tailored";
   updatedAt?: string;
   createdAt?: string;
   target_role?: string;
@@ -15,42 +13,44 @@ export function MiniResumePreview({
   name,
   type,
   createdAt,
-  className
+  className,
 }: MiniResumePreviewProps) {
-
   function formatDate(dateString?: string) {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
     });
   }
 
-  const accentBorder = type === 'base' ? 'purple-200' : 'pink-200';
-  const accentBg = type === 'base' ? 'purple-50' : 'pink-50';
-  const accentText = type === 'base' ? 'purple-600' : 'pink-600';
-  const glowColor = type === 'base' 
-    ? 'shadow-purple-500/20 hover:shadow-purple-500/30' 
-    : 'shadow-rose-500/20 hover:shadow-rose-500/30';
+  const accentBorder = type === "base" ? "purple-200" : "pink-200";
+  const accentBg = type === "base" ? "purple-50" : "pink-50";
+  const accentText = type === "base" ? "purple-600" : "pink-600";
+  const glowColor =
+    type === "base"
+      ? "shadow-purple-500/20 hover:shadow-purple-500/30"
+      : "shadow-rose-500/20 hover:shadow-rose-500/30";
 
   return (
-    <div className={cn(
-      "relative w-full aspect-[8.5/11]",
-      "rounded-lg overflow-hidden",
-      "border shadow-lg",
-      `border-${accentBorder}`,
-      "bg-white",
-      "transition-all duration-300",
-      "hover:shadow-xl hover:-translate-y-1",
-      glowColor,
-      "group",
-      className
-    )}>
+    <div
+      className={cn(
+        "relative w-full aspect-[8.5/11]",
+        "rounded-lg overflow-hidden",
+        "border shadow-lg",
+        `border-${accentBorder}`,
+        "bg-white",
+        "transition-all duration-300",
+        "hover:shadow-xl hover:-translate-y-1",
+        glowColor,
+        "group",
+        className
+      )}
+    >
       {/* Paper texture */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent_0%,rgba(0,0,0,0.02)_50%,transparent_100%)]" />
-      
+
       {/* Content Container */}
       <div className="relative h-full p-4 flex flex-col">
         {/* Header Section */}
@@ -58,11 +58,13 @@ export function MiniResumePreview({
           <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2">
             {name}
           </h3>
-          <div className={cn(
-            "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium",
-            `bg-${accentBg} text-${accentText}`
-          )}>
-            {type === 'base' ? 'Base Resume' : 'Tailored Resume'}
+          <div
+            className={cn(
+              "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium",
+              `bg-${accentBg} text-${accentText}`
+            )}
+          >
+            {type === "base" ? "Base Resume" : "Tailored Resume"}
           </div>
         </div>
 
@@ -144,14 +146,16 @@ export function MiniResumePreview({
       </div>
 
       {/* Hover overlay with enhanced glow */}
-      <div className={cn(
-        "absolute inset-0 opacity-0 group-hover:opacity-100",
-        "transition-opacity duration-300",
-        "bg-gradient-to-br",
-        type === 'base'
-          ? "from-purple-500/5 to-indigo-500/5"
-          : "from-pink-500/5 to-rose-500/5"
-      )} />
+      <div
+        className={cn(
+          "absolute inset-0 opacity-0 group-hover:opacity-100",
+          "transition-opacity duration-300",
+          "bg-gradient-to-br",
+          type === "base"
+            ? "from-purple-500/5 to-indigo-500/5"
+            : "from-pink-500/5 to-rose-500/5"
+        )}
+      />
     </div>
   );
-} 
+}

@@ -1,8 +1,8 @@
-import { type NextRequest } from 'next/server'
-import { updateSession } from '@/utils/supabase/middleware'
+import { type NextRequest } from "next/server";
+import { updateSession } from "@/utils/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+  return await updateSession(request);
 }
 
 export const config = {
@@ -16,6 +16,6 @@ export const config = {
      * - $ (base URL / landing page)
      * Run on all other routes to protect them
      */
-    '/((?!_next/static|_next/image|favicon.ico|api/webhooks|$|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    "/((?!_next/static|_next/image|favicon.ico|api/webhooks|$|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
-}
+};

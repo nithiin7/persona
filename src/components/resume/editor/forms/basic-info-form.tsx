@@ -1,12 +1,22 @@
-'use client';
+"use client";
 
 import { Profile, Resume } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, MapPin, Globe, Linkedin, Github, User, UserCircle2, LucideIcon } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Globe,
+  Linkedin,
+  Github,
+  User,
+  UserCircle2,
+  LucideIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useResumeContext } from '../resume-editor-context';
-import { memo, useCallback } from 'react';
+import { useResumeContext } from "../resume-editor-context";
+import { memo, useCallback } from "react";
 
 interface BasicInfoFormProps {
   profile: Profile;
@@ -20,13 +30,13 @@ function areBasicInfoPropsEqual(
 }
 
 // Create memoized field component
-const BasicInfoField = memo(function BasicInfoField({ 
-  field, 
-  value, 
-  label, 
+const BasicInfoField = memo(function BasicInfoField({
+  field,
+  value,
+  label,
   icon: Icon,
   placeholder,
-  type = 'text'
+  type = "text",
 }: {
   field: keyof Resume;
   value: string;
@@ -36,10 +46,13 @@ const BasicInfoField = memo(function BasicInfoField({
   type?: string;
 }) {
   const { dispatch } = useResumeContext();
-  
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'UPDATE_FIELD', field, value: e.target.value });
-  }, [dispatch, field]);
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch({ type: "UPDATE_FIELD", field, value: e.target.value });
+    },
+    [dispatch, field]
+  );
 
   return (
     <div className="relative group">
@@ -50,7 +63,7 @@ const BasicInfoField = memo(function BasicInfoField({
       </div>
       <Input
         type={type}
-        value={value || ''}
+        value={value || ""}
         onChange={handleChange}
         className="pr-10 text-sm bg-white/50 border-gray-200 rounded-lg h-9
           focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
@@ -66,28 +79,28 @@ const BasicInfoField = memo(function BasicInfoField({
 });
 
 export const BasicInfoForm = memo(function BasicInfoFormComponent({
-  profile
+  profile,
 }: BasicInfoFormProps) {
   const { state, dispatch } = useResumeContext();
   const { resume } = state;
 
   const updateField = (field: keyof typeof resume, value: string) => {
-    dispatch({ type: 'UPDATE_FIELD', field, value });
+    dispatch({ type: "UPDATE_FIELD", field, value });
   };
 
   const handleFillFromProfile = () => {
     if (!profile) return;
-    
+
     // List of fields to copy from profile
     const fieldsToFill: (keyof Profile)[] = [
-      'first_name',
-      'last_name',
-      'email',
-      'phone_number',
-      'location',
-      'website',
-      'linkedin_url',
-      'github_url'
+      "first_name",
+      "last_name",
+      "email",
+      "phone_number",
+      "location",
+      "website",
+      "linkedin_url",
+      "github_url",
     ];
 
     // Copy each field if it exists in the profile
@@ -144,7 +157,7 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
 
             <BasicInfoField
               field="phone_number"
-              value={resume.phone_number || ''}
+              value={resume.phone_number || ""}
               label="PHONE"
               icon={Phone}
               placeholder="+1 (555) 000-0000"
@@ -153,7 +166,7 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
 
             <BasicInfoField
               field="location"
-              value={resume.location || ''}
+              value={resume.location || ""}
               label="LOCATION"
               icon={MapPin}
               placeholder="City, State, Country"
@@ -162,7 +175,7 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
             <div className="space-y-2 sm:space-y-3">
               <BasicInfoField
                 field="website"
-                value={resume.website || ''}
+                value={resume.website || ""}
                 label="WEBSITE"
                 icon={Globe}
                 placeholder="https://your-website.com"
@@ -171,7 +184,7 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
 
               <BasicInfoField
                 field="linkedin_url"
-                value={resume.linkedin_url || ''}
+                value={resume.linkedin_url || ""}
                 label="LINKEDIN"
                 icon={Linkedin}
                 placeholder="https://linkedin.com/in/username"
@@ -180,7 +193,7 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
 
               <BasicInfoField
                 field="github_url"
-                value={resume.github_url || ''}
+                value={resume.github_url || ""}
                 label="GITHUB"
                 icon={Github}
                 placeholder="https://github.com/username"
@@ -192,4 +205,4 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
       </Card>
     </div>
   );
-}, areBasicInfoPropsEqual); 
+}, areBasicInfoPropsEqual);

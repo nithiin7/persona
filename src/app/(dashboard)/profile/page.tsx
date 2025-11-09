@@ -4,7 +4,7 @@ import { ProfileEditForm } from "@/components/profile/profile-edit-form";
 import { Suspense } from "react";
 
 // Force dynamic behavior and disable caching
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function EditProfilePage() {
@@ -13,7 +13,7 @@ export default async function EditProfilePage() {
   try {
     data = await getDashboardData();
   } catch (error: unknown) {
-    void error
+    void error;
     redirect("/");
   }
 
@@ -42,4 +42,4 @@ export default async function EditProfilePage() {
       </div>
     </main>
   );
-} 
+}

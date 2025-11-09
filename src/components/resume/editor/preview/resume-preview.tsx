@@ -1,6 +1,6 @@
 /**
  * Resume Preview Component
- * 
+ *
  * This component generates a PDF resume using @react-pdf/renderer and displays it using react-pdf.
  * It supports two variants: base and tailored resumes, with consistent styling and layout.
  * The PDF is generated client-side and updates whenever the resume data changes.
@@ -9,20 +9,20 @@
 "use client";
 
 import { Resume } from "@/lib/types";
-import { Document, Page, pdfjs } from 'react-pdf';
-import { useState, useEffect, memo, useMemo, useCallback } from 'react';
-import { pdf } from '@react-pdf/renderer';
-import { ResumePDFDocument } from './resume-pdf-document';
-import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import { Document, Page, pdfjs } from "react-pdf";
+import { useState, useEffect, memo, useMemo, useCallback } from "react";
+import { pdf } from "@react-pdf/renderer";
+import { ResumePDFDocument } from "./resume-pdf-document";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
 // Import required CSS for react-pdf
-import 'react-pdf/dist/Page/TextLayer.css';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
+import "react-pdf/dist/Page/TextLayer.css";
+import "react-pdf/dist/Page/AnnotationLayer.css";
 
 // Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
 ).toString();
 
 // Cache for storing generated PDFs
@@ -42,7 +42,14 @@ function generateResumeHash(resume: Resume): string {
   const content = JSON.stringify({
     basic: {
       name: `${resume.first_name} ${resume.last_name}`,
-      contact: [resume.email, resume.phone_number, resume.location, resume.website, resume.linkedin_url, resume.github_url],
+      contact: [
+        resume.email,
+        resume.phone_number,
+        resume.location,
+        resume.website,
+        resume.linkedin_url,
+        resume.github_url,
+      ],
     },
     sections: {
       skills: resume.skills,
@@ -52,12 +59,12 @@ function generateResumeHash(resume: Resume): string {
     },
     settings: resume.document_settings,
   });
-  
+
   // Simple hash function
   let hash = 0;
   for (let i = 0; i < content.length; i++) {
     const char = content.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash;
   }
   return hash.toString(36);
@@ -77,7 +84,7 @@ function cleanupCache() {
 }
 
 // Setup cache cleanup interval
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   setInterval(cleanupCache, CACHE_CLEANUP_INTERVAL);
 }
 
@@ -98,165 +105,171 @@ const customStyles = `
 
 interface ResumePreviewProps {
   resume: Resume;
-  variant?: 'base' | 'tailored';
-  containerWidth: number;  // This is now expected to be a percentage (0-100)
+  variant?: "base" | "tailored";
+  containerWidth: number; // This is now expected to be a percentage (0-100)
 }
 
 /**
  * ResumePreview Component
- * 
+ *
  * Displays a PDF preview of the resume using react-pdf.
  * Handles PDF generation and responsive display.
  */
-export const ResumePreview = memo(function ResumePreview({ resume, variant = 'base', containerWidth }: ResumePreviewProps) {
-  const [url, setUrl] = useState<string | null>(null);
-  const [numPages, setNumPages] = useState<number>(0);
-  const debouncedWidth = useDebouncedValue(containerWidth, 100);
-  
+export const ResumePreview = memo(
+  function ResumePreview({
+    resume,
+    variant = "base",
+    containerWidth,
+  }: ResumePreviewProps) {
+    const [url, setUrl] = useState<string | null>(null);
+    const [numPages, setNumPages] = useState<number>(0);
+    const debouncedWidth = useDebouncedValue(containerWidth, 100);
 
-  // Convert percentage to pixels based on parent container
-  const getPixelWidth = useCallback(() => {
-    if (typeof window === 'undefined') return 0;
-    // console.log('debouncedWidth (INSIDE)'+containerWidth);
-    // console.log('debouncedWidth * 10 (INSIDE)'+debouncedWidth * 10);
-    return ((debouncedWidth));
-  }, [debouncedWidth]);
+    // Convert percentage to pixels based on parent container
+    const getPixelWidth = useCallback(() => {
+      if (typeof window === "undefined") return 0;
+      // console.log('debouncedWidth (INSIDE)'+containerWidth);
+      // console.log('debouncedWidth * 10 (INSIDE)'+debouncedWidth * 10);
+      return debouncedWidth;
+    }, [debouncedWidth]);
 
-  // Generate resume hash for caching
-  const resumeHash = useMemo(() => generateResumeHash(resume), [resume]);
+    // Generate resume hash for caching
+    const resumeHash = useMemo(() => generateResumeHash(resume), [resume]);
 
-  // Add styles to document head
-  useEffect(() => {
-    const styleElement = document.createElement('style');
-    styleElement.innerHTML = customStyles;
-    document.head.appendChild(styleElement);
-    return () => {
-      document.head.removeChild(styleElement);
-    };
-  }, []);
+    // Add styles to document head
+    useEffect(() => {
+      const styleElement = document.createElement("style");
+      styleElement.innerHTML = customStyles;
+      document.head.appendChild(styleElement);
+      return () => {
+        document.head.removeChild(styleElement);
+      };
+    }, []);
 
-  // Generate or retrieve PDF from cache
-  useEffect(() => {
-    let currentUrl: string | null = null;
+    // Generate or retrieve PDF from cache
+    useEffect(() => {
+      let currentUrl: string | null = null;
 
-    async function generatePDF() {
-      // Check cache first
-      const cached = pdfCache.get(resumeHash);
-      if (cached) {
-        currentUrl = cached.url;
-        setUrl(cached.url);
-        return;
+      async function generatePDF() {
+        // Check cache first
+        const cached = pdfCache.get(resumeHash);
+        if (cached) {
+          currentUrl = cached.url;
+          setUrl(cached.url);
+          return;
+        }
+
+        // Generate new PDF if not in cache
+        const blob = await pdf(
+          <ResumePDFDocument resume={resume} variant={variant} />
+        ).toBlob();
+        const newUrl = URL.createObjectURL(blob);
+        currentUrl = newUrl;
+
+        // Store in cache with timestamp
+        pdfCache.set(resumeHash, { url: newUrl, timestamp: Date.now() });
+        setUrl(newUrl);
       }
 
-      // Generate new PDF if not in cache
-      const blob = await pdf(<ResumePDFDocument resume={resume} variant={variant} />).toBlob();
-      const newUrl = URL.createObjectURL(blob);
-      currentUrl = newUrl;
-      
-      // Store in cache with timestamp
-      pdfCache.set(resumeHash, { url: newUrl, timestamp: Date.now() });
-      setUrl(newUrl);
+      generatePDF();
+
+      // Cleanup function
+      return () => {
+        if (currentUrl && !pdfCache.has(resumeHash)) {
+          URL.revokeObjectURL(currentUrl);
+        }
+      };
+    }, [resumeHash, variant, resume]);
+
+    // Cleanup on component unmount
+    useEffect(() => {
+      return () => {
+        // Final cleanup of this component's URL if not in cache
+        if (url && !pdfCache.has(resumeHash)) {
+          URL.revokeObjectURL(url);
+        }
+      };
+    }, [resumeHash, url]);
+
+    // Add state for text layer visibility
+    const [shouldRenderTextLayer, setShouldRenderTextLayer] = useState(false);
+
+    // Modify Page component to conditionally render text layer
+    function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+      setNumPages(numPages);
+      // Enable text layer after document is stable
+      setTimeout(() => setShouldRenderTextLayer(true), 1000);
     }
 
-    generatePDF();
+    // Disable text layer during updates
+    useEffect(() => {
+      setShouldRenderTextLayer(false);
+    }, [resumeHash, variant]);
 
-    // Cleanup function
-    return () => {
-      if (currentUrl && !pdfCache.has(resumeHash)) {
-        URL.revokeObjectURL(currentUrl);
-      }
-    };
-  }, [resumeHash, variant, resume]);
-
-  // Cleanup on component unmount
-  useEffect(() => {
-    return () => {
-      // Final cleanup of this component's URL if not in cache
-      if (url && !pdfCache.has(resumeHash)) {
-        URL.revokeObjectURL(url);
-      }
-    };
-  }, [resumeHash, url]);
-
-  // Add state for text layer visibility
-  const [shouldRenderTextLayer, setShouldRenderTextLayer] = useState(false);
-
-  // Modify Page component to conditionally render text layer
-  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
-    setNumPages(numPages);
-    // Enable text layer after document is stable
-    setTimeout(() => setShouldRenderTextLayer(true), 1000);
-  }
-
-  // Disable text layer during updates
-  useEffect(() => {
-    setShouldRenderTextLayer(false);
-  }, [resumeHash, variant]);
-
-  // Show loading state while PDF is being generated
-  if (!url) {
-    return (
-      <div className="w-full aspect-[8.5/11] bg-white shadow-lg p-8">
-        <div className="space-y-0 animate-pulse">
-          {/* Header skeleton */}
-          <div className="space-y-4">
-            <div className="h-8 bg-gray-200  w-1/3 mx-auto" />
-            <div className="flex justify-center gap-4">
-              <div className="h-3 bg-gray-200 rounded w-24" />
-              <div className="h-3 bg-gray-200 rounded w-24" />
-              <div className="h-3 bg-gray-200 rounded w-24" />
+    // Show loading state while PDF is being generated
+    if (!url) {
+      return (
+        <div className="w-full aspect-[8.5/11] bg-white shadow-lg p-8">
+          <div className="space-y-0 animate-pulse">
+            {/* Header skeleton */}
+            <div className="space-y-4">
+              <div className="h-8 bg-gray-200  w-1/3 mx-auto" />
+              <div className="flex justify-center gap-4">
+                <div className="h-3 bg-gray-200 rounded w-24" />
+                <div className="h-3 bg-gray-200 rounded w-24" />
+                <div className="h-3 bg-gray-200 rounded w-24" />
+              </div>
             </div>
-          </div>
 
-          {/* Summary skeleton */}
-          <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-24" />
+            {/* Summary skeleton */}
             <div className="space-y-2">
-              <div className="h-3 bg-gray-200 rounded w-full" />
-              <div className="h-3 bg-gray-200 rounded w-5/6" />
+              <div className="h-4 bg-gray-200 rounded w-24" />
+              <div className="space-y-2">
+                <div className="h-3 bg-gray-200 rounded w-full" />
+                <div className="h-3 bg-gray-200 rounded w-5/6" />
+              </div>
             </div>
-          </div>
 
-          {/* Experience skeleton */}
-          <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-32" />
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <div className="h-3 bg-gray-200 rounded w-48" />
-                    <div className="h-3 bg-gray-200 rounded w-24" />
+            {/* Experience skeleton */}
+            <div className="space-y-2">
+              <div className="h-4 bg-gray-200 rounded w-32" />
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div className="h-3 bg-gray-200 rounded w-48" />
+                      <div className="h-3 bg-gray-200 rounded w-24" />
+                    </div>
+                    <div className="h-3 bg-gray-200 rounded w-full" />
+                    <div className="h-3 bg-gray-200 rounded w-5/6" />
                   </div>
-                  <div className="h-3 bg-gray-200 rounded w-full" />
-                  <div className="h-3 bg-gray-200 rounded w-5/6" />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Education skeleton */}
-          <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-28" />
-            <div className="space-y-4">
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <div className="h-3 bg-gray-200 rounded w-40" />
-                    <div className="h-3 bg-gray-200 rounded w-24" />
+            {/* Education skeleton */}
+            <div className="space-y-2">
+              <div className="h-4 bg-gray-200 rounded w-28" />
+              <div className="space-y-4">
+                {[...Array(2)].map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div className="h-3 bg-gray-200 rounded w-40" />
+                      <div className="h-3 bg-gray-200 rounded w-24" />
+                    </div>
+                    <div className="h-3 bg-gray-200 rounded w-3/4" />
                   </div>
-                  <div className="h-3 bg-gray-200 rounded w-3/4" />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  // Display the generated PDF using react-pdf
-  return (
-    <div className=" h-full relative bg-black/15">
+    // Display the generated PDF using react-pdf
+    return (
+      <div className=" h-full relative bg-black/15">
         <Document
           file={url}
           onLoadSuccess={onDocumentLoadSuccess}
@@ -331,13 +344,15 @@ export const ResumePreview = memo(function ResumePreview({ resume, variant = 'ba
             />
           ))}
         </Document>
-    </div>
-  );
-}, (prevProps, nextProps) => {
-  // Custom comparison function to determine if re-render is needed
-  return (
-    prevProps.resume === nextProps.resume &&
-    prevProps.variant === nextProps.variant &&
-    prevProps.containerWidth === nextProps.containerWidth
-  );
-}); 
+      </div>
+    );
+  },
+  (prevProps, nextProps) => {
+    // Custom comparison function to determine if re-render is needed
+    return (
+      prevProps.resume === nextProps.resume &&
+      prevProps.variant === nextProps.variant &&
+      prevProps.containerWidth === nextProps.containerWidth
+    );
+  }
+);

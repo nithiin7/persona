@@ -26,9 +26,7 @@ export function QuickSuggestions({ onSuggestionClick }: QuickSuggestionsProps) {
     <div className="flex flex-col items-center gap-4 py-6">
       <div className="flex items-center gap-2">
         <Bot className="h-4 w-4 text-purple-500" />
-        <p className="text-sm text-purple-500">
-          Try one of these
-        </p>
+        <p className="text-sm text-purple-500">Try one of these</p>
       </div>
 
       <div className="flex flex-wrap justify-center gap-2 max-w-[600px]">
@@ -56,4 +54,4 @@ export function QuickSuggestions({ onSuggestionClick }: QuickSuggestionsProps) {
       </div>
     </div>
   );
-} 
+}

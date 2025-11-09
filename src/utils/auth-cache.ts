@@ -46,4 +46,4 @@ class AuthCache {
 // Run cleanup every minute
 setInterval(() => AuthCache.cleanup(), 60000);
 
-export default AuthCache; 
+export default AuthCache;

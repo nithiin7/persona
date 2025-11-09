@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useRef } from "react";
 import Link from "next/link";
@@ -24,8 +24,8 @@ export function Logo({ className, asLink = true }: LogoProps) {
     try {
       // Create canvas with device pixel ratio for better quality
       const scale = window.devicePixelRatio || 1;
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
       // Set canvas size (larger base size * device pixel ratio)
@@ -37,28 +37,28 @@ export function Logo({ className, asLink = true }: LogoProps) {
 
       // Create gradient
       const gradient = ctx.createLinearGradient(0, 0, 800, 0);
-      gradient.addColorStop(0, '#7c3aed');
-      gradient.addColorStop(1, '#4f46e5');
+      gradient.addColorStop(0, "#7c3aed");
+      gradient.addColorStop(1, "#4f46e5");
 
       // Set text properties with larger font size
-      ctx.font = 'bold 128px Inter, system-ui, sans-serif';
+      ctx.font = "bold 128px Inter, system-ui, sans-serif";
       ctx.fillStyle = gradient;
-      ctx.textBaseline = 'middle';
-      
+      ctx.textBaseline = "middle";
+
       // Draw text (centered)
-      const text = 'Persona';
+      const text = "Persona";
       const textMetrics = ctx.measureText(text);
       const x = (800 - textMetrics.width) / 2;
       ctx.fillText(text, x, 100);
 
       // Export
-      const dataUrl = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.download = 'persona-logo.png';
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = "persona-logo.png";
       link.href = dataUrl;
       link.click();
     } catch (error) {
-      console.error('Error exporting logo:', error);
+      console.error("Error exporting logo:", error);
     }
   }
 
@@ -83,22 +83,25 @@ export function Logo({ className, asLink = true }: LogoProps) {
         </svg>
       `;
 
-      const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+      const blob = new Blob([svgContent], { type: "image/svg+xml" });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download = 'persona-logo.svg';
+      const link = document.createElement("a");
+      link.download = "persona-logo.svg";
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error exporting SVG:', error);
+      console.error("Error exporting SVG:", error);
     }
   }
 
   const logoContent = (
     <ContextMenu>
       <ContextMenuTrigger>
-        <div ref={logoRef} className="transition-transform duration-500 hover:scale-105">
+        <div
+          ref={logoRef}
+          className="transition-transform duration-500 hover:scale-105"
+        >
           <GradientHover className={cn("text-2xl font-bold", className)}>
             Persona
           </GradientHover>
@@ -118,12 +121,8 @@ export function Logo({ className, asLink = true }: LogoProps) {
   );
 
   if (asLink) {
-    return (
-      <Link href="/home">
-        {logoContent}
-      </Link>
-    );
+    return <Link href="/home">{logoContent}</Link>;
   }
 
   return logoContent;
-} 
+}

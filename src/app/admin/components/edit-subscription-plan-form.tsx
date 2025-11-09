@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { updateUserSubscriptionPlan } from '../actions';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { updateUserSubscriptionPlan } from "../actions";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -11,9 +11,9 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/select";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface EditSubscriptionPlanFormProps {
   userId: string;
@@ -24,20 +24,20 @@ export default function EditSubscriptionPlanForm({
   userId,
   currentPlan,
 }: EditSubscriptionPlanFormProps) {
-  const [plan, setPlan] = useState<'free' | 'pro'>(
-    (currentPlan === 'free' || currentPlan === 'pro') ? currentPlan : 'free'
+  const [plan, setPlan] = useState<"free" | "pro">(
+    currentPlan === "free" || currentPlan === "pro" ? currentPlan : "free"
   );
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{
-    type: 'success' | 'error';
+    type: "success" | "error";
     text: string;
   } | null>(null);
 
   const handlePlanChange = async () => {
     if (plan === currentPlan) {
       setMessage({
-        type: 'error',
-        text: 'No change: The user is already on this plan.',
+        type: "error",
+        text: "No change: The user is already on this plan.",
       });
       return;
     }
@@ -49,13 +49,14 @@ export default function EditSubscriptionPlanForm({
       const result = await updateUserSubscriptionPlan(userId, plan);
 
       setMessage({
-        type: result.success ? 'success' : 'error',
+        type: result.success ? "success" : "error",
         text: result.message,
       });
     } catch (error) {
       setMessage({
-        type: 'error',
-        text: error instanceof Error ? error.message : 'An unknown error occurred',
+        type: "error",
+        text:
+          error instanceof Error ? error.message : "An unknown error occurred",
       });
     } finally {
       setIsLoading(false);
@@ -68,11 +69,14 @@ export default function EditSubscriptionPlanForm({
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <span className="font-medium text-sm">Current Plan:</span>
-            <Badge variant={currentPlan === 'pro' ? 'default' : 'secondary'}>
-              {currentPlan ? currentPlan.toUpperCase() : 'NOT SET'}
+            <Badge variant={currentPlan === "pro" ? "default" : "secondary"}>
+              {currentPlan ? currentPlan.toUpperCase() : "NOT SET"}
             </Badge>
           </div>
-          <Select value={plan} onValueChange={(value) => setPlan(value as 'free' | 'pro')}>
+          <Select
+            value={plan}
+            onValueChange={(value) => setPlan(value as "free" | "pro")}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select a plan" />
             </SelectTrigger>
@@ -85,23 +89,23 @@ export default function EditSubscriptionPlanForm({
             </SelectContent>
           </Select>
         </div>
-        <Button 
+        <Button
           onClick={handlePlanChange}
           disabled={isLoading || plan === currentPlan}
         >
-          {isLoading ? 'Updating...' : 'Update Plan'}
+          {isLoading ? "Updating..." : "Update Plan"}
         </Button>
       </div>
 
       {message && (
-        <div 
+        <div
           className={`p-3 rounded-md flex items-start gap-2 ${
-            message.type === 'success' 
-              ? 'bg-green-50 text-green-700 border border-green-200' 
-              : 'bg-red-50 text-red-700 border border-red-200'
+            message.type === "success"
+              ? "bg-green-50 text-green-700 border border-green-200"
+              : "bg-red-50 text-red-700 border border-red-200"
           }`}
         >
-          {message.type === 'success' ? (
+          {message.type === "success" ? (
             <CheckCircle2 className="h-5 w-5 shrink-0" />
           ) : (
             <AlertCircle className="h-5 w-5 shrink-0" />
@@ -111,4 +115,4 @@ export default function EditSubscriptionPlanForm({
       )}
     </div>
   );
-} 
+}

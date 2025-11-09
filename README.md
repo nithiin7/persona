@@ -35,6 +35,7 @@ This fork includes several key modifications from the original ResumeLM:
 ## 🛠️ Tech Stack
 
 ### Frontend & UI
+
 - **Next.js 15** - App Router with React Server Components
 - **React 19** - Latest React features
 - **TypeScript** - Type-safe development
@@ -43,6 +44,7 @@ This fork includes several key modifications from the original ResumeLM:
 - **Framer Motion** - Animations
 
 ### AI & Intelligence
+
 - **OpenAI GPT** - Content generation
 - **Claude AI** - Alternative AI model support
 - **Gemini AI** - Google's AI integration
@@ -50,11 +52,13 @@ This fork includes several key modifications from the original ResumeLM:
 - **Groq** - High-speed AI inference
 
 ### Backend & Database
+
 - **PostgreSQL** - Database
 - **Supabase** - Backend-as-a-Service with auth
 - **Row Level Security** - Security
 
 ### Additional Features
+
 - **React PDF** - PDF generation
 - **Real-time Updates** - Live preview and editing
 - **No Payment Required** - All features available without subscription
@@ -62,6 +66,7 @@ This fork includes several key modifications from the original ResumeLM:
 ## 🔧 Installation & Setup
 
 ### Prerequisites
+
 - Node.js 18+
 - pnpm (recommended) or npm
 - PostgreSQL database
@@ -70,22 +75,26 @@ This fork includes several key modifications from the original ResumeLM:
 ### Quick Start
 
 1. **Clone the repository**
+
 ```bash
 git clone <your-repo-url>
 cd persona
 ```
 
 2. **Install dependencies**
+
 ```bash
 pnpm install
 ```
 
 3. **Environment setup**
+
 ```bash
 cp .env.example .env.local
 ```
 
 4. **Configure environment variables**
+
 ```env
 # Database
 DATABASE_URL=your_postgresql_url
@@ -108,6 +117,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 **Note:** Stripe integration has been completely removed from this fork. No payment processing is required.
 
 5. **Database setup**
+
 ```bash
 # Run the schema.sql file in your Supabase SQL editor
 # Or use the Supabase CLI:
@@ -115,6 +125,7 @@ supabase db push --db-url=your_supabase_db_url schema.sql
 ```
 
 6. **Start development server**
+
 ```bash
 pnpm dev
 ```
@@ -126,22 +137,26 @@ Visit `http://localhost:3000` to see your local Persona instance!
 ### Core Tables Structure
 
 #### Profiles Table
+
 - Stores user's base information and resume components
 - JSON fields for complex data (work_experience, education, skills)
 - One-to-one relationship with auth.users
 
 #### Resumes Table
+
 - Base and tailored resume versions
 - Links to jobs for targeted applications
 - JSONB for section_order and section_configs
 - Version control and tracking
 
 #### Jobs Table
+
 - Job listings with requirements and details
 - Salary range as flexible JSONB structure
 - Application status tracking
 
 ### Security Features
+
 - **Row Level Security (RLS)** - Users only access their own data
 - **Authentication Integration** - Secure user management
 - **Data Encryption** - Sensitive information protection

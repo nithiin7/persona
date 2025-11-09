@@ -1,25 +1,28 @@
 /**
  * Home Page Component
- * 
+ *
  * This is the main dashboard page of the Resume AI application. It displays:
  * - User profile information
  * - Quick stats (profile score, resume counts, job postings)
  * - Base resume management
  * - Tailored resume management
- * 
+ *
  * The page implements a soft gradient minimalism design with floating orbs
  * and mesh overlay for visual interest.
  */
 
 import { redirect } from "next/navigation";
-import {User } from "lucide-react";
+import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ProfileRow } from "@/components/dashboard/profile-row";
 import { WelcomeDialog } from "@/components/dashboard/welcome-dialog";
 import { getGreeting } from "@/lib/utils";
 import { ApiKeyAlert } from "@/components/dashboard/api-key-alert";
-import { type SortOption, type SortDirection } from "@/components/resume/management/resume-sort-controls";
+import {
+  type SortOption,
+  type SortDirection,
+} from "@/components/resume/management/resume-sort-controls";
 import type { ResumeSummary } from "@/lib/types";
 import { ResumesSection } from "@/components/dashboard/resumes-section";
 import { getDashboardData } from "@/utils/actions";
@@ -31,7 +34,7 @@ export default async function Home({
 }) {
   // Check if user is coming from confirmation
   const params = await searchParams;
-  const isNewSignup = params?.type === 'signup' && params?.token_hash;
+  const isNewSignup = params?.type === "signup" && params?.token_hash;
 
   // Fetch dashboard data and handle authentication
   let data;
@@ -45,40 +48,57 @@ export default async function Home({
     redirect("/");
   }
 
-  const { profile, baseResumes: unsortedBaseResumes, tailoredResumes: unsortedTailoredResumes } = data;
+  const {
+    profile,
+    baseResumes: unsortedBaseResumes,
+    tailoredResumes: unsortedTailoredResumes,
+  } = data;
 
   // Get sort parameters for both sections
-  const baseSort = (params.baseSort as SortOption) || 'createdAt';
-  const baseDirection = (params.baseDirection as SortDirection) || 'asc';
-  const tailoredSort = (params.tailoredSort as SortOption) || 'createdAt';
-  const tailoredDirection = (params.tailoredDirection as SortDirection) || 'asc';
+  const baseSort = (params.baseSort as SortOption) || "createdAt";
+  const baseDirection = (params.baseDirection as SortDirection) || "asc";
+  const tailoredSort = (params.tailoredSort as SortOption) || "createdAt";
+  const tailoredDirection =
+    (params.tailoredDirection as SortDirection) || "asc";
 
   // Sort function
-  function sortResumes(resumes: ResumeSummary[], sort: SortOption, direction: SortDirection) {
+  function sortResumes(
+    resumes: ResumeSummary[],
+    sort: SortOption,
+    direction: SortDirection
+  ) {
     return [...resumes].sort((a, b) => {
-      const modifier = direction === 'asc' ? 1 : -1;
+      const modifier = direction === "asc" ? 1 : -1;
       switch (sort) {
-        case 'name':
+        case "name":
           return modifier * a.name.localeCompare(b.name);
-        case 'jobTitle':
-          return modifier * ((a.target_role || '').localeCompare(b.target_role || '') || 0);
-        case 'createdAt':
+        case "jobTitle":
+          return (
+            modifier *
+            ((a.target_role || "").localeCompare(b.target_role || "") || 0)
+          );
+        case "createdAt":
         default:
-          return modifier * (new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-      
-    }
+          return (
+            modifier *
+            (new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime())
+          );
+      }
     });
   }
 
-
   // Sort both resume lists
   const baseResumes = sortResumes(unsortedBaseResumes, baseSort, baseDirection);
-  const tailoredResumes = sortResumes(unsortedTailoredResumes, tailoredSort, tailoredDirection);
-  
+  const tailoredResumes = sortResumes(
+    unsortedTailoredResumes,
+    tailoredSort,
+    tailoredDirection
+  );
+
   const isProPlan = true;
   const canCreateBase = true;
   const canCreateTailored = true;
-
 
   // Display a friendly message if no profile exists
   if (!profile) {
@@ -87,9 +107,12 @@ export default async function Home({
         <Card className="max-w-md w-full p-8 bg-white/80 backdrop-blur-xl border-white/40 shadow-2xl">
           <div className="text-center space-y-4">
             <User className="w-12 h-12 text-muted-foreground mx-auto" />
-            <h2 className="text-2xl font-semibold text-gray-800">Profile Not Found</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Profile Not Found
+            </h2>
             <p className="text-muted-foreground">
-              We couldn&apos;t find your profile information. Please contact support for assistance.
+              We couldn&apos;t find your profile information. Please contact
+              support for assistance.
             </p>
             <Button className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white">
               Contact Support
@@ -101,12 +124,10 @@ export default async function Home({
   }
 
   return (
-    
     <main className="min-h-screen relative sm:pb-12 pb-40">
-
       {/* Welcome Dialog for New Signups */}
       <WelcomeDialog isOpen={!!isNewSignup} />
-      
+
       {/* Gradient Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-rose-50/50 via-sky-50/50 to-violet-50/50" />
@@ -118,15 +139,15 @@ export default async function Home({
 
       {/* Content */}
       <div className="relative z-10">
-      {/* Profile Row Component */}
-      <ProfileRow profile={profile} />
-        
-        <div className="pl-2 sm:pl-0 sm:container sm:max-none  max-w-7xl mx-auto  lg:px-8 md:px-8 sm:px-6 pt-4 ">  
+        {/* Profile Row Component */}
+        <ProfileRow profile={profile} />
+
+        <div className="pl-2 sm:pl-0 sm:container sm:max-none  max-w-7xl mx-auto  lg:px-8 md:px-8 sm:px-6 pt-4 ">
           {/* Profile Overview */}
           <div className="mb-6 space-y-4">
             {/* API Key Alert */}
-            { !isProPlan && <ApiKeyAlert />}
-            
+            {!isProPlan && <ApiKeyAlert />}
+
             {/* Greeting & Edit Button */}
             <div className="flex items-center justify-between">
               <div>
@@ -139,12 +160,8 @@ export default async function Home({
               </div>
             </div>
 
-            
-
             {/* Resume Bookshelf */}
             <div className="">
-
-
               {/* Base Resumes Section */}
               <ResumesSection
                 type="base"

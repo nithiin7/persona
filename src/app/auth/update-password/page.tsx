@@ -21,7 +21,9 @@ export default function UpdatePasswordPage() {
   useEffect(() => {
     // Check if user is in password reset flow
     const checkSession = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         router.push("/");
       }
@@ -49,7 +51,7 @@ export default function UpdatePasswordPage() {
 
     try {
       const { error } = await supabase.auth.updateUser({
-        password: password
+        password: password,
       });
 
       if (error) {
@@ -84,11 +86,14 @@ export default function UpdatePasswordPage() {
 
           <div className="grid gap-6">
             {error && (
-              <Alert variant="destructive" className="bg-red-50/50 text-red-900 border-red-200/50">
+              <Alert
+                variant="destructive"
+                className="bg-red-50/50 text-red-900 border-red-200/50"
+              >
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             {success ? (
               <Alert className="bg-emerald-50/50 text-emerald-900 border-emerald-200/50">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
@@ -134,8 +139,8 @@ export default function UpdatePasswordPage() {
                   </div>
                 </div>
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isLoading}
                   className="w-full bg-gradient-to-r from-violet-600 via-blue-600 to-violet-600 hover:from-violet-500 hover:via-blue-500 hover:to-violet-500 shadow-lg shadow-violet-500/25 transition-all duration-500 animate-gradient-x"
                 >
@@ -155,4 +160,4 @@ export default function UpdatePasswordPage() {
       </div>
     </div>
   );
-} 
+}

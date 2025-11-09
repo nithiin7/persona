@@ -1,9 +1,9 @@
 // utils/rateLimiter.ts
-import redis from '@/lib/redis';
+import redis from "@/lib/redis";
 
 /**
  * Checks and updates the leaky bucket for a given user.
- * 
+ *
  * @param userId - The unique identifier for the Pro user.
  * @param capacity - Maximum number of allowed messages (default: 80).
  * @param duration - The duration (in seconds) over which the capacity is allowed (default: 5 hours).
@@ -15,7 +15,7 @@ export async function checkRateLimit(
   duration: number = 5 * 60 * 60 // 5 hours in seconds
 ): Promise<void> {
   // Skip rate limiting in development environment
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     return;
   }
 
@@ -53,6 +53,9 @@ export async function checkRateLimit(
   }
 
   // Update the bucket in Redis with the new token count and current timestamp.
-  await redis.hset(redisKey, { tokens: newTokens.toString(), last: now.toString() });
+  await redis.hset(redisKey, {
+    tokens: newTokens.toString(),
+    last: now.toString(),
+  });
   await redis.expire(redisKey, duration + 3600);
 }

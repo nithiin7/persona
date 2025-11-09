@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -15,19 +15,28 @@ export function TechnologiesInput({
   value,
   onChange,
   label = "Technologies & Tools Used",
-  placeholder = "React, TypeScript, Node.js, etc."
+  placeholder = "React, TypeScript, Node.js, etc.",
 }: TechnologiesInputProps) {
   return (
     <div className="space-y-3 pt-2">
       <div className="flex justify-between items-baseline">
-        <Label className="text-[11px] md:text-xs font-medium text-gray-600">{label}</Label>
-        <span className="text-[7px] md:text-[9px] text-gray-500">Separate with commas</span>
+        <Label className="text-[11px] md:text-xs font-medium text-gray-600">
+          {label}
+        </Label>
+        <span className="text-[7px] md:text-[9px] text-gray-500">
+          Separate with commas
+        </span>
       </div>
       <Input
-        value={value.join(', ')}
-        onChange={(e) => onChange(
-          e.target.value.split(',').map(t => t.trim()).filter(Boolean)
-        )}
+        value={value.join(", ")}
+        onChange={(e) =>
+          onChange(
+            e.target.value
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean)
+          )
+        }
         placeholder={placeholder}
         className={cn(
           "bg-white/50 border-gray-200 rounded-lg",
@@ -38,4 +47,4 @@ export function TechnologiesInput({
       />
     </div>
   );
-} 
+}

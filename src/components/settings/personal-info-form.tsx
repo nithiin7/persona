@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 
 export function PersonalInfoForm() {
   return (
@@ -28,7 +28,7 @@ export function PersonalInfoForm() {
       </div>
 
       <div className="flex justify-end">
-        <Button 
+        <Button
           type="submit"
           className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white hover:from-teal-600 hover:to-emerald-600"
         >
@@ -37,5 +37,5 @@ export function PersonalInfoForm() {
         </Button>
       </div>
     </form>
-  )
-} 
+  );
+}

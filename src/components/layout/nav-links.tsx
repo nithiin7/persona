@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { cn } from "@/lib/utils";
 
 interface NavLinkProps {
@@ -10,11 +10,11 @@ interface NavLinkProps {
 function NavLink({ href, children, className }: NavLinkProps) {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     // Only prevent default and use smooth scrolling for anchor links (starting with #)
-    if (href.startsWith('#')) {
+    if (href.startsWith("#")) {
       e.preventDefault();
       const target = document.querySelector(href);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
+        target.scrollIntoView({ behavior: "smooth" });
       }
     }
     // For regular page routes, let the browser handle navigation normally
@@ -37,9 +37,8 @@ function NavLink({ href, children, className }: NavLinkProps) {
 export function NavLinks() {
   return (
     <div className="hidden md:flex items-center gap-6">
-      <NavLink href="#features">Features</NavLink>
       <NavLink href="#how-it-works">How it Works</NavLink>
-      <NavLink href="#pricing">Pricing</NavLink>
+      <NavLink href="#features">Features</NavLink>
     </div>
   );
-} 
+}

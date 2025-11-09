@@ -1,15 +1,11 @@
-'use server';
+"use server";
 
-import { generateObject, LanguageModelV1 } from 'ai';
-import { z } from 'zod';
-import { 
-  simplifiedJobSchema, 
-  simplifiedResumeSchema, 
-} from "@/lib/zod-schemas";
+import { generateObject, LanguageModelV1 } from "ai";
+import { z } from "zod";
+import { simplifiedJobSchema, simplifiedResumeSchema } from "@/lib/zod-schemas";
 import { Job, Resume } from "@/lib/types";
-import { AIConfig } from '@/utils/ai-tools';
-import { initializeAIClient } from '@/utils/ai-tools';
-
+import { AIConfig } from "@/utils/ai-tools";
+import { initializeAIClient } from "@/utils/ai-tools";
 
 export async function tailorResumeToJob(
   resume: Resume,
@@ -19,20 +15,20 @@ export async function tailorResumeToJob(
   const isPro = true;
   // Hardcode to use GPT OSS 120B for now
   const hardcodedConfig: AIConfig = {
-    model: 'openai/gpt-oss-120b:nitro',
-    apiKeys: config?.apiKeys || []
+    model: "openai/gpt-oss-120b:nitro",
+    apiKeys: config?.apiKeys || [],
   };
   const aiClient = initializeAIClient(hardcodedConfig, isPro, true);
 
-try {
+  try {
     const { object } = await generateObject({
       model: aiClient as LanguageModelV1,
       temperature: 0.5, // further reduced for better structured output reliability
       schema: z.object({
-      content: simplifiedResumeSchema,
-    }),
+        content: simplifiedResumeSchema,
+      }),
       maxRetries: 2, // retry on failure
-    system: `
+      system: `
 
 You are Persona, an advanced AI resume transformer that specializes in optimizing technical resumes for software engineering roles using machine-learning-driven ATS strategies. Your mission is to transform the provided resume into a highly targeted, ATS-friendly document that precisely aligns with the job description.
 
@@ -68,19 +64,18 @@ Transform the resume according to these principles, ensuring the final output is
 
 
     `,
-prompt: `
+      prompt: `
     This is the Resume:
     ${JSON.stringify(resume, null, 2)}
     
     This is the Job Description:
     ${JSON.stringify(jobListing, null, 2)}
     `,
-  });
-
+    });
 
     return object.content satisfies z.infer<typeof simplifiedResumeSchema>;
   } catch (error) {
-    console.error('Error tailoring resume:', error);
+    console.error("Error tailoring resume:", error);
     throw error;
   }
 }
@@ -89,17 +84,17 @@ export async function formatJobListing(jobListing: string, config?: AIConfig) {
   const isPro = true;
   // Hardcode to use GPT OSS 120B for now
   const hardcodedConfig: AIConfig = {
-    model: 'openai/gpt-oss-120b:nitro',
-    apiKeys: config?.apiKeys || []
+    model: "openai/gpt-oss-120b:nitro",
+    apiKeys: config?.apiKeys || [],
   };
   const aiClient = initializeAIClient(hardcodedConfig, isPro, true);
 
-try {
+  try {
     const { object } = await generateObject({
       model: aiClient as LanguageModelV1,
       temperature: 0.7, // reduced for better structured output compatibility
       schema: z.object({
-        content: simplifiedJobSchema
+        content: simplifiedJobSchema,
       }),
       system: `You are an AI assistant specializing in structured data extraction from job listings. You have been provided with a schema
               and must adhere to it strictly. When processing the given job listing, follow these steps:
@@ -145,10 +140,9 @@ try {
               - FORMAT THE FOLLOWING JOB LISTING AS A JSON OBJECT: ${jobListing}`,
     });
 
-
     return object.content satisfies Partial<Job>;
   } catch (error) {
-    console.error('Error formatting job listing:', error);
+    console.error("Error formatting job listing:", error);
     throw error;
   }
 }

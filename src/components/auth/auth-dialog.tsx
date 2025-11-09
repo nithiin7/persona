@@ -1,7 +1,13 @@
-'use client';
+"use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoginForm } from "@/components/auth/login-form";
 import { SignupForm } from "@/components/auth/signup-form";
@@ -29,7 +35,7 @@ interface AuthDialogProps {
 
 function TabButton({ value, children }: TabButtonProps) {
   return (
-    <TabsTrigger 
+    <TabsTrigger
       value={value}
       className="
         relative flex-1 h-8 px-3 text-sm font-medium rounded-md
@@ -53,14 +59,14 @@ function SocialAuth() {
     try {
       setIsLoading(true);
       const result = await signInWithGithub();
-      
+
       if (!result.success) {
-        console.error('❌ GitHub sign in error:', result.error);
+        console.error("❌ GitHub sign in error:", result.error);
       } else if (result.url) {
         window.location.href = result.url;
       }
     } catch (error) {
-      console.error('💥 Failed to sign in with GitHub:', error);
+      console.error("💥 Failed to sign in with GitHub:", error);
     } finally {
       setIsLoading(false);
     }
@@ -73,9 +79,7 @@ function SocialAuth() {
           <Separator className="bg-slate-200" />
         </div>
         <div className="relative flex justify-center text-xs">
-          <span className="bg-white px-3 text-slate-500">
-            or
-          </span>
+          <span className="bg-white px-3 text-slate-500">or</span>
         </div>
       </div>
       <Button
@@ -111,12 +115,11 @@ export function AuthDialog({ children }: AuthDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-
       {/* AUTH DIALOG TRIGGER BUTTON */}
       <DialogTrigger asChild>
         {children || (
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className={`${gradientClasses.base} ${gradientClasses.hover} text-white font-semibold 
             text-lg py-6 px-10 ${gradientClasses.animation} group
             shadow-xl shadow-violet-500/30 hover:shadow-violet-500/40
@@ -134,7 +137,7 @@ export function AuthDialog({ children }: AuthDialogProps) {
         )}
       </DialogTrigger>
 
-      <DialogContent 
+      <DialogContent
         className="
           sm:max-w-[420px] w-full max-h-[85vh] p-0 bg-white border border-slate-200 shadow-xl 
           animate-in fade-in-0 zoom-in-95 duration-200
@@ -144,42 +147,52 @@ export function AuthDialog({ children }: AuthDialogProps) {
         <AuthProvider>
           {/* Hidden accessibility elements */}
           <DialogTitle className="sr-only">Authentication</DialogTitle>
-          <DialogDescription className="sr-only">Sign in or create an account</DialogDescription>
+          <DialogDescription className="sr-only">
+            Sign in or create an account
+          </DialogDescription>
 
           {/* Content starts immediately with tabs */}
           <div className="px-6 pt-6">
-            <Tabs 
-              value={activeTab} 
-              onValueChange={(value) => setActiveTab(value as "login" | "signup")} 
+            <Tabs
+              value={activeTab}
+              onValueChange={(value) =>
+                setActiveTab(value as "login" | "signup")
+              }
               className="w-full"
             >
-              <TabsList className="
+              <TabsList
+                className="
                 w-full h-10 bg-violet-50/30 border border-violet-100/50 p-1
                 flex gap-0.5 rounded-lg
-              ">
-                <TabButton value="login">
-                  Sign In
-                </TabButton>
-                <TabButton value="signup">
-                  Create Account
-                </TabButton>
+              "
+              >
+                <TabButton value="login">Sign In</TabButton>
+                <TabButton value="signup">Create Account</TabButton>
               </TabsList>
 
               {/* Forms Content */}
               <div className="mt-5 pb-6">
                 <TabsContent value="login" className="mt-0 space-y-4">
                   <div className="text-center mb-4">
-                    <h3 className="text-lg font-semibold text-slate-900">Welcome back</h3>
-                    <p className="text-sm text-slate-600 mt-1">Sign in to continue</p>
+                    <h3 className="text-lg font-semibold text-slate-900">
+                      Welcome back
+                    </h3>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Sign in to continue
+                    </p>
                   </div>
                   <LoginForm />
                   <SocialAuth />
                 </TabsContent>
-                
+
                 <TabsContent value="signup" className="mt-0 space-y-4">
                   <div className="text-center mb-4">
-                    <h3 className="text-lg font-semibold text-slate-900">Get started</h3>
-                    <p className="text-sm text-slate-600 mt-1">Create your free account</p>
+                    <h3 className="text-lg font-semibold text-slate-900">
+                      Get started
+                    </h3>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Create your free account
+                    </p>
                   </div>
                   <SignupForm />
                   <SocialAuth />
@@ -191,4 +204,4 @@ export function AuthDialog({ children }: AuthDialogProps) {
       </DialogContent>
     </Dialog>
   );
-} 
+}

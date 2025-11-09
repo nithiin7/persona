@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,12 +21,14 @@ export function AIImprovementPrompt({
   onSubmit,
   isLoading,
   placeholder = "e.g., Make it more impactful and quantifiable",
-  hideSubmitButton = false
+  hideSubmitButton = false,
 }: AIImprovementPromptProps) {
   return (
     <div className="space-y-3">
       <div>
-        <Label className="text-[11px] font-medium text-purple-700">Prompt for AI (Optional)</Label>
+        <Label className="text-[11px] font-medium text-purple-700">
+          Prompt for AI (Optional)
+        </Label>
         <Textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -75,4 +77,4 @@ export function AIImprovementPrompt({
       )}
     </div>
   );
-} 
+}

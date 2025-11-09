@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,17 +25,14 @@ export function ErrorDialog({ isOpen: initialIsOpen }: ErrorDialogProps) {
     setIsOpen(initialIsOpen);
   }, [initialIsOpen]);
 
-  const errorMessage = isOpen ? (
-    searchParams.get('error') === 'auth_code_missing' 
-      ? 'We couldn\'t complete your sign-in. Please try again.' 
-      : 'There was an issue with your email confirmation. Please check your inbox and try again.'
-  ) : null;
+  const errorMessage = isOpen
+    ? searchParams.get("error") === "auth_code_missing"
+      ? "We couldn't complete your sign-in. Please try again."
+      : "There was an issue with your email confirmation. Please check your inbox and try again."
+    : null;
 
   return (
-    <Dialog 
-      open={isOpen} 
-      onOpenChange={setIsOpen}
-    >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="mx-auto rounded-full w-12 h-12 bg-red-100 flex items-center justify-center mb-4">
@@ -46,10 +43,11 @@ export function ErrorDialog({ isOpen: initialIsOpen }: ErrorDialogProps) {
           </DialogTitle>
           <DialogDescription>{errorMessage}</DialogDescription>
         </DialogHeader>
-        
+
         <div className="pt-4 space-y-4">
           <p className="text-center text-muted-foreground">
-            There was an error confirming your email address. This could be because:
+            There was an error confirming your email address. This could be
+            because:
           </p>
           <ul className="list-disc list-inside space-y-2 text-muted-foreground">
             <li>The confirmation link has expired</li>
@@ -62,11 +60,12 @@ export function ErrorDialog({ isOpen: initialIsOpen }: ErrorDialogProps) {
                 Try Logging In Again
               </Button>
             </Link>
-            <Link href="https://x.com/alexfromvan" target="_blank" rel="noopener noreferrer">
-              <Button 
-                variant="outline" 
-                className="w-full"
-              >
+            <Link
+              href="https://x.com/alexfromvan"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline" className="w-full">
                 Contact Support
               </Button>
             </Link>
@@ -75,4 +74,4 @@ export function ErrorDialog({ isOpen: initialIsOpen }: ErrorDialogProps) {
       </DialogContent>
     </Dialog>
   );
-} 
+}

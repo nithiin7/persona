@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -6,16 +6,18 @@ import { Sparkles } from "lucide-react";
 
 export function SuggestionSkeleton() {
   return (
-    <Card className={cn(
-      "group relative overflow-hidden",
-      "p-4",
-      "bg-gradient-to-br from-white/95 via-purple-50/30 to-indigo-50/40 border-white/60",
-      "shadow-xl shadow-purple-500/10",
-      "backdrop-blur-xl"
-    )}>
+    <Card
+      className={cn(
+        "group relative overflow-hidden",
+        "p-4",
+        "bg-gradient-to-br from-white/95 via-purple-50/30 to-indigo-50/40 border-white/60",
+        "shadow-xl shadow-purple-500/10",
+        "backdrop-blur-xl"
+      )}
+    >
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:14px_14px] [mask-image:radial-gradient(ellipse_at_center,white,transparent_70%)] opacity-[0.15]" />
-      
+
       {/* Floating Gradient Orbs */}
       <div className="absolute -top-1/2 -right-1/2 w-[150%] h-[150%] rounded-full bg-gradient-to-br from-purple-200/20 via-indigo-200/20 to-transparent blur-3xl animate-float opacity-60" />
       <div className="absolute -bottom-1/2 -left-1/2 w-[150%] h-[150%] rounded-full bg-gradient-to-br from-indigo-200/20 via-purple-200/20 to-transparent blur-3xl animate-float-delayed opacity-60" />
@@ -54,8 +56,8 @@ export function SuggestionSkeleton() {
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5 pt-1">
             {[...Array(4)].map((_, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className="h-5 w-16 rounded-full bg-gradient-to-r from-gray-200 to-gray-100 animate-pulse"
               />
             ))}
@@ -70,4 +72,4 @@ export function SuggestionSkeleton() {
       </div>
     </Card>
   );
-} 
+}

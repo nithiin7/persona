@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Education } from "@/lib/types";
 import { Input } from "@/components/ui/input";
@@ -19,20 +19,30 @@ interface ProfileEducationFormProps {
   onChange: (education: Education[]) => void;
 }
 
-export function ProfileEducationForm({ education, onChange }: ProfileEducationFormProps) {
+export function ProfileEducationForm({
+  education,
+  onChange,
+}: ProfileEducationFormProps) {
   const addEducation = () => {
-    onChange([...education, {
-      school: "",
-      degree: "",
-      field: "",
-      location: "",
-      date: "",
-      gpa: undefined,
-      achievements: []
-    }]);
+    onChange([
+      ...education,
+      {
+        school: "",
+        degree: "",
+        field: "",
+        location: "",
+        date: "",
+        gpa: undefined,
+        achievements: [],
+      },
+    ]);
   };
 
-  const updateEducation = (index: number, field: keyof Education, value: Education[typeof field]) => {
+  const updateEducation = (
+    index: number,
+    field: keyof Education,
+    value: Education[typeof field]
+  ) => {
     const updated = [...education];
     updated[index] = { ...updated[index], [field]: value };
     onChange(updated);
@@ -44,8 +54,8 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
 
   return (
     <div className="space-y-3">
-      <Accordion 
-        type="multiple" 
+      <Accordion
+        type="multiple"
         className="space-y-3"
         defaultValue={education.map((_, index) => `education-${index}`)}
       >
@@ -58,7 +68,9 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
             <AccordionTrigger className="px-4 py-2 hover:no-underline">
               <div className="flex items-center justify-between gap-3 flex-1">
                 <div className="flex-1 text-left text-sm font-medium text-indigo-900">
-                  {edu.degree ? `${edu.degree} ` : ''}{edu.field ? `in ${edu.field} ` : ''}{edu.school ? `at ${edu.school}` : 'New Education'}
+                  {edu.degree ? `${edu.degree} ` : ""}
+                  {edu.field ? `in ${edu.field} ` : ""}
+                  {edu.school ? `at ${edu.school}` : "New Education"}
                 </div>
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   {edu.date && <span>{edu.date}</span>}
@@ -73,7 +85,9 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                   <div className="relative group flex-1">
                     <Input
                       value={edu.school}
-                      onChange={(e) => updateEducation(index, 'school', e.target.value)}
+                      onChange={(e) =>
+                        updateEducation(index, "school", e.target.value)
+                      }
                       className="text-base bg-white/50 border-gray-200 rounded-md h-8
                         focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
                         hover:border-indigo-500/30 hover:bg-white/60 transition-colors
@@ -84,8 +98,8 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                       INSTITUTION
                     </div>
                   </div>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     size="sm"
                     onClick={() => removeEducation(index)}
                     className="text-gray-400 hover:text-red-500 transition-colors duration-300 h-8 w-8"
@@ -98,7 +112,9 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                 <div className="relative group">
                   <Input
                     value={edu.location}
-                    onChange={(e) => updateEducation(index, 'location', e.target.value)}
+                    onChange={(e) =>
+                      updateEducation(index, "location", e.target.value)
+                    }
                     className="bg-white/50 border-gray-200 rounded-md h-8
                       focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
                       hover:border-indigo-500/30 hover:bg-white/60 transition-colors
@@ -115,7 +131,9 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                   <div className="relative group flex-1">
                     <Input
                       value={edu.degree}
-                      onChange={(e) => updateEducation(index, 'degree', e.target.value)}
+                      onChange={(e) =>
+                        updateEducation(index, "degree", e.target.value)
+                      }
                       className="bg-white/50 border-gray-200 rounded-md h-8
                         focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
                         hover:border-indigo-500/30 hover:bg-white/60 transition-colors
@@ -129,7 +147,9 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                   <div className="relative group flex-1">
                     <Input
                       value={edu.field}
-                      onChange={(e) => updateEducation(index, 'field', e.target.value)}
+                      onChange={(e) =>
+                        updateEducation(index, "field", e.target.value)
+                      }
                       className="bg-white/50 border-gray-200 rounded-md h-8
                         focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
                         hover:border-indigo-500/30 hover:bg-white/60 transition-colors
@@ -148,7 +168,9 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                     <Input
                       type="text"
                       value={edu.date}
-                      onChange={(e) => updateEducation(index, 'date', e.target.value)}
+                      onChange={(e) =>
+                        updateEducation(index, "date", e.target.value)
+                      }
                       className="bg-white/50 border-gray-200 rounded-md h-8
                         focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
                         hover:border-indigo-500/30 hover:bg-white/60 transition-colors
@@ -162,8 +184,14 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                   <div className="relative group md:w-1/3">
                     <Input
                       type="text"
-                      value={edu.gpa || ''}
-                      onChange={(e) => updateEducation(index, 'gpa', e.target.value || undefined)}
+                      value={edu.gpa || ""}
+                      onChange={(e) =>
+                        updateEducation(
+                          index,
+                          "gpa",
+                          e.target.value || undefined
+                        )
+                      }
                       className="bg-white/50 border-gray-200 rounded-md h-8
                         focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
                         hover:border-indigo-500/30 hover:bg-white/60 transition-colors
@@ -179,14 +207,22 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                 {/* Achievements */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-baseline">
-                    <Label className="text-xs font-medium text-indigo-700">Achievements & Activities</Label>
-                    <span className="text-[9px] text-gray-500">One achievement per line</span>
+                    <Label className="text-xs font-medium text-indigo-700">
+                      Achievements & Activities
+                    </Label>
+                    <span className="text-[9px] text-gray-500">
+                      One achievement per line
+                    </span>
                   </div>
                   <Textarea
-                    value={edu.achievements?.join('\n')}
-                    onChange={(e) => updateEducation(index, 'achievements', 
-                      e.target.value.split('\n').filter(Boolean)
-                    )}
+                    value={edu.achievements?.join("\n")}
+                    onChange={(e) =>
+                      updateEducation(
+                        index,
+                        "achievements",
+                        e.target.value.split("\n").filter(Boolean)
+                      )
+                    }
                     placeholder="• Dean's List 2020-2021&#10;• President of Computer Science Club&#10;• First Place in Hackathon 2022"
                     className="min-h-[100px] bg-white/50 border-gray-200 rounded-md
                       focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
@@ -200,8 +236,8 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
         ))}
       </Accordion>
 
-      <Button 
-        variant="outline" 
+      <Button
+        variant="outline"
         onClick={addEducation}
         className="w-full bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-blue-500/5 hover:from-indigo-500/10 hover:via-indigo-500/15 hover:to-blue-500/10 border-dashed border-indigo-500/30 hover:border-indigo-500/40 text-indigo-700 hover:text-indigo-800 transition-all duration-300 h-8 text-sm"
       >
@@ -210,4 +246,4 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
       </Button>
     </div>
   );
-} 
+}

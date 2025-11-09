@@ -1,5 +1,3 @@
-
-
 // OpenAI function schema for resume parsing
 export const openAiProfileSchema = {
   name: "resume-schema",
@@ -7,31 +5,31 @@ export const openAiProfileSchema = {
     type: "object",
     properties: {
       response: {
-        type: "string"
+        type: "string",
       },
       first_name: {
-        type: "string"
+        type: "string",
       },
       last_name: {
-        type: "string"
+        type: "string",
       },
       email: {
-        type: "string"
+        type: "string",
       },
       phone_number: {
-        type: "string"
+        type: "string",
       },
       location: {
-        type: "string"
+        type: "string",
       },
       website: {
-        type: "string"
+        type: "string",
       },
       linkedin_url: {
-        type: "string"
+        type: "string",
       },
       github_url: {
-        type: "string"
+        type: "string",
       },
       work_experience: {
         type: "array",
@@ -39,29 +37,29 @@ export const openAiProfileSchema = {
           type: "object",
           properties: {
             company: {
-              type: "string"
+              type: "string",
             },
             position: {
-              type: "string"
+              type: "string",
             },
             date: {
-              type: "string"
+              type: "string",
             },
             location: {
-              type: "string"
+              type: "string",
             },
             description: {
               type: "array",
               items: {
-                type: "string"
-              }
+                type: "string",
+              },
             },
             technologies: {
               type: "array",
               items: {
-                type: "string"
-              }
-            }
+                type: "string",
+              },
+            },
           },
           required: [
             "company",
@@ -69,10 +67,10 @@ export const openAiProfileSchema = {
             "date",
             "location",
             "description",
-            "technologies"
+            "technologies",
           ],
-          additionalProperties: false
-        }
+          additionalProperties: false,
+        },
       },
       education: {
         type: "array",
@@ -80,29 +78,29 @@ export const openAiProfileSchema = {
           type: "object",
           properties: {
             school: {
-              type: "string"
+              type: "string",
             },
             degree: {
-              type: "string"
+              type: "string",
             },
             field: {
-              type: "string"
+              type: "string",
             },
             date: {
-              type: "string"
+              type: "string",
             },
             location: {
-              type: "string"
+              type: "string",
             },
             gpa: {
-              type: "string"
+              type: "string",
             },
             achievements: {
               type: "array",
               items: {
-                type: "string"
-              }
-            }
+                type: "string",
+              },
+            },
           },
           required: [
             "school",
@@ -111,10 +109,10 @@ export const openAiProfileSchema = {
             "date",
             "location",
             "gpa",
-            "achievements"
+            "achievements",
           ],
-          additionalProperties: false
-        }
+          additionalProperties: false,
+        },
       },
       skills: {
         type: "array",
@@ -122,21 +120,18 @@ export const openAiProfileSchema = {
           type: "object",
           properties: {
             category: {
-              type: "string"
+              type: "string",
             },
             skills: {
               type: "array",
               items: {
-                type: "string"
-              }
-            }
+                type: "string",
+              },
+            },
           },
-          required: [
-            "category",
-            "skills"
-          ],
-          additionalProperties: false
-        }
+          required: ["category", "skills"],
+          additionalProperties: false,
+        },
       },
       projects: {
         type: "array",
@@ -144,38 +139,31 @@ export const openAiProfileSchema = {
           type: "object",
           properties: {
             name: {
-              type: "string"
+              type: "string",
             },
             description: {
-                type: "array",
-                items: {
-                  type: "string"
-                }
+              type: "array",
+              items: {
+                type: "string",
+              },
             },
             date: {
-              type: "string"
+              type: "string",
             },
             url: {
-              type: "string"
+              type: "string",
             },
             technologies: {
               type: "array",
               items: {
-                type: "string"
-              }
-            }
+                type: "string",
+              },
+            },
           },
-          required: [
-            "name",
-            "description",
-            "date",
-            "url",
-            "technologies"
-          ],
-          additionalProperties: false
-        }
+          required: ["name", "description", "date", "url", "technologies"],
+          additionalProperties: false,
+        },
       },
-
     },
     required: [
       "response",
@@ -190,13 +178,12 @@ export const openAiProfileSchema = {
       "work_experience",
       "education",
       "skills",
-      "projects"
+      "projects",
     ],
-    additionalProperties: false
+    additionalProperties: false,
   },
-  strict: true
+  strict: true,
 } as const;
-
 
 export const openAiResumeSchema = {
   name: "resume",
@@ -230,12 +217,12 @@ export const openAiResumeSchema = {
             location: { type: "string" },
             description: {
               type: "array",
-              items: { type: "string" }
+              items: { type: "string" },
             },
             technologies: {
               type: "array",
-              items: { type: "string" }
-            }
+              items: { type: "string" },
+            },
           },
           required: [
             "company",
@@ -243,10 +230,10 @@ export const openAiResumeSchema = {
             "date",
             "location",
             "description",
-            "technologies"
+            "technologies",
           ],
-          additionalProperties: false
-        }
+          additionalProperties: false,
+        },
       },
       education: {
         type: "array",
@@ -261,8 +248,8 @@ export const openAiResumeSchema = {
             gpa: { type: ["number", "null"] },
             achievements: {
               type: "array",
-              items: { type: "string" }
-            }
+              items: { type: "string" },
+            },
           },
           required: [
             "school",
@@ -271,10 +258,10 @@ export const openAiResumeSchema = {
             "date",
             "location",
             "gpa",
-            "achievements"
+            "achievements",
           ],
-          additionalProperties: false
-        }
+          additionalProperties: false,
+        },
       },
       projects: {
         type: "array",
@@ -284,15 +271,15 @@ export const openAiResumeSchema = {
             name: { type: "string" },
             description: {
               type: "array",
-              items: { type: "string" }
+              items: { type: "string" },
             },
             date: { type: "string" },
             url: { type: ["string", "null"] },
             github_url: { type: ["string", "null"] },
             technologies: {
               type: "array",
-              items: { type: "string" }
-            }
+              items: { type: "string" },
+            },
           },
           required: [
             "name",
@@ -300,10 +287,10 @@ export const openAiResumeSchema = {
             "date",
             "github_url",
             "url",
-            "technologies"
+            "technologies",
           ],
-          additionalProperties: false
-        }
+          additionalProperties: false,
+        },
       },
       skills: {
         type: "array",
@@ -313,16 +300,16 @@ export const openAiResumeSchema = {
             category: { type: "string" },
             items: {
               type: "array",
-              items: { type: "string" }
-            }
+              items: { type: "string" },
+            },
           },
           required: ["category", "items"],
-          additionalProperties: false
-        }
+          additionalProperties: false,
+        },
       },
       section_order: {
         type: "array",
-        items: { type: "string" }
+        items: { type: "string" },
       },
       section_configs: {
         type: "object",
@@ -334,11 +321,11 @@ export const openAiResumeSchema = {
               max_items: { type: ["number", "null"] },
               style: {
                 type: ["string", "null"],
-                enum: ["grouped", "list", "grid", null]
-              }
+                enum: ["grouped", "list", "grid", null],
+              },
             },
             required: ["visible", "max_items", "style"],
-            additionalProperties: false
+            additionalProperties: false,
           },
           education: {
             type: "object",
@@ -347,11 +334,11 @@ export const openAiResumeSchema = {
               max_items: { type: ["number", "null"] },
               style: {
                 type: ["string", "null"],
-                enum: ["grouped", "list", "grid", null]
-              }
+                enum: ["grouped", "list", "grid", null],
+              },
             },
             required: ["visible", "max_items", "style"],
-            additionalProperties: false
+            additionalProperties: false,
           },
           skills: {
             type: "object",
@@ -360,11 +347,11 @@ export const openAiResumeSchema = {
               max_items: { type: ["number", "null"] },
               style: {
                 type: ["string", "null"],
-                enum: ["grouped", "list", "grid", null]
-              }
+                enum: ["grouped", "list", "grid", null],
+              },
             },
             required: ["visible", "max_items", "style"],
-            additionalProperties: false
+            additionalProperties: false,
           },
           projects: {
             type: "object",
@@ -373,18 +360,18 @@ export const openAiResumeSchema = {
               max_items: { type: ["number", "null"] },
               style: {
                 type: ["string", "null"],
-                enum: ["grouped", "list", "grid", null]
-              }
+                enum: ["grouped", "list", "grid", null],
+              },
             },
             required: ["visible", "max_items", "style"],
-            additionalProperties: false
+            additionalProperties: false,
           },
         },
         required: ["work_experience", "education", "skills", "projects"],
-        additionalProperties: false
+        additionalProperties: false,
       },
       created_at: { type: "string" },
-      updated_at: { type: "string" }
+      updated_at: { type: "string" },
     },
     required: [
       "id",
@@ -410,168 +397,160 @@ export const openAiResumeSchema = {
       "section_order",
       "section_configs",
       "created_at",
-      "updated_at"
+      "updated_at",
     ],
-    additionalProperties: false
+    additionalProperties: false,
   },
-  strict: true
+  strict: true,
 } as const;
 
 export const openAiWorkExperienceBulletPointsSchema = {
-  "name": "work-experience-schema",
-  "schema": {
-    "type": "object",
-    "properties": {
-      "points": {
-        "type": "array",
-        "description": "A collection of bullet points describing work achievements or responsibilities.",
-        "items": {
-          "type": "string",
-          "description": "A bullet point describing a work achievement or responsibility."
-        }
-      },
-      "analysis": {
-        "type": "object",
-        "description": "An analysis of the work experience achievements.",
-        "properties": {
-          "impact_score": {
-            "type": "number",
-            "description": "Score indicating the overall impact of these achievements (1-10)."
-          },
-          "improvement_suggestions": {
-            "type": "array",
-            "description": "Suggestions for improvement based on the analysis.",
-            "items": {
-              "type": "string",
-              "description": "A suggestion for improvement."
-            }
-          }
+  name: "work-experience-schema",
+  schema: {
+    type: "object",
+    properties: {
+      points: {
+        type: "array",
+        description:
+          "A collection of bullet points describing work achievements or responsibilities.",
+        items: {
+          type: "string",
+          description:
+            "A bullet point describing a work achievement or responsibility.",
         },
-        "required": [
-          "impact_score",
-          "improvement_suggestions"
-        ],
-        "additionalProperties": false
-      }
+      },
+      analysis: {
+        type: "object",
+        description: "An analysis of the work experience achievements.",
+        properties: {
+          impact_score: {
+            type: "number",
+            description:
+              "Score indicating the overall impact of these achievements (1-10).",
+          },
+          improvement_suggestions: {
+            type: "array",
+            description: "Suggestions for improvement based on the analysis.",
+            items: {
+              type: "string",
+              description: "A suggestion for improvement.",
+            },
+          },
+        },
+        required: ["impact_score", "improvement_suggestions"],
+        additionalProperties: false,
+      },
     },
-    "required": [
-      "points",
-      "analysis"
-    ],
-    "additionalProperties": false
+    required: ["points", "analysis"],
+    additionalProperties: false,
   },
-  "strict": true
+  strict: true,
 } as const;
 
 export const openAiProjectSchema = {
-  "name": "project-schema",
-  "schema": {
-    "type": "object",
-    "properties": {
-      "points": {
-        "type": "array",
-        "description": "A collection of bullet points describing project achievements or features.",
-        "items": {
-          "type": "string",
-          "description": "A bullet point describing a project achievement or feature."
-        }
-      },
-      "analysis": {
-        "type": "object",
-        "description": "An analysis of the project achievements.",
-        "properties": {
-          "impact_score": {
-            "type": "number",
-            "description": "Score indicating the overall impact of these achievements (1-10)."
-          },
-          "improvement_suggestions": {
-            "type": "array",
-            "description": "Suggestions for improvement based on the analysis.",
-            "items": {
-              "type": "string",
-              "description": "A suggestion for improvement."
-            }
-          }
+  name: "project-schema",
+  schema: {
+    type: "object",
+    properties: {
+      points: {
+        type: "array",
+        description:
+          "A collection of bullet points describing project achievements or features.",
+        items: {
+          type: "string",
+          description:
+            "A bullet point describing a project achievement or feature.",
         },
-        "required": [
-          "impact_score",
-          "improvement_suggestions"
-        ],
-        "additionalProperties": false
-      }
+      },
+      analysis: {
+        type: "object",
+        description: "An analysis of the project achievements.",
+        properties: {
+          impact_score: {
+            type: "number",
+            description:
+              "Score indicating the overall impact of these achievements (1-10).",
+          },
+          improvement_suggestions: {
+            type: "array",
+            description: "Suggestions for improvement based on the analysis.",
+            items: {
+              type: "string",
+              description: "A suggestion for improvement.",
+            },
+          },
+        },
+        required: ["impact_score", "improvement_suggestions"],
+        additionalProperties: false,
+      },
     },
-    "required": [
-      "points",
-      "analysis"
-    ],
-    "additionalProperties": false
+    required: ["points", "analysis"],
+    additionalProperties: false,
   },
-  "strict": true
+  strict: true,
 } as const;
 
-
-
-
-
-
 export const openAiWorkExperienceSchema = {
-  "name": "WorkExperience",
-  "schema": {
-    "type": "object",
-    "properties": {
-      "work_experience_items": {
-        "type": "array",
-        "description": "A list of work experience items.",
-        "items": {
-          "type": "object",
-          "properties": {
-            "company": {
-              "type": "string",
-              "description": "The name of the company where the work experience took place."
+  name: "WorkExperience",
+  schema: {
+    type: "object",
+    properties: {
+      work_experience_items: {
+        type: "array",
+        description: "A list of work experience items.",
+        items: {
+          type: "object",
+          properties: {
+            company: {
+              type: "string",
+              description:
+                "The name of the company where the work experience took place.",
             },
-            "position": {
-              "type": "string",
-              "description": "The job title or position held during the work experience."
+            position: {
+              type: "string",
+              description:
+                "The job title or position held during the work experience.",
             },
-            "location": {
-              "type": "string",
-              "description": "The location of the company."
+            location: {
+              type: "string",
+              description: "The location of the company.",
             },
-            "date": {
-              "type": "string",
-              "description": "The date or period during which the work experience occurred."
+            date: {
+              type: "string",
+              description:
+                "The date or period during which the work experience occurred.",
             },
-            "description": {
-              "type": "array",
-              "description": "A list of responsibilities and achievements during the work experience.",
-              "items": {
-                "type": "string"
-              }
+            description: {
+              type: "array",
+              description:
+                "A list of responsibilities and achievements during the work experience.",
+              items: {
+                type: "string",
+              },
             },
-            "technologies": {
-              "type": "array",
-              "description": "A list of technologies used during the work experience.",
-              "items": {
-                "type": "string"
-              }
-            }
+            technologies: {
+              type: "array",
+              description:
+                "A list of technologies used during the work experience.",
+              items: {
+                type: "string",
+              },
+            },
           },
-          "required": [
+          required: [
             "company",
             "position",
             "location",
             "date",
             "description",
-            "technologies"
+            "technologies",
           ],
-          "additionalProperties": false
-        }
-      }
+          additionalProperties: false,
+        },
+      },
     },
-    "required": [
-      "work_experience_items"
-    ],
-    "additionalProperties": false
+    required: ["work_experience_items"],
+    additionalProperties: false,
   },
-  "strict": true
+  strict: true,
 } as const;

@@ -1,13 +1,13 @@
-import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
   // Debug logging
-  console.log('🔍 Middleware running on:', request.nextUrl.pathname)
-  
+  console.log("🔍 Middleware running on:", request.nextUrl.pathname);
+
   let supabaseResponse = NextResponse.next({
     request,
-  })
+  });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,20 +15,22 @@ export async function updateSession(request: NextRequest) {
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll()
+          return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          );
           supabaseResponse = NextResponse.next({
             request,
-          })
+          });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
-          )
+          );
         },
       },
     }
-  )
+  );
 
   // Do not run code between createServerClient and
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
@@ -38,15 +40,14 @@ export async function updateSession(request: NextRequest) {
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
-  
+  } = await supabase.auth.getUser();
+
   // Debug logging
-  console.log('👤 User authenticated:', !!user)
+  console.log("👤 User authenticated:", !!user);
 
   // Create a new headers object with the existing headers
   // Given an incoming request...
-  const requestHeaders = new Headers(request.headers)
-
+  const requestHeaders = new Headers(request.headers);
 
   // Create new response with enriched headers
   supabaseResponse = NextResponse.next({
@@ -54,20 +55,20 @@ export async function updateSession(request: NextRequest) {
       ...request,
       headers: requestHeaders,
     },
-  })
+  });
 
-  supabaseResponse.cookies.set('show-banner', 'false')
+  supabaseResponse.cookies.set("show-banner", "false");
 
   // Check if user is authenticated and redirect if needed
   if (!user) {
     // If no user is authenticated, redirect to the landing page
-    console.log('🚫 Redirecting unauthenticated user to landing page')
-    const url = request.nextUrl.clone()
-    url.pathname = '/'
-    return NextResponse.redirect(url)
+    console.log("🚫 Redirecting unauthenticated user to landing page");
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
   }
 
-  console.log('✅ User authenticated, allowing access')
+  console.log("✅ User authenticated, allowing access");
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
@@ -82,5 +83,5 @@ export async function updateSession(request: NextRequest) {
   // If this is not done, you may be causing the browser and server to go out
   // of sync and terminate the user's session prematurely!
 
-  return supabaseResponse
+  return supabaseResponse;
 }

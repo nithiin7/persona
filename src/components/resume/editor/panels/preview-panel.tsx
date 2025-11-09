@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Resume } from "@/lib/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -17,23 +17,25 @@ interface PreviewPanelProps {
 export function PreviewPanel({
   resume,
   // onResumeChange,
-  width
+  width,
 }: PreviewPanelProps) {
   return (
-    <ScrollArea className={cn(
-      " z-50     bg-red-500 h-full",
-      resume.is_base_resume
-        ? "bg-purple-50/30"
-        : "bg-pink-50/60 shadow-sm shadow-pink-200/20"
-    )}>
+    <ScrollArea
+      className={cn(
+        " z-50     bg-red-500 h-full",
+        resume.is_base_resume
+          ? "bg-purple-50/30"
+          : "bg-pink-50/60 shadow-sm shadow-pink-200/20"
+      )}
+    >
       <div className="">
-      <ResumeContextMenu resume={resume}>
+        <ResumeContextMenu resume={resume}>
           <ResumePreview resume={resume} containerWidth={width} />
         </ResumeContextMenu>
       </div>
 
-      <CoverLetter 
-        // resumeId={resume.id} 
+      <CoverLetter
+        // resumeId={resume.id}
         // hasCoverLetter={resume.has_cover_letter}
         // coverLetterData={resume.cover_letter}
         containerWidth={width}
@@ -41,11 +43,11 @@ export function PreviewPanel({
         //   if ('has_cover_letter' in data) {
         //     onResumeChange('has_cover_letter', data.has_cover_letter as boolean);
         //   }
-        //   if ('cover_letter' in data) {    
+        //   if ('cover_letter' in data) {
         //     onResumeChange('cover_letter', data.cover_letter as Record<string, unknown>);
         //   }
         // }}
       />
     </ScrollArea>
   );
-} 
+}

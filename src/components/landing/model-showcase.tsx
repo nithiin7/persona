@@ -15,7 +15,7 @@ export function ModelShowcase() {
         <div className="relative">
           {/* Gradient background with animation */}
           <div className="absolute inset-0 bg-gradient-to-r from-violet-100/50 via-blue-100/50 to-violet-100/50 rounded-2xl blur-xl" />
-          
+
           {/* Glass container */}
           <div className="relative backdrop-blur-xl bg-white/40 border border-white/40 rounded-2xl p-8 shadow-xl">
             {/* Logo grid with responsive layout */}
@@ -65,4 +65,4 @@ export function ModelShowcase() {
       </div>
     </div>
   );
-} 
+}

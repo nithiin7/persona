@@ -1,8 +1,16 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableCaption } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import Link from "next/link";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableCaption,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
 // Define the structure of the resume data expected by this component
 interface ResumeInfo {
@@ -19,21 +27,25 @@ interface UserResumeListProps {
 
 // Helper function to format dates concisely for the table
 function formatTableDate(dateString?: string | null): string {
-  if (!dateString) return 'N/A';
+  if (!dateString) return "N/A";
   try {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   } catch {
-    return 'Invalid Date';
+    return "Invalid Date";
   }
 }
 
 export default function UserResumeList({ resumes }: UserResumeListProps) {
   if (!resumes || resumes.length === 0) {
-    return <p className="text-sm text-muted-foreground italic">This user has no resumes.</p>;
+    return (
+      <p className="text-sm text-muted-foreground italic">
+        This user has no resumes.
+      </p>
+    );
   }
 
   return (
@@ -50,18 +62,25 @@ export default function UserResumeList({ resumes }: UserResumeListProps) {
         {resumes.map((resume) => (
           <TableRow key={resume.id}>
             <TableCell className="font-medium">
-              <Link href={`/resumes/${resume.id}`} className="hover:underline text-primary" target="_blank" rel="noopener noreferrer">
-                {resume.name || 'Untitled Resume'}
+              <Link
+                href={`/resumes/${resume.id}`}
+                className="hover:underline text-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {resume.name || "Untitled Resume"}
               </Link>
             </TableCell>
-             <TableCell>
+            <TableCell>
               {resume.is_base_resume ? (
                 <Badge variant="secondary">Base</Badge>
               ) : (
-                 <Badge variant="outline">Tailored</Badge>
+                <Badge variant="outline">Tailored</Badge>
               )}
             </TableCell>
-            <TableCell className="text-right">{formatTableDate(resume.created_at)}</TableCell>
+            <TableCell className="text-right">
+              {formatTableDate(resume.created_at)}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

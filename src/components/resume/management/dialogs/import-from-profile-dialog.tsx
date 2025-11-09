@@ -1,7 +1,21 @@
-'use client';
+"use client";
 
-import { WorkExperience, Project, Profile, Education, Skill } from "@/lib/types";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import {
+  WorkExperience,
+  Project,
+  Profile,
+  Education,
+  Skill,
+} from "@/lib/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,53 +29,55 @@ type ImportItem = WorkExperience | Project | Education | Skill;
 interface ImportFromProfileDialogProps<T extends ImportItem> {
   profile: Profile;
   onImport: (items: T[]) => void;
-  type: 'work_experience' | 'projects' | 'education' | 'skills';
+  type: "work_experience" | "projects" | "education" | "skills";
   buttonClassName?: string;
 }
 
-export function ImportFromProfileDialog<T extends ImportItem>({ 
-  profile, 
-  onImport, 
+export function ImportFromProfileDialog<T extends ImportItem>({
+  profile,
+  onImport,
   type,
-  buttonClassName 
+  buttonClassName,
 }: ImportFromProfileDialogProps<T>) {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
-  const items = type === 'work_experience' 
-    ? profile.work_experience 
-    : type === 'projects'
-    ? profile.projects
-    : type === 'education'
-    ? profile.education
-    : profile.skills;
+  const items =
+    type === "work_experience"
+      ? profile.work_experience
+      : type === "projects"
+        ? profile.projects
+        : type === "education"
+          ? profile.education
+          : profile.skills;
 
-  const title = type === 'work_experience' 
-    ? 'Work Experience' 
-    : type === 'projects'
-    ? 'Projects'
-    : type === 'education'
-    ? 'Education'
-    : 'Skills';
+  const title =
+    type === "work_experience"
+      ? "Work Experience"
+      : type === "projects"
+        ? "Projects"
+        : type === "education"
+          ? "Education"
+          : "Skills";
 
   const handleImport = () => {
     const itemsToImport = items.filter((item) => {
       const id = getItemId(item);
       return selectedItems.includes(id);
     }) as T[];
-    
+
     onImport(itemsToImport);
     setOpen(false);
     setSelectedItems([]);
   };
 
   const getItemId = (item: ImportItem): string => {
-    if (type === 'work_experience') {
+    if (type === "work_experience") {
       const exp = item as WorkExperience;
       return `${exp.company}-${exp.position}-${exp.date}`;
-    } else if (type === 'projects') {
+    } else if (type === "projects") {
       return (item as Project).name;
-    } else if (type === 'education') {
+    } else if (type === "education") {
       const edu = item as Education;
       return `${edu.school}-${edu.degree}-${edu.field}`;
     } else {
@@ -70,11 +86,11 @@ export function ImportFromProfileDialog<T extends ImportItem>({
   };
 
   const getItemTitle = (item: ImportItem): string => {
-    if (type === 'work_experience') {
+    if (type === "work_experience") {
       return (item as WorkExperience).position;
-    } else if (type === 'projects') {
+    } else if (type === "projects") {
       return (item as Project).name;
-    } else if (type === 'education') {
+    } else if (type === "education") {
       const edu = item as Education;
       return `${edu.degree} in ${edu.field}`;
     } else {
@@ -83,11 +99,11 @@ export function ImportFromProfileDialog<T extends ImportItem>({
   };
 
   const getItemSubtitle = (item: ImportItem): string | null => {
-    if (type === 'work_experience') {
+    if (type === "work_experience") {
       return (item as WorkExperience).company;
-    } else if (type === 'projects') {
-      return ((item as Project).technologies || []).join(', ');
-    } else if (type === 'education') {
+    } else if (type === "projects") {
+      return ((item as Project).technologies || []).join(", ");
+    } else if (type === "education") {
       return (item as Education).school;
     } else {
       return null;
@@ -95,24 +111,24 @@ export function ImportFromProfileDialog<T extends ImportItem>({
   };
 
   const getItemDate = (item: ImportItem): string => {
-    if (type === 'work_experience') {
+    if (type === "work_experience") {
       const exp = item as WorkExperience;
       return exp.date;
-    } else if (type === 'projects') {
+    } else if (type === "projects") {
       const proj = item as Project;
-      return proj.date || '';
-    } else if (type === 'education') {
+      return proj.date || "";
+    } else if (type === "education") {
       const edu = item as Education;
       return edu.date;
     }
-    return '';
+    return "";
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className={cn(
             "mb-6 w-full h-16",
             "bg-gradient-to-r from-teal-500/5 via-teal-500/10 to-cyan-500/5",
@@ -132,7 +148,8 @@ export function ImportFromProfileDialog<T extends ImportItem>({
         <DialogHeader>
           <DialogTitle>Import {title}</DialogTitle>
           <DialogDescription>
-            Select the {title.toLowerCase()} you want to import from your profile
+            Select the {title.toLowerCase()} you want to import from your
+            profile
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[400px] mt-4">
@@ -148,10 +165,8 @@ export function ImportFromProfileDialog<T extends ImportItem>({
                     id={id}
                     checked={selectedItems.includes(id)}
                     onCheckedChange={(checked) => {
-                      setSelectedItems(prev =>
-                        checked
-                          ? [...prev, id]
-                          : prev.filter(x => x !== id)
+                      setSelectedItems((prev) =>
+                        checked ? [...prev, id] : prev.filter((x) => x !== id)
                       );
                     }}
                     className="mt-1"
@@ -161,16 +176,20 @@ export function ImportFromProfileDialog<T extends ImportItem>({
                       htmlFor={id}
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                     >
-                      <div className="font-semibold text-base mb-1">{getItemTitle(item)}</div>
+                      <div className="font-semibold text-base mb-1">
+                        {getItemTitle(item)}
+                      </div>
                       {getItemSubtitle(item) && (
-                        <div className="text-sm text-muted-foreground">{getItemSubtitle(item)}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {getItemSubtitle(item)}
+                        </div>
                       )}
                       {getItemDate(item) && (
                         <div className="text-xs text-muted-foreground mt-1">
                           {getItemDate(item)}
                         </div>
                       )}
-                      {type === 'skills' && (
+                      {type === "skills" && (
                         <div className="flex flex-wrap gap-2 mt-2">
                           {(item as Skill).items.map((skill, index) => (
                             <Badge
@@ -209,4 +228,4 @@ export function ImportFromProfileDialog<T extends ImportItem>({
       </DialogContent>
     </Dialog>
   );
-} 
+}

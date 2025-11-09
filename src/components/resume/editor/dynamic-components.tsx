@@ -1,8 +1,14 @@
-import dynamic from 'next/dynamic';
-import React from 'react';
-import type { ComponentType } from 'react';
-import { LoadingFallback } from './shared/LoadingFallback';
-import type { WorkExperience, Education, Skill, Project, DocumentSettings } from '@/lib/types';
+import dynamic from "next/dynamic";
+import React from "react";
+import type { ComponentType } from "react";
+import { LoadingFallback } from "./shared/LoadingFallback";
+import type {
+  WorkExperience,
+  Education,
+  Skill,
+  Project,
+  DocumentSettings,
+} from "@/lib/types";
 
 interface WorkExperienceFormProps {
   experiences: WorkExperience[];
@@ -23,8 +29,6 @@ interface EducationFormProps {
   profile: { education: Education[] };
 }
 
-
-
 interface SkillsFormProps {
   skills: Skill[];
   onChange: (skills: Skill[]) => void;
@@ -32,47 +36,61 @@ interface SkillsFormProps {
 }
 
 export const WorkExperienceForm = dynamic(
-  () => import('./forms/work-experience-form').then(mod => ({ default: mod.WorkExperienceForm })) as Promise<ComponentType<WorkExperienceFormProps>>,
+  () =>
+    import("./forms/work-experience-form").then((mod) => ({
+      default: mod.WorkExperienceForm,
+    })) as Promise<ComponentType<WorkExperienceFormProps>>,
   {
     loading: () => <LoadingFallback lines={2} />,
-    ssr: false
+    ssr: false,
   }
 );
 
 export const EducationForm = dynamic(
-  () => import('./forms/education-form').then(mod => ({ default: mod.EducationForm })) as Promise<ComponentType<EducationFormProps>>,
+  () =>
+    import("./forms/education-form").then((mod) => ({
+      default: mod.EducationForm,
+    })) as Promise<ComponentType<EducationFormProps>>,
   {
     loading: () => <LoadingFallback lines={1} />,
-    ssr: false
+    ssr: false,
   }
 );
 
 export const SkillsForm = dynamic(
-  () => import('./forms/skills-form').then(mod => ({ default: mod.SkillsForm })) as Promise<ComponentType<SkillsFormProps>>,
+  () =>
+    import("./forms/skills-form").then((mod) => ({
+      default: mod.SkillsForm,
+    })) as Promise<ComponentType<SkillsFormProps>>,
   {
     loading: () => <LoadingFallback lines={1} />,
-    ssr: false
+    ssr: false,
   }
 );
 
 export const ProjectsForm = dynamic(
-  () => import('./forms/projects-form').then(mod => ({ default: mod.ProjectsForm })) as Promise<ComponentType<ProjectsFormProps>>,
+  () =>
+    import("./forms/projects-form").then((mod) => ({
+      default: mod.ProjectsForm,
+    })) as Promise<ComponentType<ProjectsFormProps>>,
   {
     loading: () => <LoadingFallback lines={1} />,
-    ssr: false
+    ssr: false,
   }
 );
 
-
 export const DocumentSettingsForm = dynamic(
-  () => import('./forms/document-settings-form').then(mod => ({ 
-    default: mod.DocumentSettingsForm 
-  })) as Promise<ComponentType<{ 
-    documentSettings: DocumentSettings; 
-    onChange: (field: 'document_settings', value: DocumentSettings) => void 
-  }>>,
+  () =>
+    import("./forms/document-settings-form").then((mod) => ({
+      default: mod.DocumentSettingsForm,
+    })) as Promise<
+      ComponentType<{
+        documentSettings: DocumentSettings;
+        onChange: (field: "document_settings", value: DocumentSettings) => void;
+      }>
+    >,
   {
     loading: () => <LoadingFallback lines={1} />,
-    ssr: false
+    ssr: false,
   }
 );

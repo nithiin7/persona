@@ -1,8 +1,18 @@
-'use client';
+"use client";
 
 import { Resume } from "@/lib/types";
 import { Logo } from "@/components/ui/logo";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -17,60 +27,73 @@ export function ResumeEditorHeader({
 }: ResumeEditorHeaderProps) {
   const router = useRouter();
   const capitalizeWords = (str: string) => {
-    return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    return str
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   const handleBackClick = () => {
     if (!hasUnsavedChanges) {
-      router.push('/');
+      router.push("/");
     }
   };
 
   // Dynamic color classes based on resume type
-  const colors = resume.is_base_resume ? {
-    gradient: "from-purple-600 via-purple-500 to-indigo-600",
-    border: "border-purple-200/50",
-    background: "from-purple-50/95 via-white/95 to-purple-50/95",
-    shadow: "shadow-purple-500/10",
-    text: "text-purple-600",
-    hover: "hover:text-purple-600",
-    textOpacity: "text-purple-600/60",
-    gradientOverlay: "#f3e8ff30",
-  } : {
-    gradient: "from-pink-600 via-pink-500 to-rose-600",
-    border: "border-pink-200/50",
-    background: "from-pink-50/95 via-white/95 to-pink-50/95",
-    shadow: "shadow-pink-500/10",
-    text: "text-pink-600",
-    hover: "hover:text-pink-600",
-    textOpacity: "text-pink-600/60",
-    gradientOverlay: "#fce7f330",
-  };
+  const colors = resume.is_base_resume
+    ? {
+        gradient: "from-purple-600 via-purple-500 to-indigo-600",
+        border: "border-purple-200/50",
+        background: "from-purple-50/95 via-white/95 to-purple-50/95",
+        shadow: "shadow-purple-500/10",
+        text: "text-purple-600",
+        hover: "hover:text-purple-600",
+        textOpacity: "text-purple-600/60",
+        gradientOverlay: "#f3e8ff30",
+      }
+    : {
+        gradient: "from-pink-600 via-pink-500 to-rose-600",
+        border: "border-pink-200/50",
+        background: "from-pink-50/95 via-white/95 to-pink-50/95",
+        shadow: "shadow-pink-500/10",
+        text: "text-pink-600",
+        hover: "hover:text-pink-600",
+        textOpacity: "text-pink-600/60",
+        gradientOverlay: "#fce7f330",
+      };
 
   return (
-    <div className={cn(
-      "h-20 border-b backdrop-blur-xl fixed left-0 right-0 z-40 shadow-lg",
-      colors.border,
-      `bg-gradient-to-r ${colors.background}`,
-      colors.shadow
-    )}>
+    <div
+      className={cn(
+        "h-20 border-b backdrop-blur-xl fixed left-0 right-0 z-40 shadow-lg",
+        colors.border,
+        `bg-gradient-to-r ${colors.background}`,
+        colors.shadow
+      )}
+    >
       {/* Gradient Overlays */}
-      <div className={cn(
-        "absolute inset-0",
-        `bg-[linear-gradient(to_right,${colors.gradientOverlay}_0%,#ffffff40_50%,${colors.gradientOverlay}_100%)]`,
-        "pointer-events-none"
-      )} />
-      <div className={cn(
-        "absolute inset-0",
-        `bg-[radial-gradient(circle_800px_at_50%_-40%,${colors.gradientOverlay}_0%,transparent_100%)]`,
-        "pointer-events-none"
-      )} />
-      <div className={cn(
-        "absolute inset-0",
-        `bg-[radial-gradient(circle_600px_at_100%_100%,${colors.gradientOverlay}_0%,transparent_100%)]`,
-        "pointer-events-none"
-      )} />
-      
+      <div
+        className={cn(
+          "absolute inset-0",
+          `bg-[linear-gradient(to_right,${colors.gradientOverlay}_0%,#ffffff40_50%,${colors.gradientOverlay}_100%)]`,
+          "pointer-events-none"
+        )}
+      />
+      <div
+        className={cn(
+          "absolute inset-0",
+          `bg-[radial-gradient(circle_800px_at_50%_-40%,${colors.gradientOverlay}_0%,transparent_100%)]`,
+          "pointer-events-none"
+        )}
+      />
+      <div
+        className={cn(
+          "absolute inset-0",
+          `bg-[radial-gradient(circle_600px_at_100%_100%,${colors.gradientOverlay}_0%,transparent_100%)]`,
+          "pointer-events-none"
+        )}
+      />
+
       {/* Content Container */}
       <div className="max-w-[2000px] mx-auto h-full px-6 flex items-center justify-between relative">
         {/* Left Section - Logo, Title  */}
@@ -86,13 +109,14 @@ export function ResumeEditorHeader({
                 <AlertDialogHeader>
                   <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
                   <AlertDialogDescription>
-                    You have unsaved changes. Are you sure you want to leave? Your changes will be lost.
+                    You have unsaved changes. Are you sure you want to leave?
+                    Your changes will be lost.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
-                    onClick={() => router.push('/')}
+                    onClick={() => router.push("/")}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
                     Leave
@@ -110,11 +134,15 @@ export function ResumeEditorHeader({
             {/* Resume Title Section */}
             <div className="flex flex-col ">
               <h1 className="text-xl font-semibold">
-                <span className={cn(
-                  "bg-gradient-to-r bg-clip-text text-transparent",
-                  colors.gradient
-                )}>
-                  {resume.is_base_resume ? capitalizeWords(resume.target_role) : resume.name}
+                <span
+                  className={cn(
+                    "bg-gradient-to-r bg-clip-text text-transparent",
+                    colors.gradient
+                  )}
+                >
+                  {resume.is_base_resume
+                    ? capitalizeWords(resume.target_role)
+                    : resume.name}
                 </span>
               </h1>
               <div className={cn("flex text-sm", colors.textOpacity)}>
@@ -134,4 +162,4 @@ export function ResumeEditorHeader({
       </div>
     </div>
   );
-} 
+}

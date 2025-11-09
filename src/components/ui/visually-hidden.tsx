@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
@@ -22,4 +22,4 @@ const VisuallyHidden = React.forwardRef<
 
 VisuallyHidden.displayName = "VisuallyHidden";
 
-export { VisuallyHidden }; 
+export { VisuallyHidden };

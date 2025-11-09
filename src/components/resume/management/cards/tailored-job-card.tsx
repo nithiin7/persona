@@ -1,8 +1,18 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import {  MapPin, Clock, DollarSign, Briefcase, Trash2, Loader2, Plus, Sparkles, AlertCircle } from "lucide-react";
+import {
+  MapPin,
+  Clock,
+  DollarSign,
+  Briefcase,
+  Trash2,
+  Loader2,
+  Plus,
+  Sparkles,
+  AlertCircle,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Job, Resume } from "@/lib/types";
@@ -11,14 +21,25 @@ import { updateResume } from "@/utils/actions/resumes/actions";
 import { createJob, deleteJob } from "@/utils/actions/jobs/actions";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
 import { toast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { useResumeContext } from "../../editor/resume-editor-context";
-import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import {
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import { BriefcaseIcon } from "lucide-react";
 import { formatJobListing } from "@/utils/actions/jobs/ai";
 
@@ -29,10 +50,10 @@ interface TailoredJobCardProps {
   isLoading?: boolean;
 }
 
-export function TailoredJobCard({ 
-  jobId, 
+export function TailoredJobCard({
+  jobId,
   job: externalJob,
-  isLoading: externalIsLoading 
+  isLoading: externalIsLoading,
 }: TailoredJobCardProps) {
   const router = useRouter();
   const { state, dispatch } = useResumeContext();
@@ -40,7 +61,7 @@ export function TailoredJobCard({
   // Only use internal state if external job is not provided
   const [internalJob, setInternalJob] = useState<Job | null>(null);
   const [internalIsLoading, setInternalIsLoading] = useState(true);
-  
+
   const effectiveJob = externalJob ?? internalJob;
   const effectiveIsLoading = externalIsLoading ?? internalIsLoading;
 
@@ -59,23 +80,23 @@ export function TailoredJobCard({
         setInternalIsLoading(true);
         const supabase = createClient();
         const { data: jobData, error } = await supabase
-          .from('jobs')
-          .select('*')
-          .eq('id', jobId)
+          .from("jobs")
+          .select("*")
+          .eq("id", jobId)
           .single();
 
         if (error) {
-          if (error.code !== 'PGRST116') {
+          if (error.code !== "PGRST116") {
             throw error;
           }
           setInternalJob(null);
           return;
         }
-        
+
         setInternalJob(jobData);
       } catch (error) {
-        console.error('Error fetching job:', error);
-        if (error instanceof Error && error.message !== 'No rows returned') {
+        console.error("Error fetching job:", error);
+        if (error instanceof Error && error.message !== "No rows returned") {
           setInternalJob(null);
         }
       } finally {
@@ -88,15 +109,15 @@ export function TailoredJobCard({
 
   const [isCreating, setIsCreating] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [jobDescription, setJobDescription] = useState('');
+  const [jobDescription, setJobDescription] = useState("");
   const [isFormatting, setIsFormatting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{
     jobDescription?: string;
   }>({});
 
-  const formatWorkLocation = (workLocation: Job['work_location']) => {
-    if (!workLocation) return 'Not specified';
-    return workLocation.replace('_', ' ');
+  const formatWorkLocation = (workLocation: Job["work_location"]) => {
+    if (!workLocation) return "Not specified";
+    return workLocation.replace("_", " ");
   };
 
   const validateJobDescription = (value: string) => {
@@ -104,12 +125,15 @@ export function TailoredJobCard({
     if (!value.trim()) {
       errors.jobDescription = "Job description is required";
     } else if (value.trim().length < 50) {
-      errors.jobDescription = "Job description should be at least 50 characters";
+      errors.jobDescription =
+        "Job description should be at least 50 characters";
     }
     return errors;
   };
 
-  const handleJobDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleJobDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     const value = e.target.value;
     setJobDescription(value);
     setValidationErrors(validateJobDescription(value));
@@ -131,8 +155,8 @@ export function TailoredJobCard({
       setIsFormatting(true);
 
       // Get model and API key from local storage
-      const MODEL_STORAGE_KEY = 'persona-default-model';
-      const LOCAL_STORAGE_KEY = 'persona-api-keys';
+      const MODEL_STORAGE_KEY = "persona-default-model";
+      const LOCAL_STORAGE_KEY = "persona-api-keys";
 
       const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
       const storedKeys = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -141,13 +165,13 @@ export function TailoredJobCard({
       try {
         apiKeys = storedKeys ? JSON.parse(storedKeys) : [];
       } catch (error) {
-        console.error('Error parsing API keys:', error);
+        console.error("Error parsing API keys:", error);
       }
 
       // Format job listing using AI
       const formattedJob = await formatJobListing(jobDescription, {
-        model: selectedModel || '',
-        apiKeys
+        model: selectedModel || "",
+        apiKeys,
       });
 
       setIsFormatting(false);
@@ -155,31 +179,31 @@ export function TailoredJobCard({
 
       // Create job in database
       const newJob = await createJob(formattedJob);
-      
+
       // Update resume with new job ID using context
-      dispatch({ type: 'UPDATE_FIELD', field: 'job_id', value: newJob.id });
-      
+      dispatch({ type: "UPDATE_FIELD", field: "job_id", value: newJob.id });
+
       // Save the changes to the database
       await updateResume(state.resume.id, {
         ...state.resume,
-        job_id: newJob.id
+        job_id: newJob.id,
       });
-      
+
       // Close dialog and refresh
       setCreateDialogOpen(false);
       router.refresh();
-
     } catch (error) {
-      console.error('Error creating job:', error);
+      console.error("Error creating job:", error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to create job",
+        description:
+          error instanceof Error ? error.message : "Failed to create job",
         variant: "destructive",
       });
     } finally {
       setIsFormatting(false);
       setIsCreating(false);
-      setJobDescription('');
+      setJobDescription("");
     }
   };
 
@@ -209,7 +233,10 @@ export function TailoredJobCard({
       </div>
       <div className="flex gap-2">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-6 w-20 bg-gradient-to-r from-pink-100/50 via-rose-100/50 to-pink-100/50 rounded-full animate-pulse" />
+          <div
+            key={i}
+            className="h-6 w-20 bg-gradient-to-r from-pink-100/50 via-rose-100/50 to-pink-100/50 rounded-full animate-pulse"
+          />
         ))}
       </div>
     </motion.div>
@@ -217,7 +244,7 @@ export function TailoredJobCard({
 
   // Enhanced error state with proper ARIA and animations
   const ErrorState = () => (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center justify-center p-8 space-y-4"
@@ -230,10 +257,11 @@ export function TailoredJobCard({
       <div className="text-center space-y-2">
         <h3 className="font-semibold text-red-900">Unable to Load Job</h3>
         <p className="text-sm text-red-600/90">
-          This job listing is no longer available or there was an error loading it.
+          This job listing is no longer available or there was an error loading
+          it.
         </p>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           onClick={() => router.refresh()}
           className="mt-4 bg-white/80 border-red-200 hover:bg-red-50/80 hover:border-red-300 text-red-700"
         >
@@ -255,13 +283,14 @@ export function TailoredJobCard({
           <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500/5 to-rose-500/5 border border-pink-200/20 group-hover:scale-110 transition-transform duration-500">
             <Plus className="w-8 h-8 text-pink-500" />
           </div>
-          
+
           <div className="space-y-2">
             <h3 className="text-xl font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
               No Job Currently Linked
             </h3>
             <p className="text-sm text-gray-500/90 max-w-sm">
-              Create a new job listing to track the position you&apos;re applying for and tailor your resume accordingly.
+              Create a new job listing to track the position you&apos;re
+              applying for and tailor your resume accordingly.
             </p>
           </div>
 
@@ -285,7 +314,7 @@ export function TailoredJobCard({
               </Button>
             </DialogTrigger>
 
-            <DialogContent 
+            <DialogContent
               className={cn(
                 "sm:max-w-[600px]",
                 "bg-gradient-to-b from-white/95 to-white/90",
@@ -298,7 +327,8 @@ export function TailoredJobCard({
                 Create New Job Listing
               </DialogTitle>
               <DialogDescription className="text-muted-foreground">
-                Paste the job description below and let our AI format it automatically.
+                Paste the job description below and let our AI format it
+                automatically.
               </DialogDescription>
 
               <div className="space-y-4 mt-4">
@@ -312,8 +342,8 @@ export function TailoredJobCard({
                       "bg-white/80 backdrop-blur-sm",
                       "border transition-all duration-300",
                       "placeholder:text-gray-400",
-                      validationErrors.jobDescription 
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20" 
+                      validationErrors.jobDescription
+                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
                         : "border-gray-200 focus:border-pink-500 focus:ring-pink-500/20"
                     )}
                     aria-invalid={!!validationErrors.jobDescription}
@@ -343,7 +373,11 @@ export function TailoredJobCard({
                   </Button>
                   <Button
                     onClick={handleCreateJobWithAI}
-                    disabled={isFormatting || isCreating || !!validationErrors.jobDescription}
+                    disabled={
+                      isFormatting ||
+                      isCreating ||
+                      !!validationErrors.jobDescription
+                    }
                     className={cn(
                       "relative overflow-hidden",
                       "bg-gradient-to-r from-pink-500 to-rose-500",
@@ -383,10 +417,7 @@ export function TailoredJobCard({
   }
 
   return (
-    <Card className={cn(
-      "relative group border-none px-8",
-    )}>
-
+    <Card className={cn("relative group border-none px-8")}>
       <div className="relative">
         <AnimatePresence mode="wait">
           {effectiveIsLoading ? (
@@ -403,10 +434,28 @@ export function TailoredJobCard({
               {/* Job Details Grid */}
               <div className="grid grid-cols-2 gap-x-2 gap-y-3">
                 {[
-                  { icon: MapPin, text: effectiveJob.location || 'Location not specified', color: 'pink' },
-                  { icon: Briefcase, text: formatWorkLocation(effectiveJob.work_location), color: 'rose' },
-                  { icon: DollarSign, text: effectiveJob.salary_range || 'Salary not specified', color: 'pink' },
-                  { icon: Clock, text: effectiveJob.employment_type?.replace('_', ' ') || 'Employment type not specified', color: 'rose' }
+                  {
+                    icon: MapPin,
+                    text: effectiveJob.location || "Location not specified",
+                    color: "pink",
+                  },
+                  {
+                    icon: Briefcase,
+                    text: formatWorkLocation(effectiveJob.work_location),
+                    color: "rose",
+                  },
+                  {
+                    icon: DollarSign,
+                    text: effectiveJob.salary_range || "Salary not specified",
+                    color: "pink",
+                  },
+                  {
+                    icon: Clock,
+                    text:
+                      effectiveJob.employment_type?.replace("_", " ") ||
+                      "Employment type not specified",
+                    color: "rose",
+                  },
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -429,13 +478,15 @@ export function TailoredJobCard({
               {/* Description */}
               {effectiveJob.description && (
                 <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-gray-700">Description</h4>
+                  <h4 className="text-sm font-medium text-gray-700">
+                    Description
+                  </h4>
                   <p className="text-sm text-gray-600 whitespace-pre-wrap">
                     {effectiveJob.description}
                   </p>
                 </div>
               )}
-              
+
               {/* Keywords */}
               <div className="flex flex-wrap gap-2 ">
                 {effectiveJob.keywords?.map((keyword, index) => (
@@ -445,8 +496,8 @@ export function TailoredJobCard({
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.05 }}
                   >
-                    <Badge 
-                      variant="secondary" 
+                    <Badge
+                      variant="secondary"
                       className={cn(
                         "text-xs py-0.5",
                         "bg-gradient-to-r from-pink-50/50 to-rose-50/50",
@@ -481,7 +532,7 @@ interface TailoredJobAccordionProps {
 export function TailoredJobAccordion({
   resume,
   job,
-  isLoading
+  isLoading,
 }: TailoredJobAccordionProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
@@ -493,13 +544,13 @@ export function TailoredJobAccordion({
 
   const handleDelete = async () => {
     if (!resume.job_id) return;
-    
+
     try {
       setIsDeleting(true);
       await deleteJob(resume.job_id);
       router.refresh();
     } catch (error) {
-      console.error('Error deleting job:', error);
+      console.error("Error deleting job:", error);
       toast({
         title: "Error",
         description: "Failed to delete job",
@@ -511,15 +562,25 @@ export function TailoredJobAccordion({
   };
 
   return (
-    <AccordionItem value="job" className="mb-4 backdrop-blur-xl rounded-lg shadow-lg bg-white border-pink-600/50 border-2">
+    <AccordionItem
+      value="job"
+      className="mb-4 backdrop-blur-xl rounded-lg shadow-lg bg-white border-pink-600/50 border-2"
+    >
       <div className="px-4">
         <AccordionTrigger className="hover:no-underline group">
           <div className="flex items-center gap-2">
-            <div className={cn("p-1 rounded-md transition-transform duration-300 group-data-[state=open]:scale-105", "bg-pink-100/80")}>
+            <div
+              className={cn(
+                "p-1 rounded-md transition-transform duration-300 group-data-[state=open]:scale-105",
+                "bg-pink-100/80"
+              )}
+            >
               <BriefcaseIcon className={cn("h-3.5 w-3.5", "text-pink-600")} />
             </div>
             <div className="flex flex-col items-start">
-              <span className={cn("text-sm font-medium", "text-pink-900")}>{title}</span>
+              <span className={cn("text-sm font-medium", "text-pink-900")}>
+                {title}
+              </span>
               {company && (
                 <span className="text-xs text-pink-600/80">{company}</span>
               )}
@@ -529,7 +590,7 @@ export function TailoredJobAccordion({
       </div>
       <AccordionContent className=" ">
         <div className="">
-          <TailoredJobCard 
+          <TailoredJobCard
             jobId={resume.job_id || null}
             job={job}
             isLoading={isLoading}
@@ -563,4 +624,4 @@ export function TailoredJobAccordion({
       </AccordionContent>
     </AccordionItem>
   );
-} 
+}

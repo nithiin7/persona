@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Tiptap from "@/components/ui/tiptap";
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,7 @@ export function DescriptionPoint({
   placeholder = "Start with a strong action verb",
   improvementPrompt = "",
   onImprovementPromptChange,
-  improvementPromptPlaceholder = "e.g., Focus on technical implementation details and performance metrics"
+  improvementPromptPlaceholder = "e.g., Focus on technical implementation details and performance metrics",
 }: DescriptionPointProps) {
   return (
     <div className="flex gap-1 items-start group/item">
@@ -59,10 +59,10 @@ export function DescriptionPoint({
                   "border-purple-400",
                   "bg-gradient-to-r from-purple-50/80 to-indigo-50/80",
                   "shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]",
-                  "hover:bg-gradient-to-r hover:from-purple-50/90 hover:to-indigo-50/90"
+                  "hover:bg-gradient-to-r hover:from-purple-50/90 hover:to-indigo-50/90",
                 ]
-              )
-            }
+              ),
+            },
           }}
         />
         {isImproved && (
@@ -152,8 +152,8 @@ export function DescriptionPoint({
                   </Button>
                 </TooltipTrigger>
                 {onImprovementPromptChange && (
-                  <TooltipContent 
-                    side="bottom" 
+                  <TooltipContent
+                    side="bottom"
                     align="start"
                     sideOffset={2}
                     className={cn(
@@ -180,4 +180,4 @@ export function DescriptionPoint({
       </div>
     </div>
   );
-} 
+}

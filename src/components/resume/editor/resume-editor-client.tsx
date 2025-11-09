@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 import { Resume, Profile, Job } from "@/lib/types";
 import { useState, useEffect, useReducer } from "react";
 import { useRouter } from "next/navigation";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { ResumeContext, resumeReducer } from './resume-editor-context';
+import { ResumeContext, resumeReducer } from "./resume-editor-context";
 import { createClient } from "@/utils/supabase/client";
 import { EditorLayout } from "./layout/EditorLayout";
-import { EditorPanel } from './panels/editor-panel';
-import { PreviewPanel } from './panels/preview-panel';
-import { UnsavedChangesDialog } from './dialogs/unsaved-changes-dialog';
+import { EditorPanel } from "./panels/editor-panel";
+import { PreviewPanel } from "./panels/preview-panel";
+import { UnsavedChangesDialog } from "./dialogs/unsaved-changes-dialog";
 
 interface ResumeEditorClientProps {
   initialResume: Resume;
@@ -28,11 +28,13 @@ export function ResumeEditorClient({
     resume: initialResume,
     isSaving: false,
     isDeleting: false,
-    hasUnsavedChanges: false
+    hasUnsavedChanges: false,
   });
 
   const [showExitDialog, setShowExitDialog] = useState(false);
-  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(
+    null
+  );
   const debouncedResume = useDebouncedValue(state.resume, 100);
   const [job, setJob] = useState<Job | null>(initialJob ?? null);
   const [isLoadingJob, setIsLoadingJob] = useState(false);
@@ -56,9 +58,9 @@ export function ResumeEditorClient({
         setIsLoadingJob(true);
         const supabase = createClient();
         const { data: jobData, error } = await supabase
-          .from('jobs')
-          .select('*')
-          .eq('id', state.resume.job_id)
+          .from("jobs")
+          .select("*")
+          .eq("id", state.resume.job_id)
           .single();
 
         if (isCancelled) {
@@ -91,23 +93,23 @@ export function ResumeEditorClient({
   }, [state.resume.job_id, job?.id]);
 
   const updateField = <K extends keyof Resume>(field: K, value: Resume[K]) => {
-    
-    if (field === 'document_settings') {
+    if (field === "document_settings") {
       // Ensure we're passing a valid DocumentSettings object
-      if (typeof value === 'object' && value !== null) {
-        dispatch({ type: 'UPDATE_FIELD', field, value });
+      if (typeof value === "object" && value !== null) {
+        dispatch({ type: "UPDATE_FIELD", field, value });
       } else {
-        console.error('Invalid document settings:', value);
+        console.error("Invalid document settings:", value);
       }
     } else {
-      dispatch({ type: 'UPDATE_FIELD', field, value });
+      dispatch({ type: "UPDATE_FIELD", field, value });
     }
   };
 
   // Track changes
   useEffect(() => {
-    const hasChanges = JSON.stringify(state.resume) !== JSON.stringify(initialResume);
-    dispatch({ type: 'SET_HAS_CHANGES', value: hasChanges });
+    const hasChanges =
+      JSON.stringify(state.resume) !== JSON.stringify(initialResume);
+    dispatch({ type: "SET_HAS_CHANGES", value: hasChanges });
   }, [state.resume, initialResume]);
 
   // Handle beforeunload event
@@ -115,16 +117,14 @@ export function ResumeEditorClient({
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (state.hasUnsavedChanges) {
         e.preventDefault();
-        e.returnValue = '';
-        return '';
+        e.returnValue = "";
+        return "";
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [state.hasUnsavedChanges]);
-
-
 
   // Editor Panel
   const editorPanel = (
@@ -170,4 +170,4 @@ export function ResumeEditorClient({
       />
     </ResumeContext.Provider>
   );
-} 
+}

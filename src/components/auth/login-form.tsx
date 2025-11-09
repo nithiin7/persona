@@ -13,10 +13,10 @@ import { useAuth } from "./auth-context";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  
+
   return (
-    <Button 
-      type="submit" 
+    <Button
+      type="submit"
       disabled={pending}
       className="w-full bg-gradient-to-r from-violet-600 via-blue-600 to-violet-600 hover:from-violet-500 hover:via-blue-500 hover:to-violet-500 shadow-lg shadow-violet-500/25 transition-all duration-500 animate-gradient-x"
     >
@@ -34,24 +34,23 @@ function SubmitButton() {
 
 export function LoginForm() {
   const [error, setError] = useState<string>();
-  const { 
-    formData, 
-    setFormData, 
-    setFieldLoading, 
-    validations, 
+  const {
+    formData,
+    setFormData,
+    setFieldLoading,
+    validations,
     validateField,
     touchedFields,
-    setFieldTouched 
+    setFieldTouched,
   } = useAuth();
- 
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(undefined);
 
     // Mark all fields as touched on submit
-    const fields = ['email', 'password'] as const;
-    fields.forEach(field => setFieldTouched(field));
+    const fields = ["email", "password"] as const;
+    fields.forEach((field) => setFieldTouched(field));
 
     // Validate all fields
     Object.entries(formData).forEach(([field, value]) => {
@@ -59,7 +58,7 @@ export function LoginForm() {
     });
 
     // Check if all required fields are valid
-    const isValid = fields.every(field => validations[field]?.isValid);
+    const isValid = fields.every((field) => validations[field]?.isValid);
 
     if (!isValid) {
       setError("Please fix the validation errors before submitting");
@@ -67,24 +66,26 @@ export function LoginForm() {
     }
 
     try {
-      setFieldLoading('submit', true);
+      setFieldLoading("submit", true);
       const formDataToSend = new FormData();
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('password', formData.password);
-      
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("password", formData.password);
+
       const result = await login(formDataToSend);
       if (!result.success) {
-        setError("Invalid credentials. If you just signed up, please check your email for a verification link.");
+        setError(
+          "Invalid credentials. If you just signed up, please check your email for a verification link."
+        );
       }
     } catch (error: unknown) {
       setError("An error occurred during login");
       console.error("Login error:", error);
     } finally {
-      setFieldLoading('submit', false);
+      setFieldLoading("submit", false);
     }
   }
 
-  const handleInputChange = (field: 'email' | 'password', value: string) => {
+  const handleInputChange = (field: "email" | "password", value: string) => {
     setFormData({ [field]: value });
     validateField(field, value);
     // Simulate field validation loading state
@@ -98,17 +99,19 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="login-email" className="text-sm font-medium">Email</Label>
+        <Label htmlFor="login-email" className="text-sm font-medium">
+          Email
+        </Label>
         <div className="relative">
           {/* <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 " /> */}
-          <Input 
+          <Input
             autoFocus
             id="login-email"
             name="email"
             type="email"
             value={formData.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
-            onBlur={() => setFieldTouched('email')}
+            onChange={(e) => handleInputChange("email", e.target.value)}
+            onBlur={() => setFieldTouched("email")}
             placeholder="you@example.com"
             required
             // className="pl-10"
@@ -120,8 +123,10 @@ export function LoginForm() {
       </div>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="login-password" className="text-sm font-medium">Password</Label>
-          <Link 
+          <Label htmlFor="login-password" className="text-sm font-medium">
+            Password
+          </Label>
+          <Link
             href="/auth/reset-password"
             className="text-sm text-muted-foreground hover:text-violet-600 transition-colors"
           >
@@ -135,8 +140,8 @@ export function LoginForm() {
             name="password"
             type="password"
             value={formData.password}
-            onChange={(e) => handleInputChange('password', e.target.value)}
-            onBlur={() => setFieldTouched('password')}
+            onChange={(e) => handleInputChange("password", e.target.value)}
+            onBlur={() => setFieldTouched("password")}
             placeholder="••••••••"
             required
             minLength={6}
@@ -148,11 +153,14 @@ export function LoginForm() {
         </div>
       </div>
       {error && (
-        <Alert variant="destructive" className="bg-red-50/50 text-red-900 border-red-200/50">
+        <Alert
+          variant="destructive"
+          className="bg-red-50/50 text-red-900 border-red-200/50"
+        >
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
       <SubmitButton />
     </form>
   );
-} 
+}
