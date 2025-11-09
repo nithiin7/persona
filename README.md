@@ -1,124 +1,59 @@
-# Persona - Free AI Resume Builder | Create ATS-Optimized Resumes in Minutes
+# Persona
 
-<div align="center">
+> **⚠️ This is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) for personal use only.**
 
-![Persona Logo](public/og.webp)
+A free, open-source AI resume builder that helps create professional, ATS-optimized resumes. This fork has been rebranded to "Persona" and customized for personal use.
 
-**🚀 The AI-Powered Resume Builder That Gets You Hired**
+## 🙏 Credits
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-persona.com-blue?style=for-the-badge)](https://persona.com)
-[![GitHub Stars](https://img.shields.io/github/stars/olyaiy/resume-lm?style=for-the-badge)](https://github.com/olyaiy/resume-lm/stargazers)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+This project is a fork of [ResumeLM](https://github.com/olyaiy/resume-lm) by [@olyaiy](https://github.com/olyaiy). All credit for the original work goes to the original author.
 
-</div>
+**Original Repository:** [https://github.com/olyaiy/resume-lm](https://github.com/olyaiy/resume-lm)
 
-## 📊 Proven Results That Matter
+## ⚠️ Personal Use Only
 
-<div align="center">
+This fork is maintained for **personal use only**. It is not intended for public distribution or commercial use.
 
-| 📈 **500+ Resumes Created** | 🎯 **89% Interview Rate** | ⭐ **4.9/5 User Rating** | ⏱️ **15 min Setup Time** |
-|:---------------------------:|:-------------------------:|:------------------------:|:-------------------------:|
-| Professional resumes built | Higher interview success  | Excellent user satisfaction | Quick and easy setup |
+## ✨ Features
 
-</div>
+- 🤖 AI-Powered Resume Assistant with real-time feedback
+- 📊 Resume Dashboard for managing multiple resumes
+- 📈 ATS Compatibility Scoring
+- 📝 AI Cover Letter Generator
+- 🎨 Multiple resume templates and themes
+- 📱 Mobile-responsive design
 
-## 🎯 Why Choose Persona?
-
-**Persona** is a free, open-source AI resume builder that helps job seekers create professional, ATS-optimized resumes that increase interview chances by up to **3x**. Our intelligent platform combines cutting-edge AI technology with proven resume best practices to help you land your dream job.
-
-## ✨ Key Features & Screenshots
-
-### 🤖 AI-Powered Resume Assistant
-![AI Resume Assistant](public/SS%20Chat.png)
-
-**90% More Effective Bullet Points**
-- Smart content suggestions based on your experience
-- Real-time feedback on your resume content
-- Industry-specific optimization for better results
-- ATS-friendly formatting and keyword optimization
-
-### 📊 Beautiful Resume Dashboard
-![Resume Dashboard](public/Dashboard%20Image.png)
-
-**Organize Your Entire Job Search**
-- Centralized resume management system
-- Create base resumes and tailored versions
-
-### 📈 Resume Performance Scoring
-![Resume Scoring](public/SS%20Score.png)
-
-**3x Higher Response Rates**
-- ATS compatibility scoring and analysis
-- Keyword optimization insights
-- Detailed improvement recommendations
-- Performance metrics and analytics
-
-### 📝 AI Cover Letter Generator
-![Cover Letter Generator](public/SS%20Cover%20Letter.png)
-
-**Save 30+ Minutes Per Application**
-- Tailored to match specific job requirements
-- Professional tone and structure
-- Highlights your relevant achievements
-- Personalized for each opportunity
-
-## 🚀 Live Demo & Getting Started
-
-**[Try Persona Now - 100% Free](https://persona.com)**
-
-No credit card required • No signup fees • Open source
-
-## 🛠️ Complete Tech Stack
+## 🛠️ Tech Stack
 
 ### Frontend & UI
 - **Next.js 15** - App Router with React Server Components
-- **React 19** - Latest React features and optimizations
+- **React 19** - Latest React features
 - **TypeScript** - Type-safe development
-- **Shadcn UI** - Beautiful, accessible components
-- **Tailwind CSS** - Utility-first styling
-- **Framer Motion** - Smooth animations
+- **Shadcn UI** - UI components
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
 
 ### AI & Intelligence
-- **OpenAI GPT** - Advanced content generation
+- **OpenAI GPT** - Content generation
 - **Claude AI** - Alternative AI model support
 - **Gemini AI** - Google's AI integration
 - **DeepSeek** - Cost-effective AI processing
 - **Groq** - High-speed AI inference
 
 ### Backend & Database
-- **PostgreSQL** - Robust relational database
+- **PostgreSQL** - Database
 - **Supabase** - Backend-as-a-Service with auth
-- **Row Level Security** - Enterprise-grade security
+- **Row Level Security** - Security
 
 ### Additional Features
-- **React PDF** - Professional PDF generation
-- **Stripe Integration** - Secure payment processing
+- **React PDF** - PDF generation
+- **Stripe Integration** - Payment processing (optional)
 - **Real-time Updates** - Live preview and editing
-- **Mobile Responsive** - Works on all devices
-
-## 📱 Mobile-First Design
-
-Persona is built with a mobile-first approach, ensuring your resume building experience is seamless across all devices:
-
-- 📱 **Mobile Optimized** - Full functionality on smartphones
-- 💻 **Desktop Enhanced** - Rich editing experience on larger screens
-- 🎨 **Responsive Design** - Adapts to any screen size
-- ⚡ **Fast Loading** - Optimized for performance
-
-## 🎨 Modern Design System
-
-### Visual Design Principles
-- **Layered Depth** - Multiple translucent layers create visual hierarchy
-- **Organic Motion** - Subtle animations suggest liveliness without distraction
-- **Purposeful White Space** - Generous spacing improves content digestion
-- **Consistent Interaction** - Predictable hover and active states
-- **Gradient Aesthetics** - Soft, professional color schemes
 
 ## 🔧 Installation & Setup
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+
 - pnpm (recommended) or npm
 - PostgreSQL database
 - Supabase account
@@ -127,8 +62,8 @@ Persona is built with a mobile-first approach, ensuring your resume building exp
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/olyaiy/resume-lm.git
-cd resume-lm
+git clone <your-repo-url>
+cd persona
 ```
 
 2. **Install dependencies**
@@ -157,9 +92,14 @@ GOOGLE_AI_API_KEY=your_gemini_key
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_secret_key
 
+# Site URL
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
 # Payments (Optional)
 STRIPE_SECRET_KEY=your_stripe_secret
-STRIPE_PUBLISHABLE_KEY=your_stripe_public
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+NEXT_PUBLIC_STRIPE_PRO_PRICE_ID=your_stripe_price_id
+STRIPE_WEBHOOK_SECRET=your_webhook_secret
 ```
 
 5. **Database setup**
@@ -201,120 +141,12 @@ Visit `http://localhost:3000` to see your local Persona instance!
 - **Authentication Integration** - Secure user management
 - **Data Encryption** - Sensitive information protection
 
-## 🌟 Key Benefits for Job Seekers
-
-### For Individual Users
-- ✅ **Free Forever** - Core features always free
-- ✅ **No Hidden Costs** - Transparent pricing
-- ✅ **ATS Optimization** - Beat applicant tracking systems
-- ✅ **Multiple Formats** - PDF, Word, and web formats
-- ✅ **Industry Templates** - Tailored for different fields
-
-### For Developers
-- ✅ **Open Source** - Full access to source code
-- ✅ **Modern Stack** - Latest technologies and best practices
-- ✅ **Extensible** - Easy to customize and extend
-- ✅ **Well Documented** - Comprehensive documentation
-- ✅ **Active Community** - Regular updates and support
-
-## 🎯 SEO Keywords & Use Cases
-
-**Primary Keywords:** AI resume builder, free resume maker, ATS-optimized resume, professional resume template, job application tool
-
-**Use Cases:**
-- Recent graduates entering the job market
-- Career changers looking to pivot industries
-- Professionals seeking advancement opportunities
-- Freelancers building their personal brand
-- Anyone wanting to improve their resume quality
-
-## 📈 Performance & Analytics
-
-### Core Metrics
-- **Page Load Speed** - Under 2 seconds average
-- **Mobile Performance** - 95+ Lighthouse score
-- **SEO Optimization** - Structured data and meta tags
-- **Accessibility** - WCAG 2.1 AA compliant
-
-### User Success Stories
-- 89% of users report getting more interview calls
-- Average setup time reduced to just 15 minutes
-- 4.9/5 star rating from active users
-- 500+ professional resumes created monthly
-
-## 🔮 Roadmap & Future Features
-
-### Short Term (Q1 2025)
-- [ ] Enhanced AI tailoring algorithms
-- [ ] Additional resume templates and themes
-- [ ] Advanced PDF customization options
-- [ ] Job application tracking system
-
-### Long Term (2025)
-- [ ] LinkedIn integration and sync
-- [ ] Interview preparation tools
-- [ ] Salary negotiation guidance
-- [ ] Career path recommendations
-- [ ] Mobile app development
-
-## 🤝 Contributing
-
-We welcome contributions from developers of all skill levels! Here's how you can help:
-
-### Ways to Contribute
-- 🐛 **Bug Reports** - Help us identify and fix issues
-- 💡 **Feature Requests** - Suggest new functionality
-- 🔧 **Code Contributions** - Submit pull requests
-- 📚 **Documentation** - Improve our guides and docs
-- 🎨 **Design** - Enhance UI/UX elements
-
-### Development Process
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📞 Support & Community
-
-### Get Help
-- 📧 **Email Support** - Contact us for technical issues
-- 💬 **GitHub Discussions** - Community Q&A and feature requests
-- 🐛 **Issue Tracker** - Report bugs and technical problems
-- 📖 **Documentation** - Comprehensive guides and tutorials
-
-### Stay Updated
-- ⭐ **Star this repo** - Get notified of new releases
-- 👀 **Watch releases** - Stay informed about updates
-- 🐦 **Follow on social media** - Latest news and tips
-
-## 📄 License & Legal
+## 📄 License
 
 **GNU Affero General Public License v3 (AGPL-3.0)**
 
-### License Summary
-- ✅ **Commercial Use** - Use in commercial projects
-- ✅ **Modification** - Modify and distribute changes
-- ✅ **Distribution** - Share the software freely
-- ✅ **Patent Use** - Use any patents in the software
-- ❗ **Disclose Source** - Must provide source code
-- ❗ **License Notice** - Include license and copyright notice
-- ❗ **Network Use** - Network use is considered distribution
-- ❗ **Same License** - Derivative works must use same license
-
-### Commercial Licensing
-For businesses requiring proprietary licenses or commercial support, please contact us for custom licensing arrangements.
-
+This project is licensed under the AGPL-3.0 license. As a fork, it maintains the same license as the original project.
 
 ---
 
-<div align="center">
-
-**Ready to land your dream job?**
-
-[![Get Started Free](https://img.shields.io/badge/🚀_Get_Started_Free-persona.com-blue?style=for-the-badge&color=6366f1)](https://persona.com)
-[![View Source Code](https://img.shields.io/badge/📚_View_Source-GitHub-black?style=for-the-badge&logo=github)](https://github.com/olyaiy/resume-lm)
-
-**Built with ❤️ using Next.js**
-
-</div>
+**Note:** This is a personal fork for personal use only. For the original project, please visit [ResumeLM](https://github.com/olyaiy/resume-lm).
