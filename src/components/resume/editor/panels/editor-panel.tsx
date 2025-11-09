@@ -170,12 +170,20 @@ export function EditorPanel({
                   }
                 >
                   <DocumentSettingsForm
+                    resume={resume}
                     documentSettings={resume.document_settings!}
                     onChange={(
-                      _field: "document_settings",
-                      value: DocumentSettings
+                      _field: "document_settings" | "template",
+                      value
                     ) => {
-                      onResumeChange("document_settings", value);
+                      if (_field === "template") {
+                        onResumeChange("template", value);
+                      } else {
+                        onResumeChange("document_settings", value);
+                      }
+                    }}
+                    onTemplateChange={(template) => {
+                      onResumeChange("template", template);
                     }}
                   />
                 </Suspense>

@@ -1,17 +1,22 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { DocumentSettings } from "@/lib/types";
+import { DocumentSettings, Resume, ResumeTemplate } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { SavedStylesDialog } from "./saved-styles-dialog";
+import { TemplateSelector } from "./template-selector";
 import { LayoutTemplate } from "lucide-react";
 
 interface DocumentSettingsFormProps {
-  // resume: Resume;
+  resume?: Resume;
   documentSettings: DocumentSettings;
-  onChange: (field: "document_settings", value: DocumentSettings) => void;
+  onChange: (
+    field: "document_settings" | "template",
+    value: DocumentSettings | ResumeTemplate
+  ) => void;
+  onTemplateChange?: (template: ResumeTemplate) => void;
 }
 
 interface NumberInputProps {
@@ -65,8 +70,10 @@ function NumberInput({ value, onChange, min, max, step }: NumberInputProps) {
 }
 
 export function DocumentSettingsForm({
+  resume,
   documentSettings,
   onChange,
+  onTemplateChange,
 }: DocumentSettingsFormProps) {
   const defaultSettings = {
     // Global Settings
@@ -279,11 +286,17 @@ export function DocumentSettingsForm({
       <Card className="">
         {/* Buttons */}
         <CardHeader className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-2 w-full">
+          <div className="grid grid-cols-2 gap-2 w-full">
             <SavedStylesDialog
               currentSettings={documentSettings || defaultSettings}
               onApplyStyle={(settings) => handleSettingsChange(settings)}
             />
+            {onTemplateChange && resume && (
+              <TemplateSelector
+                currentTemplate={resume.template || "classic"}
+                onTemplateChange={onTemplateChange}
+              />
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4 pt-2">

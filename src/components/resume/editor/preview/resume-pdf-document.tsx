@@ -631,6 +631,140 @@ function createResumeStyles(
   });
 }
 
+// Template-specific style overrides
+function getTemplateStyles(template: string) {
+  switch (template) {
+    case "modern":
+      return {
+        header: {
+          backgroundColor: "#f9fafb",
+          padding: 16,
+          borderLeftWidth: 4,
+          borderLeftColor: "#6366f1",
+          marginBottom: 28,
+        },
+        name: {
+          color: "#1f2937",
+        },
+        sectionTitle: {
+          color: "#6366f1",
+          fontSize: 13,
+          textTransform: "uppercase" as const,
+          letterSpacing: 1,
+          borderBottomWidth: 0,
+          marginBottom: 8,
+        },
+        link: {
+          color: "#6366f1",
+        },
+      };
+    
+    case "minimal":
+      return {
+        header: {
+          alignItems: "center" as const,
+          marginBottom: 32,
+          borderBottomWidth: 0,
+        },
+        name: {
+          letterSpacing: -0.5,
+          color: "#111827",
+        },
+        contactInfo: {
+          justifyContent: "center" as const,
+        },
+        sectionTitle: {
+          color: "#374151",
+          fontSize: 11,
+          textTransform: "uppercase" as const,
+          letterSpacing: 2,
+          borderBottomWidth: 0,
+          marginBottom: 8,
+        },
+        bulletSeparator: {
+          color: "#d1d5db",
+        },
+        link: {
+          color: "#111827",
+        },
+      };
+    
+    case "professional":
+      return {
+        header: {
+          backgroundColor: "#eff6ff",
+          padding: 12,
+          borderBottomWidth: 3,
+          borderBottomColor: "#2563eb",
+          marginBottom: 24,
+        },
+        name: {
+          color: "#1e40af",
+        },
+        sectionTitle: {
+          color: "#2563eb",
+          fontSize: 12,
+          fontFamily: "Helvetica-Bold",
+          borderBottomWidth: 2,
+          borderBottomColor: "#93c5fd",
+          paddingBottom: 4,
+          marginBottom: 8,
+        },
+        link: {
+          color: "#2563eb",
+        },
+      };
+    
+    case "creative":
+      return {
+        header: {
+          backgroundColor: "#fdf2f8",
+          padding: 16,
+          borderTopWidth: 4,
+          borderTopColor: "#ec4899",
+          borderBottomWidth: 4,
+          borderBottomColor: "#ec4899",
+          marginBottom: 24,
+        },
+        name: {
+          color: "#be185d",
+        },
+        sectionTitle: {
+          color: "#ec4899",
+          fontSize: 13,
+          fontFamily: "Helvetica-Bold",
+          borderBottomWidth: 2,
+          borderBottomColor: "#f9a8d4",
+          paddingBottom: 3,
+          marginBottom: 8,
+        },
+        link: {
+          color: "#ec4899",
+        },
+      };
+    
+    case "classic":
+    default:
+      return {
+        header: {
+          borderBottomWidth: 2,
+          borderBottomColor: "#1f2937",
+          paddingBottom: 8,
+        },
+        sectionTitle: {
+          fontSize: 12,
+          color: "#1f2937",
+          textTransform: "uppercase" as const,
+          letterSpacing: 0.5,
+          borderBottomWidth: 1,
+          borderBottomColor: "#e5e7eb",
+          paddingBottom: 2,
+          marginBottom: 6,
+        },
+      };
+  }
+}
+
 interface ResumePDFDocumentProps {
   resume: Resume;
   variant?: "base" | "tailored";
@@ -638,32 +772,59 @@ interface ResumePDFDocumentProps {
 
 export const ResumePDFDocument = memo(
   function ResumePDFDocument({ resume }: ResumePDFDocumentProps) {
-    // Memoize styles based on document settings
-    const styles = useMemo(
-      () => createResumeStyles(resume.document_settings),
-      [resume.document_settings]
+    // Get the template or default to classic
+    const template = resume.template || "classic";
+
+    // Create template-specific styles
+    const styles = useMemo(() => {
+      const baseStyles = createResumeStyles(resume.document_settings);
+      const templateOverrides = getTemplateStyles(template);
+      
+      // Deep merge template overrides with base styles
+      const mergedStyles: any = { ...baseStyles };
+      
+      Object.keys(templateOverrides).forEach((key) => {
+        if (mergedStyles[key]) {
+          // Merge the style object for this key
+          mergedStyles[key] = {
+            ...mergedStyles[key],
+            ...templateOverrides[key],
+          };
+        } else {
+          mergedStyles[key] = templateOverrides[key];
+        }
+      });
+      
+      return mergedStyles;
+    }, [resume.document_settings, template]);
+
+    // Content sections (same for all templates)
+    const contentSections = (
+      <>
+        <SkillsSection skills={resume.skills} styles={styles} />
+        <ExperienceSection
+          experiences={resume.work_experience}
+          styles={styles}
+        />
+        <ProjectsSection projects={resume.projects} styles={styles} />
+        <EducationSection education={resume.education} styles={styles} />
+
+        {resume.document_settings?.show_ubc_footer && (
+          <View style={styles.footer}>
+            <Image
+              src="/images/ubc-science-footer.png"
+              style={styles.footerImage}
+            />
+          </View>
+        )}
+      </>
     );
 
     return (
       <PDFDocument>
         <PDFPage size="LETTER" style={styles.page}>
           <HeaderSection resume={resume} styles={styles} />
-          <SkillsSection skills={resume.skills} styles={styles} />
-          <ExperienceSection
-            experiences={resume.work_experience}
-            styles={styles}
-          />
-          <ProjectsSection projects={resume.projects} styles={styles} />
-          <EducationSection education={resume.education} styles={styles} />
-
-          {resume.document_settings?.show_ubc_footer && (
-            <View style={styles.footer}>
-              <Image
-                src="/images/ubc-science-footer.png"
-                style={styles.footerImage}
-              />
-            </View>
-          )}
+          {contentSections}
         </PDFPage>
       </PDFDocument>
     );

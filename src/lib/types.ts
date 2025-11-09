@@ -60,6 +60,13 @@ export interface SectionConfig {
   style?: "grouped" | "list" | "grid";
 }
 
+export type ResumeTemplate = 
+  | "classic"
+  | "modern"
+  | "minimal"
+  | "professional"
+  | "creative";
+
 export interface Resume {
   id: string;
   user_id: string;
@@ -82,6 +89,7 @@ export interface Resume {
   created_at: string;
   updated_at: string;
   document_settings?: DocumentSettings;
+  template?: ResumeTemplate;
   section_order?: string[];
   section_configs?: {
     [key: string]: { visible: boolean };
