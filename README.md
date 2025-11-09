@@ -14,6 +14,15 @@ This project is a fork of [ResumeLM](https://github.com/olyaiy/resume-lm) by [@o
 
 This fork is maintained for **personal use only**. It is not intended for public distribution or commercial use.
 
+## 🔄 Changes in This Fork
+
+This fork includes several key modifications from the original ResumeLM:
+
+- **🚫 Stripe Removed** - Complete removal of payment/subscription system. All users have full access to all features by default (no payment walls)
+- **🎨 New Resume Designs** - Enhanced resume templates and styling with modern, professional layouts
+- **🏷️ Rebranded to Persona** - Complete rebranding from "ResumeLM" to "Persona" across the entire application
+- **✨ Simplified Setup** - No payment processing required, making it easier to deploy for personal use
+
 ## ✨ Features
 
 - 🤖 AI-Powered Resume Assistant with real-time feedback
@@ -47,8 +56,8 @@ This fork is maintained for **personal use only**. It is not intended for public
 
 ### Additional Features
 - **React PDF** - PDF generation
-- **Stripe Integration** - Payment processing (optional)
 - **Real-time Updates** - Live preview and editing
+- **No Payment Required** - All features available without subscription
 
 ## 🔧 Installation & Setup
 
@@ -94,13 +103,9 @@ NEXTAUTH_SECRET=your_secret_key
 
 # Site URL
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-
-# Payments (Optional)
-STRIPE_SECRET_KEY=your_stripe_secret
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-NEXT_PUBLIC_STRIPE_PRO_PRICE_ID=your_stripe_price_id
-STRIPE_WEBHOOK_SECRET=your_webhook_secret
 ```
+
+**Note:** Stripe integration has been completely removed from this fork. No payment processing is required.
 
 5. **Database setup**
 ```bash

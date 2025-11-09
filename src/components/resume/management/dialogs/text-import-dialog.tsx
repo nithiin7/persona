@@ -11,7 +11,6 @@ import { toast } from "@/hooks/use-toast";
 import { addTextToResume } from "@/utils/actions/resumes/ai";
 import pdfToText from "react-pdftotext";
 import { cn } from "@/lib/utils";
-import { ProUpgradeButton } from "@/components/settings/pro-upgrade-button";
 
 interface TextImportDialogProps {
   resume: Resume;
@@ -206,11 +205,7 @@ export function TextImportDialog({
             <div className="flex-1">
               <p className="font-medium">API Key Required</p>
               <p className="text-red-500/90">{apiKeyError}</p>
-              <div className="mt-2 flex flex-col gap-2 justify-start">
-                <div className="w-auto mx-auto">
-                <ProUpgradeButton />
-                </div>
-                <div className="text-center text-xs text-red-400">or</div>
+              <div className="mt-2">
                 <Button
                   variant="outline"
                   size="sm"

@@ -2,7 +2,6 @@
 
 import { createClient, createServiceClient } from "@/utils/supabase/server"; // Import createClient as well
 import { redirect } from 'next/navigation'; // Import redirect
-import { revalidatePath } from 'next/cache';
 
 export async function getAllUsers() {
   const supabase = await createServiceClient();
@@ -409,21 +408,10 @@ export async function getTotalResumeCount(): Promise<number> {
   return typeof data === 'number' ? data : 0;
 }
 
-// Action to get the total count of subscriptions
+// Action to get the total count of subscriptions (DEPRECATED)
 export async function getTotalSubscriptionCount(): Promise<number> {
-  const supabase = await createServiceClient();
-  const { count, error } = await supabase
-    .from('subscriptions')
-    .select('*', { count: 'exact', head: true })
-    // Add filtering if needed, e.g., filter by active status if there's a 'status' column
-    // .eq('status', 'active');
-
-  if (error) {
-    console.error('Error fetching total subscription count:', error);
-    return 0; // Return 0 on error
-  }
-
-  return count ?? 0;
+  // Subscriptions table no longer exists
+  return 0;
 }
 
 // Action to get the total count of base resumes
@@ -442,22 +430,9 @@ export async function getBaseResumeCount(): Promise<number> {
   return count ?? 0;
 }
 
-// Action to get the total count of active subscriptions (Pro Users)
+// Action to get the total count of active subscriptions (Pro Users) (DEPRECATED)
 export async function getProUserCount(): Promise<number> {
-  const supabase = await createServiceClient();
-  const { count, error } = await supabase
-    .from('subscriptions')
-    .select('*', { count: 'exact', head: true })
-    // Check for 'pro' plan and 'active' status
-    .eq('subscription_plan', 'pro')
-    .eq('subscription_status', 'active');
-
-  if (error) {
-    console.error('Error fetching pro user count:', error);
-    return 0; // Return 0 on error
-  }
-
-  return count ?? 0;
+  return getTotalUserCount();
 }
 
 // Action to get the total count of tailored resumes
@@ -477,109 +452,17 @@ export async function getTailoredResumeCount(): Promise<number> {
 }
 
 /**
- * Updates a user's subscription plan as an admin.
+ * Updates a user's subscription plan as an admin. (DEPRECATED)
  * @param userId - The ID of the user whose subscription plan should be updated.
  * @param plan - The new subscription plan ('free' or 'pro').
  * @returns {Promise<{ success: boolean, message: string }>} - Result of the operation.
  */
 export async function updateUserSubscriptionPlan(
-  userId: string,
-  plan: 'free' | 'pro'
 ): Promise<{ success: boolean; message: string }> {
-  try {
-    // Ensure the current user is an admin
-    const isAdmin = await checkAdminStatus();
-    if (!isAdmin) {
-      return {
-        success: false,
-        message: 'Unauthorized: Only administrators can update subscription plans.',
-      };
-    }
-
-    if (!userId) {
-      return {
-        success: false,
-        message: 'User ID is required.',
-      };
-    }
-
-    if (plan !== 'free' && plan !== 'pro') {
-      return {
-        success: false,
-        message: 'Invalid plan type. Plan must be "free" or "pro".',
-      };
-    }
-
-    const supabase = await createServiceClient();
-
-    // Determine subscription status based on plan
-    const subscription_status = plan === 'pro' ? 'active' : null;
-
-    // Check if the user already has a subscription record
-    const { data: existingSubscription, error: checkError } = await supabase
-      .from('subscriptions')
-      .select('user_id')
-      .eq('user_id', userId)
-      .maybeSingle();
-
-    if (checkError) {
-      console.error(`Error checking subscription for user ${userId}:`, checkError);
-      return {
-        success: false,
-        message: `Database error: ${checkError.message}`,
-      };
-    }
-
-    let updateError;
-
-    if (existingSubscription) {
-      // Update existing subscription
-      const { error } = await supabase
-        .from('subscriptions')
-        .update({
-          subscription_plan: plan,
-          subscription_status: subscription_status,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', userId);
-
-      updateError = error;
-    } else {
-      // Create new subscription record
-      const { error } = await supabase
-        .from('subscriptions')
-        .insert({
-          user_id: userId,
-          subscription_plan: plan,
-          subscription_status: subscription_status,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        });
-
-      updateError = error;
-    }
-
-    if (updateError) {
-      console.error(`Error updating subscription for user ${userId}:`, updateError);
-      return {
-        success: false,
-        message: `Failed to update subscription: ${updateError.message}`,
-      };
-    }
-
-    // Revalidate the user detail page and admin pages to reflect the changes
-    revalidatePath(`/admin/${userId}`);
-    revalidatePath('/admin');
-
-    return {
-      success: true,
-      message: `Subscription plan successfully updated to "${plan}".`,
-    };
-  } catch (error) {
-    console.error('Unexpected error updating subscription plan:', error);
-    return {
-      success: false,
-      message: `An unexpected error occurred: ${error instanceof Error ? error.message : String(error)}`,
-    };
-  }
+  // Subscription system removed
+  return {
+    success: false,
+    message: 'Subscription system has been removed. All users have pro features by default.',
+  };
+  
 }

@@ -9,8 +9,6 @@ import {
 import { Job, Resume } from "@/lib/types";
 import { AIConfig } from '@/utils/ai-tools';
 import { initializeAIClient } from '@/utils/ai-tools';
-import { getSubscriptionPlan } from '../stripe/actions';
-import { checkRateLimit } from '@/lib/rateLimiter';
 
 
 export async function tailorResumeToJob(
@@ -18,16 +16,13 @@ export async function tailorResumeToJob(
   jobListing: z.infer<typeof simplifiedJobSchema>,
   config?: AIConfig
 ) {
-  const { plan, id } = await getSubscriptionPlan(true);
-  const isPro = plan === 'pro';
+  const isPro = true;
   // Hardcode to use GPT OSS 120B for now
   const hardcodedConfig: AIConfig = {
     model: 'openai/gpt-oss-120b:nitro',
     apiKeys: config?.apiKeys || []
   };
-  const aiClient = isPro ? initializeAIClient(hardcodedConfig, isPro, true) : initializeAIClient(hardcodedConfig);
-// Check rate limit
-  await checkRateLimit(id);
+  const aiClient = initializeAIClient(hardcodedConfig, isPro, true);
 
 try {
     const { object } = await generateObject({
@@ -91,16 +86,13 @@ prompt: `
 }
 
 export async function formatJobListing(jobListing: string, config?: AIConfig) {
-  const { plan, id } = await getSubscriptionPlan(true);
-  const isPro = plan === 'pro';
+  const isPro = true;
   // Hardcode to use GPT OSS 120B for now
   const hardcodedConfig: AIConfig = {
     model: 'openai/gpt-oss-120b:nitro',
     apiKeys: config?.apiKeys || []
   };
-  const aiClient = isPro ? initializeAIClient(hardcodedConfig, isPro, true) : initializeAIClient(hardcodedConfig);
-// Check rate limit
-  await checkRateLimit(id);
+  const aiClient = initializeAIClient(hardcodedConfig, isPro, true);
 
 try {
     const { object } = await generateObject({

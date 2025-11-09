@@ -2,7 +2,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SecurityForm } from "./security-form"
 import { ApiKeysForm } from "./api-keys-form"
-import { SubscriptionSection } from "./subscription-section"
 import { DangerZone } from "./danger-zone"
 import { User } from "@supabase/supabase-js"
 import { cn } from "@/lib/utils"
@@ -11,7 +10,6 @@ import { useEffect, useState } from "react"
 
 const sections = [
   { id: "security", title: "Security", description: "Manage your email and password settings", icon: "🔒" },
-  { id: "subscription", title: "Subscription", description: "Manage your subscription and billing settings", icon: "💳" },
   { id: "api-keys", title: "API Keys", description: "Manage your API keys for different AI providers", icon: "🔑" },
   { id: "danger-zone", title: "Danger Zone", description: "Irreversible and destructive actions", icon: "⚠️" },
 ]
@@ -104,17 +102,6 @@ export function SettingsContent({ user, isProPlan, subscriptionStatus }: Setting
           </CardContent>
         </Card>
 
-        {/* Subscription Management */}
-        <Card id="subscription" className="border-white/40 shadow-xl shadow-black/5 bg-white/80 backdrop-blur-xl">
-          <CardHeader>
-            <CardTitle className="text-xl">Subscription</CardTitle>
-            <CardDescription>Manage your subscription and billing settings</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <SubscriptionSection />
-          </CardContent>
-        </Card>
-
         {/* API Keys */}
         <Card id="api-keys" className="border-white/40 shadow-xl shadow-black/5 bg-white/80 backdrop-blur-xl">
           <CardHeader>
@@ -133,7 +120,7 @@ export function SettingsContent({ user, isProPlan, subscriptionStatus }: Setting
             <CardDescription>Irreversible and destructive actions</CardDescription>
           </CardHeader>
           <CardContent>
-            <DangerZone subscriptionStatus={subscriptionStatus} />
+            <DangerZone />
           </CardContent>
         </Card>
       </div>

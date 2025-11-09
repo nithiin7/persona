@@ -1,6 +1,5 @@
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ProUpgradeButton } from "@/components/settings/pro-upgrade-button";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -111,22 +110,21 @@ export function ApiKeyErrorAlert({ error, router }: ApiKeyErrorAlertProps) {
           <>
             <div className="w-full h-px bg-red-100" />
             <div className="text-sm text-red-400 mb-2">
-              Unlock premium features and advanced AI capabilities
+              Configure your API keys to continue
             </div>
             <div className="flex flex-col items-center gap-2 w-full">
-              <ProUpgradeButton />
               <Button
-                variant="ghost"
+                variant="default"
                 size="sm"
                 className={cn(
-                  "text-xs text-gray-500 hover:text-gray-600",
-                  "hover:bg-gray-50/50 bg-gray-200",
-                  "border border-gray-400",
-                  "h-8"
+                  "text-sm",
+                  "bg-gradient-to-r from-purple-600 to-indigo-600",
+                  "hover:from-purple-700 hover:to-indigo-700",
+                  "text-white"
                 )}
                 onClick={() => router.push('/settings')}
               >
-                Set API Keys
+                Set API Keys in Settings
               </Button>
             </div>
           </>

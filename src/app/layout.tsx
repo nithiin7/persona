@@ -4,7 +4,6 @@ import { Toaster } from "sonner";
 import { Footer } from "@/components/layout/footer";
 import { AppHeader } from "@/components/layout/app-header";
 import { createClient } from "@/utils/supabase/server";
-import { getSubscriptionStatus } from '@/utils/actions/stripe/actions';
 import { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react"
 import Link from "next/link";
@@ -84,23 +83,7 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const isImpersonating = cookieStore.get('is_impersonating')?.value === 'true';
 
-  
-  let showUpgradeButton = false;
-  let isProPlan = false;
-  if (user) {
-    try {
-      const profile = await getSubscriptionStatus();
-      const isPro = profile?.subscription_plan?.toLowerCase()?.includes('pro') && 
-                    profile?.subscription_status !== 'canceled';
-      isProPlan = isPro || false;
-      // Show upgrade button only if user is not on pro plan or has canceled
-      showUpgradeButton = !isPro;
-    } catch {
-      // If there's an error, we'll show the upgrade button by default
-      showUpgradeButton = true;
-      isProPlan = false;
-    }
-  }
+  const isProPlan = true;
 
   return (
     <html lang="en">
@@ -114,7 +97,7 @@ export default async function RootLayout({
           </div>
         )}
         <div className="relative min-h-screen h-screen flex flex-col">
-          {user && <AppHeader showUpgradeButton={showUpgradeButton} isProPlan={isProPlan} />}
+          {user && <AppHeader isProPlan={isProPlan} />}
           {/* Padding for header and footer */}
           <main className="py-14 h-full">
             {children}

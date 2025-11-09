@@ -6,7 +6,6 @@ import { textImportSchema, workExperienceBulletPointsSchema } from "@/lib/zod-sc
 import { generateObject } from "ai";
 import { z } from "zod";
 import { initializeAIClient, type AIConfig } from '@/utils/ai-tools';
-import { getSubscriptionPlan } from "@/utils/actions/stripe/actions";
 import { MODEL_DESIGNATIONS } from '@/lib/ai-models';
 import { PROJECT_GENERATOR_MESSAGE, PROJECT_IMPROVER_MESSAGE, TEXT_ANALYZER_SYSTEM_MESSAGE, WORK_EXPERIENCE_GENERATOR_MESSAGE, WORK_EXPERIENCE_IMPROVER_MESSAGE } from "@/lib/prompts";
 import { projectAnalysisSchema, workExperienceItemsSchema } from "@/lib/zod-schemas";
@@ -94,9 +93,8 @@ export async function convertTextToResume(prompt: string, existingResume: Resume
       customPrompt: string = '',
       config?: AIConfig
     ) { 
-      const subscriptionPlan = await getSubscriptionPlan();
-      const isPro = subscriptionPlan === 'pro';
-      const aiClient = isPro ? initializeAIClient(config, isPro) : initializeAIClient(config);
+      const isPro = true;
+      const aiClient = initializeAIClient(config, isPro);
   
       const { object } = await generateObject({
         model: aiClient,
@@ -114,11 +112,10 @@ export async function convertTextToResume(prompt: string, existingResume: Resume
       return object.content;
       }
     
-      // WORK EXPERIENCE BULLET POINTS IMPROVEMENT
-      export async function improveWorkExperience(point: string, customPrompt?: string, config?: AIConfig) {
-          const subscriptionPlan = await getSubscriptionPlan();
-          const isPro = subscriptionPlan === 'pro';
-          const aiClient = isPro ? initializeAIClient(config, isPro) : initializeAIClient(config);
+    // WORK EXPERIENCE BULLET POINTS IMPROVEMENT
+    export async function improveWorkExperience(point: string, customPrompt?: string, config?: AIConfig) {
+        const isPro = true;
+        const aiClient = initializeAIClient(config, isPro);
           
           const { object } = await generateObject({
           model: aiClient,
@@ -134,12 +131,10 @@ export async function convertTextToResume(prompt: string, existingResume: Resume
           return object.content;
       }
     
-      // PROJECT BULLET POINTS IMPROVEMENT
-      export async function improveProject(point: string, customPrompt?: string, config?: AIConfig) {
-          
-          const subscriptionPlan = await getSubscriptionPlan();
-          const isPro = subscriptionPlan === 'pro';
-          const aiClient = isPro ? initializeAIClient(config, isPro) : initializeAIClient(config);
+    // PROJECT BULLET POINTS IMPROVEMENT
+    export async function improveProject(point: string, customPrompt?: string, config?: AIConfig) {
+        const isPro = true;
+        const aiClient = initializeAIClient(config, isPro);
 
   
           const { object } = await generateObject({
@@ -154,18 +149,17 @@ export async function convertTextToResume(prompt: string, existingResume: Resume
           return object.content;
       }
       
-      // NEW PROJECT BULLET POINTS
-      export async function generateProjectPoints(
-          projectName: string,
-          technologies: string[],
-          targetRole: string,
-          numPoints: number = 3,
-          customPrompt: string = '',
-          config?: AIConfig
-      ) {
-          const subscriptionPlan = await getSubscriptionPlan();
-          const isPro = subscriptionPlan === 'pro';
-          const aiClient = isPro ? initializeAIClient(config, isPro) : initializeAIClient(config);
+    // NEW PROJECT BULLET POINTS
+    export async function generateProjectPoints(
+        projectName: string,
+        technologies: string[],
+        targetRole: string,
+        numPoints: number = 3,
+        customPrompt: string = '',
+        config?: AIConfig
+    ) {
+        const isPro = true;
+        const aiClient = initializeAIClient(config, isPro);
           
           const { object } = await generateObject({
           model: aiClient,
@@ -198,15 +192,14 @@ export async function convertTextToResume(prompt: string, existingResume: Resume
           return object.content;
       }
       
-      // WORK EXPERIENCE MODIFICATION
-      export async function modifyWorkExperience(
-          experience: WorkExperience[],
-          prompt: string,
-          config?: AIConfig
-      ) {
-          const subscriptionPlan = await getSubscriptionPlan();
-          const isPro = subscriptionPlan === 'pro';
-          const aiClient = isPro ? initializeAIClient(config, isPro) : initializeAIClient(config);
+    // WORK EXPERIENCE MODIFICATION
+    export async function modifyWorkExperience(
+        experience: WorkExperience[],
+        prompt: string,
+        config?: AIConfig
+    ) {
+        const isPro = true;
+        const aiClient = initializeAIClient(config, isPro);
           
           const { object } = await generateObject({
           model: aiClient,
@@ -223,11 +216,10 @@ export async function convertTextToResume(prompt: string, existingResume: Resume
           return object.content;
       }
       
-      // ADDING TEXT CONTENT TO RESUME
-      export async function addTextToResume(prompt: string, existingResume: Resume, config?: AIConfig) {
-          const subscriptionPlan = await getSubscriptionPlan();
-          const isPro = subscriptionPlan === 'pro';
-          const aiClient = isPro ? initializeAIClient(config, isPro) : initializeAIClient(config);
+    // ADDING TEXT CONTENT TO RESUME
+    export async function addTextToResume(prompt: string, existingResume: Resume, config?: AIConfig) {
+        const isPro = true;
+        const aiClient = initializeAIClient(config, isPro);
   
           
           const { object } = await generateObject({

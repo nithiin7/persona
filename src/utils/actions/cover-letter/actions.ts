@@ -3,14 +3,12 @@
 import { LanguageModelV1, streamText } from 'ai';
 import { createStreamableValue } from 'ai/rsc';
 import { initializeAIClient, type AIConfig } from '@/utils/ai-tools';
-import { getSubscriptionPlan } from '../stripe/actions';
 
 export async function generate(input: string, config?: AIConfig) {
   try {
     const stream = createStreamableValue('');
-    const subscriptionPlan = await getSubscriptionPlan();
-    const isPro = subscriptionPlan === 'pro';
-    const aiClient = isPro ? initializeAIClient(config, isPro) : initializeAIClient(config);
+    const isPro = true;
+    const aiClient = initializeAIClient(config, isPro);
 
    const system = `
    

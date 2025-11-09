@@ -1,9 +1,7 @@
 import { Background } from "@/components/landing/Background";
 import FeatureHighlights from "@/components/landing/FeatureHighlights";
 import { Hero } from "@/components/landing/Hero";
-import { PricingPlans } from "@/components/landing/PricingPlans";
 import { VideoShowcase } from "@/components/landing/VideoShowcase";
-import { FAQ } from "@/components/landing/FAQ";
 import { Footer } from "@/components/layout/footer";
 import { NavLinks } from "@/components/layout/nav-links";
 import { Logo } from "@/components/ui/logo";
@@ -94,14 +92,6 @@ export default async function Page() {
         <section id="features" aria-labelledby="features-heading">
           <FeatureHighlights />
         </section>  
-        
-        {/* Pricing Plans Section */}
-        <section id="pricing" aria-labelledby="pricing-heading">
-          <PricingPlans />
-        </section>
-        
-        {/* FAQ Section */}
-        <FAQ />
 
         <Footer variant="static"/>
       </main>

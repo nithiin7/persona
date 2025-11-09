@@ -1,5 +1,5 @@
--- ResumeLM Database Schema
--- This file contains all the SQL statements needed to set up the ResumeLM database schema
+-- Persona Database Schema
+-- This file contains all the SQL statements needed to set up the Persona database schema
 -- Run this against your PostgreSQL database to create all required tables
 
 -- First, ensure the UUID extension is available
@@ -14,42 +14,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Subscriptions table
-CREATE TABLE IF NOT EXISTS public.subscriptions (
-  user_id uuid NOT NULL,
-  stripe_customer_id text NULL,
-  stripe_subscription_id text NULL,
-  subscription_plan text NULL DEFAULT 'free'::text,
-  subscription_status text NULL,
-  current_period_end timestamp with time zone NULL,
-  trial_end timestamp with time zone NULL,
-  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
-  updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
-  CONSTRAINT subscriptions_pkey PRIMARY KEY (user_id),
-  CONSTRAINT subscriptions_user_id_key UNIQUE (user_id),
-  CONSTRAINT subscriptions_stripe_subscription_id_key UNIQUE (stripe_subscription_id),
-  CONSTRAINT subscriptions_stripe_customer_id_key UNIQUE (stripe_customer_id),
-  CONSTRAINT subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users (id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT subscriptions_subscription_plan_check CHECK (
-    (
-      subscription_plan = ANY (ARRAY['free'::text, 'pro'::text])
-    )
-  ),
-  CONSTRAINT subscriptions_subscription_status_check CHECK (
-    (
-      (subscription_status IS NULL)
-      OR (
-        subscription_status = ANY (ARRAY['active'::text, 'canceled'::text])
-      )
-    )
-  )
-) TABLESPACE pg_default;
-
--- Create updated_at trigger for subscriptions
-DROP TRIGGER IF EXISTS update_subscriptions_updated_at ON public.subscriptions;
-CREATE TRIGGER update_subscriptions_updated_at BEFORE
-UPDATE ON subscriptions FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
 
 -- Jobs table
 CREATE TABLE IF NOT EXISTS public.jobs (

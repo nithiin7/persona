@@ -23,15 +23,6 @@ import { type SortOption, type SortDirection } from "@/components/resume/managem
 import type { ResumeSummary } from "@/lib/types";
 import { ResumesSection } from "@/components/dashboard/resumes-section";
 import { getDashboardData } from "@/utils/actions";
-import { checkSubscriptionPlan } from "@/utils/actions/stripe/actions";
-
-
-
-
-
-
-
-
 
 export default async function Home({
   searchParams,
@@ -43,19 +34,9 @@ export default async function Home({
   const isNewSignup = params?.type === 'signup' && params?.token_hash;
 
   // Fetch dashboard data and handle authentication
-  const fallbackSubscription = {
-    plan: '',
-    status: '',
-    currentPeriodEnd: ''
-  };
-
   let data;
-  let subscription: Awaited<ReturnType<typeof checkSubscriptionPlan>> = fallbackSubscription;
   try {
-    [data, subscription] = await Promise.all([
-      getDashboardData(),
-      checkSubscriptionPlan().catch(() => fallbackSubscription)
-    ]);
+    data = await getDashboardData();
     if (!data.profile) {
       redirect("/");
     }
@@ -65,8 +46,6 @@ export default async function Home({
   }
 
   const { profile, baseResumes: unsortedBaseResumes, tailoredResumes: unsortedTailoredResumes } = data;
-  const baseResumesCount = unsortedBaseResumes.length;
-  const tailoredResumesCount = unsortedTailoredResumes.length;
 
   // Get sort parameters for both sections
   const baseSort = (params.baseSort as SortOption) || 'createdAt';
@@ -96,14 +75,9 @@ export default async function Home({
   const baseResumes = sortResumes(unsortedBaseResumes, baseSort, baseDirection);
   const tailoredResumes = sortResumes(unsortedTailoredResumes, tailoredSort, tailoredDirection);
   
-  // Check if user is on Pro plan
-  const isProPlan = subscription.plan === 'pro';
-
-  // console.log(subscription);
-  
-  // Free plan limits
-  const canCreateBase = isProPlan || baseResumesCount < 2;
-  const canCreateTailored = isProPlan || tailoredResumesCount < 4;
+  const isProPlan = true;
+  const canCreateBase = true;
+  const canCreateTailored = true;
 
 
   // Display a friendly message if no profile exists

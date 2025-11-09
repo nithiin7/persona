@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Menu, User } from "lucide-react";
 import { PageTitle } from "./page-title";
-import { ProUpgradeButton } from "@/components/settings/pro-upgrade-button";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
@@ -16,11 +15,10 @@ import { getDefaultModel, type ApiKey } from "@/lib/ai-models";
 
 interface AppHeaderProps {
   children?: React.ReactNode;
-  showUpgradeButton?: boolean;
   isProPlan?: boolean;
 }
 
-export function AppHeader({ children, showUpgradeButton = true, isProPlan = false }: AppHeaderProps) {
+export function AppHeader({ children, isProPlan = true }: AppHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [defaultModel, setDefaultModel] = useState<string>('');
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
@@ -85,12 +83,6 @@ export function AppHeader({ children, showUpgradeButton = true, isProPlan = fals
             <>
               {/* Desktop Navigation */}
               <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-                {showUpgradeButton && (
-                  <>
-                    <ProUpgradeButton />
-                    <div className="h-4 w-px bg-purple-200/50 ml-2 lg:ml-3" />
-                  </>
-                )}
                 
                 {/* Model Selector - Responsive Width */}
                 <div className="mr-2 lg:mr-3">
@@ -137,8 +129,6 @@ export function AppHeader({ children, showUpgradeButton = true, isProPlan = fals
                     <SheetTitle>Menu</SheetTitle>
                   </SheetHeader>
                   <div className="flex flex-col gap-4 pt-6">
-                    {showUpgradeButton && <ProUpgradeButton className="w-full" />}
-                    
                     {/* Mobile Model Selector */}
                     <div className="px-1">
                       <ModelSelector
