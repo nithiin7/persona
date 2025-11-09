@@ -636,130 +636,213 @@ function getTemplateStyles(template: string) {
   switch (template) {
     case "modern":
       return {
+        page: {
+          backgroundColor: "#ffffff",
+        },
         header: {
-          backgroundColor: "#f9fafb",
-          padding: 16,
-          borderLeftWidth: 4,
+          backgroundColor: "#f0f9ff",
+          padding: 20,
+          borderLeftWidth: 6,
           borderLeftColor: "#6366f1",
           marginBottom: 28,
+          borderRadius: 4,
         },
         name: {
-          color: "#1f2937",
+          color: "#1e3a8a",
+          fontFamily: "Helvetica-Bold",
+          fontSize: 28,
+        },
+        contactInfo: {
+          color: "#64748b",
+          fontSize: 9,
         },
         sectionTitle: {
           color: "#6366f1",
-          fontSize: 13,
+          fontSize: 14,
+          fontFamily: "Helvetica-Bold",
           textTransform: "uppercase" as const,
-          letterSpacing: 1,
+          letterSpacing: 1.5,
           borderBottomWidth: 0,
-          marginBottom: 8,
+          marginBottom: 10,
+          marginTop: 6,
         },
         link: {
+          color: "#6366f1",
+          textDecoration: "none",
+        },
+        bulletSeparator: {
           color: "#6366f1",
         },
       };
     
     case "minimal":
       return {
+        page: {
+          backgroundColor: "#ffffff",
+        },
         header: {
           alignItems: "center" as const,
-          marginBottom: 32,
+          marginBottom: 36,
           borderBottomWidth: 0,
+          paddingBottom: 16,
         },
         name: {
           letterSpacing: -0.5,
-          color: "#111827",
+          color: "#0f172a",
+          fontFamily: "Helvetica",
+          fontSize: 26,
+          textAlign: "center" as const,
         },
         contactInfo: {
           justifyContent: "center" as const,
+          color: "#64748b",
+          fontSize: 9,
         },
         sectionTitle: {
-          color: "#374151",
-          fontSize: 11,
+          color: "#334155",
+          fontSize: 10,
+          fontFamily: "Helvetica-Bold",
           textTransform: "uppercase" as const,
-          letterSpacing: 2,
+          letterSpacing: 3,
           borderBottomWidth: 0,
-          marginBottom: 8,
+          marginBottom: 10,
+          marginTop: 8,
         },
         bulletSeparator: {
-          color: "#d1d5db",
+          color: "#cbd5e1",
+          marginHorizontal: 8,
         },
         link: {
-          color: "#111827",
+          color: "#0f172a",
+          textDecoration: "none",
         },
       };
     
     case "professional":
       return {
+        page: {
+          backgroundColor: "#fafafa",
+        },
         header: {
-          backgroundColor: "#eff6ff",
-          padding: 12,
-          borderBottomWidth: 3,
-          borderBottomColor: "#2563eb",
+          backgroundColor: "#dbeafe",
+          padding: 16,
+          borderBottomWidth: 4,
+          borderBottomColor: "#1e40af",
           marginBottom: 24,
         },
         name: {
-          color: "#1e40af",
+          color: "#1e3a8a",
+          fontFamily: "Helvetica-Bold",
+          fontSize: 26,
+        },
+        contactInfo: {
+          color: "#475569",
+          fontSize: 9,
         },
         sectionTitle: {
-          color: "#2563eb",
-          fontSize: 12,
+          color: "#1e40af",
+          fontSize: 13,
           fontFamily: "Helvetica-Bold",
-          borderBottomWidth: 2,
-          borderBottomColor: "#93c5fd",
+          textTransform: "uppercase" as const,
+          letterSpacing: 1,
+          borderBottomWidth: 3,
+          borderBottomColor: "#60a5fa",
           paddingBottom: 4,
-          marginBottom: 8,
+          marginBottom: 10,
+          marginTop: 6,
         },
         link: {
+          color: "#2563eb",
+          textDecoration: "none",
+        },
+        bulletSeparator: {
           color: "#2563eb",
         },
       };
     
     case "creative":
       return {
+        page: {
+          backgroundColor: "#fffbf5",
+        },
         header: {
-          backgroundColor: "#fdf2f8",
-          padding: 16,
-          borderTopWidth: 4,
-          borderTopColor: "#ec4899",
-          borderBottomWidth: 4,
-          borderBottomColor: "#ec4899",
+          backgroundColor: "#fef2f2",
+          padding: 20,
+          borderTopWidth: 6,
+          borderTopColor: "#e11d48",
+          borderBottomWidth: 6,
+          borderBottomColor: "#e11d48",
           marginBottom: 24,
         },
         name: {
-          color: "#be185d",
+          color: "#9f1239",
+          fontFamily: "Helvetica-Bold",
+          fontSize: 28,
+        },
+        contactInfo: {
+          color: "#881337",
+          fontSize: 9,
         },
         sectionTitle: {
-          color: "#ec4899",
-          fontSize: 13,
+          color: "#e11d48",
+          fontSize: 14,
           fontFamily: "Helvetica-Bold",
-          borderBottomWidth: 2,
-          borderBottomColor: "#f9a8d4",
-          paddingBottom: 3,
-          marginBottom: 8,
+          textTransform: "uppercase" as const,
+          letterSpacing: 1.5,
+          borderBottomWidth: 3,
+          borderBottomColor: "#fda4af",
+          paddingBottom: 4,
+          marginBottom: 10,
+          marginTop: 6,
         },
         link: {
-          color: "#ec4899",
+          color: "#e11d48",
+          textDecoration: "none",
+        },
+        bulletSeparator: {
+          color: "#e11d48",
         },
       };
     
     case "classic":
     default:
       return {
+        page: {
+          backgroundColor: "#ffffff",
+        },
         header: {
-          borderBottomWidth: 2,
+          borderBottomWidth: 2.5,
           borderBottomColor: "#1f2937",
-          paddingBottom: 8,
+          paddingBottom: 10,
+          marginBottom: 20,
+        },
+        name: {
+          color: "#111827",
+          fontFamily: "Helvetica-Bold",
+          fontSize: 24,
+        },
+        contactInfo: {
+          color: "#4b5563",
+          fontSize: 9,
         },
         sectionTitle: {
           fontSize: 12,
           color: "#1f2937",
+          fontFamily: "Helvetica-Bold",
           textTransform: "uppercase" as const,
-          letterSpacing: 0.5,
-          borderBottomWidth: 1,
-          borderBottomColor: "#e5e7eb",
-          paddingBottom: 2,
-          marginBottom: 6,
+          letterSpacing: 0.8,
+          borderBottomWidth: 1.5,
+          borderBottomColor: "#d1d5db",
+          paddingBottom: 3,
+          marginBottom: 8,
+          marginTop: 4,
+        },
+        link: {
+          color: "#374151",
+          textDecoration: "none",
+        },
+        bulletSeparator: {
+          color: "#6b7280",
         },
       };
   }
@@ -781,9 +864,9 @@ export const ResumePDFDocument = memo(
       const templateOverrides = getTemplateStyles(template);
       
       // Deep merge template overrides with base styles
-      const mergedStyles: any = { ...baseStyles };
+      const mergedStyles = { ...baseStyles } as any;
       
-      Object.keys(templateOverrides).forEach((key) => {
+      (Object.keys(templateOverrides) as Array<keyof typeof templateOverrides>).forEach((key) => {
         if (mergedStyles[key]) {
           // Merge the style object for this key
           mergedStyles[key] = {
