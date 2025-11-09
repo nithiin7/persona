@@ -19,16 +19,62 @@ interface GithubAuthResult extends AuthResult {
 // Login
 export async function login(formData: FormData): Promise<AuthResult> {
   const supabase = await createClient();
+  const serviceSupabase = await createServiceClient();
 
   const data = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
 
-  const { error } = await supabase.auth.signInWithPassword(data);
+  const { data: authData, error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
+    // If error is due to unconfirmed email, try to auto-confirm and retry
+    if (
+      error.message?.toLowerCase().includes("email not confirmed") ||
+      error.message?.toLowerCase().includes("email_not_confirmed")
+    ) {
+      try {
+        // Get user by email using service client
+        const { data: users, error: listError } =
+          await serviceSupabase.auth.admin.listUsers();
+        
+        if (!listError && users?.users) {
+          const user = users.users.find((u) => u.email === data.email);
+          
+          if (user) {
+            // Auto-confirm the user
+            const { error: confirmError } =
+              await serviceSupabase.auth.admin.updateUserById(user.id, {
+                email_confirm: true,
+              });
+
+            if (!confirmError) {
+              // Retry login after confirmation
+              const { data: retryData, error: retryError } =
+                await supabase.auth.signInWithPassword(data);
+
+              if (!retryError && retryData?.user) {
+                redirect("/");
+                return { success: true };
+              }
+            }
+          }
+        }
+      } catch (confirmErr) {
+        console.error("Error auto-confirming user:", confirmErr);
+      }
+    }
+
     return { success: false, error: error.message };
+  }
+
+  // Check if user exists but might have confirmation issues
+  if (!authData?.user) {
+    return {
+      success: false,
+      error: "Unable to sign in. Please check your credentials.",
+    };
   }
 
   redirect("/");
@@ -46,10 +92,9 @@ export async function signup(formData: FormData): Promise<AuthResult> {
       data: {
         full_name: formData.get("name") as string,
       },
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
     },
   };
-  const { error: signupError } = await supabase.auth.signUp(data);
+  const { data: signupData, error: signupError } = await supabase.auth.signUp(data);
 
   if (signupError) {
     // Log detailed error information
@@ -60,6 +105,18 @@ export async function signup(formData: FormData): Promise<AuthResult> {
       name: signupError.name,
     });
     return { success: false, error: signupError.message };
+  }
+
+  // Auto-confirm the user if they were created (using service role key)
+  if (signupData?.user) {
+    const { error: confirmError } = await supabase.auth.admin.updateUserById(
+      signupData.user.id,
+      { email_confirm: true }
+    );
+    
+    if (confirmError) {
+      console.error("Error auto-confirming user:", confirmError);
+    }
   }
 
   return { success: true };

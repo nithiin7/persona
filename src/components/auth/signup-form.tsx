@@ -111,8 +111,7 @@ export function SignupForm() {
         <Alert className="bg-emerald-50/50 text-emerald-900 border-emerald-200/50">
           <CheckCircle2 className="h-4 w-4 text-emerald-500" />
           <AlertDescription>
-            Account created successfully! Please check your email to confirm
-            your account.
+            Account created successfully! You can now sign in.
           </AlertDescription>
         </Alert>
       ) : (

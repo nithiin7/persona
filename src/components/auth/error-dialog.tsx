@@ -26,9 +26,7 @@ export function ErrorDialog({ isOpen: initialIsOpen }: ErrorDialogProps) {
   }, [initialIsOpen]);
 
   const errorMessage = isOpen
-    ? searchParams.get("error") === "auth_code_missing"
-      ? "We couldn't complete your sign-in. Please try again."
-      : "There was an issue with your email confirmation. Please check your inbox and try again."
+    ? "We couldn't complete your sign-in. Please try again."
     : null;
 
   return (
@@ -46,14 +44,8 @@ export function ErrorDialog({ isOpen: initialIsOpen }: ErrorDialogProps) {
 
         <div className="pt-4 space-y-4">
           <p className="text-center text-muted-foreground">
-            There was an error confirming your email address. This could be
-            because:
+            There was an error with authentication. Please try logging in again.
           </p>
-          <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-            <li>The confirmation link has expired</li>
-            <li>The link was already used</li>
-            <li>The link is invalid</li>
-          </ul>
           <div className="pt-4 space-y-2">
             <Link href="/">
               <Button className="w-full bg-gradient-to-r from-red-600 to-rose-600 text-white">

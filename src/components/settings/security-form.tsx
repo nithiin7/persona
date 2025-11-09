@@ -39,7 +39,7 @@ export function SecurityForm({ user }: SecurityFormProps) {
         return;
       }
 
-      toast.success("Please check your new email to confirm the change");
+      toast.success("Email update request sent. Your email will be updated shortly.");
       setNewEmail("");
       setEmailCurrentPassword("");
     } catch {

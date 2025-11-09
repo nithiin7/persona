@@ -13,8 +13,6 @@ import { SplitContent } from "@/components/ui/split-content";
 import { NavLinks } from "@/components/layout/nav-links";
 import { ModelShowcase } from "@/components/landing/model-showcase";
 
-// import { WaitlistSection } from "@/components/waitlist/waitlist-section";
-
 export const metadata: Metadata = {
   title: "Login | Persona - AI-Powered Resume Builder",
   description:
@@ -64,9 +62,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  // verification: {
-  //   google: "google-site-verification-code", // Replace with actual verification code
-  // },
 };
 
 export default async function LoginPage({
@@ -75,9 +70,7 @@ export default async function LoginPage({
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const params = await searchParams;
-  const showErrorDialog =
-    params?.error === "email_confirmation" ||
-    params?.error === "auth_code_missing";
+  const showErrorDialog = params?.error === "auth_code_missing";
 
   return (
     <>
