@@ -450,6 +450,346 @@ export function DocumentSettingsForm({
                 </div>
               </div>
             </Button>
+
+            {/* Spacious Layout */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                handleSettingsChange({
+                  ...documentSettings,
+                  header_name_size: 28,
+                  skills_margin_top: 6,
+                  document_font_size: 10.5,
+                  projects_margin_top: 6,
+                  skills_item_spacing: 4,
+                  document_line_height: 1.6,
+                  education_margin_top: 6,
+                  skills_margin_bottom: 6,
+                  experience_margin_top: 6,
+                  projects_item_spacing: 6,
+                  education_item_spacing: 6,
+                  projects_margin_bottom: 6,
+                  education_margin_bottom: 6,
+                  experience_item_spacing: 6,
+                  document_margin_vertical: 48,
+                  experience_margin_bottom: 6,
+                  skills_margin_horizontal: 0,
+                  document_margin_horizontal: 42,
+                  header_name_bottom_spacing: 32,
+                  projects_margin_horizontal: 0,
+                  education_margin_horizontal: 0,
+                  experience_margin_horizontal: 0,
+                  certifications_margin_top: 6,
+                  certifications_margin_bottom: 6,
+                  certifications_item_spacing: 6,
+                  certifications_margin_horizontal: 0,
+                })
+              }
+              className="relative h-60 group p-0 overflow-hidden border-slate-200 hover:border-blue-600/40 transition-colors"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative h-full w-full flex flex-col items-center">
+                <div className="w-full p-2 text-xs font-medium text-blue-600 border-b border-slate-200 bg-slate-50/80">
+                  <LayoutTemplate className="w-3 h-3 inline-block mr-1" />
+                  Spacious Layout
+                </div>
+                <div className="flex-1 w-full p-2 flex flex-col justify-start">
+                  {/* Mock resume content - Spacious */}
+                  <div className="mb-4">
+                    <div className="w-4/5 h-2.5 bg-slate-300 rounded mb-8" />
+                    <div className="flex space-x-3 mb-6">
+                      <div className="w-1/3 h-1.5 bg-slate-300 rounded" />
+                      <div className="w-1/3 h-1.5 bg-slate-300 rounded" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-5">
+                    <div className="space-y-3">
+                      <div className="w-2/5 h-2 bg-slate-300 rounded" />
+                      <div className="space-y-2 pl-2">
+                        <div className="w-full h-1 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-1 bg-slate-300 rounded" />
+                        <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="w-2/5 h-2 bg-slate-300 rounded" />
+                      <div className="space-y-2 pl-2">
+                        <div className="w-full h-1 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-1 bg-slate-300 rounded" />
+                        <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Button>
+
+            {/* Modern Layout */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                handleSettingsChange({
+                  ...documentSettings,
+                  header_name_size: 32,
+                  skills_margin_top: 4,
+                  document_font_size: 10,
+                  projects_margin_top: 4,
+                  skills_item_spacing: 3,
+                  document_line_height: 1.3,
+                  education_margin_top: 4,
+                  skills_margin_bottom: 4,
+                  experience_margin_top: 4,
+                  projects_item_spacing: 3,
+                  education_item_spacing: 3,
+                  projects_margin_bottom: 4,
+                  education_margin_bottom: 4,
+                  experience_item_spacing: 3,
+                  document_margin_vertical: 30,
+                  experience_margin_bottom: 4,
+                  skills_margin_horizontal: 8,
+                  document_margin_horizontal: 32,
+                  header_name_bottom_spacing: 20,
+                  projects_margin_horizontal: 8,
+                  education_margin_horizontal: 8,
+                  experience_margin_horizontal: 8,
+                  certifications_margin_top: 4,
+                  certifications_margin_bottom: 4,
+                  certifications_item_spacing: 3,
+                  certifications_margin_horizontal: 8,
+                })
+              }
+              className="relative h-60 group p-0 overflow-hidden border-slate-200 hover:border-purple-600/40 transition-colors"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-violet-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative h-full w-full flex flex-col items-center">
+                <div className="w-full p-2 text-xs font-medium text-purple-600 border-b border-slate-200 bg-slate-50/80">
+                  <LayoutTemplate className="w-3 h-3 inline-block mr-1" />
+                  Modern Layout
+                </div>
+                <div className="flex-1 w-full p-2 flex flex-col justify-start">
+                  {/* Mock resume content - Modern */}
+                  <div className="mb-3">
+                    <div className="w-full h-3 bg-slate-300 rounded mb-5" />
+                    <div className="flex space-x-2 mb-3">
+                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
+                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
+                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2 pl-2">
+                      <div className="w-1/3 h-1.5 bg-slate-300 rounded" />
+                      <div className="space-y-1.5">
+                        <div className="w-full h-1 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-1 bg-slate-300 rounded" />
+                        <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 pl-2">
+                      <div className="w-1/3 h-1.5 bg-slate-300 rounded" />
+                      <div className="space-y-1.5">
+                        <div className="w-full h-1 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-1 bg-slate-300 rounded" />
+                        <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 pl-2">
+                      <div className="w-1/3 h-1.5 bg-slate-300 rounded" />
+                      <div className="space-y-1.5">
+                        <div className="w-full h-1 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-1 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Button>
+
+            {/* Minimal Layout */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                handleSettingsChange({
+                  ...documentSettings,
+                  header_name_size: 22,
+                  skills_margin_top: 1,
+                  document_font_size: 9.5,
+                  projects_margin_top: 1,
+                  skills_item_spacing: 1,
+                  document_line_height: 1.4,
+                  education_margin_top: 1,
+                  skills_margin_bottom: 1,
+                  experience_margin_top: 1,
+                  projects_item_spacing: 2,
+                  education_item_spacing: 2,
+                  projects_margin_bottom: 1,
+                  education_margin_bottom: 1,
+                  experience_item_spacing: 2,
+                  document_margin_vertical: 24,
+                  experience_margin_bottom: 1,
+                  skills_margin_horizontal: 0,
+                  document_margin_horizontal: 30,
+                  header_name_bottom_spacing: 18,
+                  projects_margin_horizontal: 0,
+                  education_margin_horizontal: 0,
+                  experience_margin_horizontal: 0,
+                  certifications_margin_top: 1,
+                  certifications_margin_bottom: 1,
+                  certifications_item_spacing: 1,
+                  certifications_margin_horizontal: 0,
+                })
+              }
+              className="relative h-60 group p-0 overflow-hidden border-slate-200 hover:border-emerald-600/40 transition-colors"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-green-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative h-full w-full flex flex-col items-center">
+                <div className="w-full p-2 text-xs font-medium text-emerald-600 border-b border-slate-200 bg-slate-50/80">
+                  <LayoutTemplate className="w-3 h-3 inline-block mr-1" />
+                  Minimal Layout
+                </div>
+                <div className="flex-1 w-full p-2 flex flex-col justify-start">
+                  {/* Mock resume content - Minimal */}
+                  <div className="mb-2">
+                    <div className="w-2/3 h-1.5 bg-slate-300 rounded mb-4" />
+                    <div className="flex space-x-1.5 mb-3">
+                      <div className="w-1/5 h-0.5 bg-slate-300 rounded" />
+                      <div className="w-1/5 h-0.5 bg-slate-300 rounded" />
+                      <div className="w-1/5 h-0.5 bg-slate-300 rounded" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
+                      <div className="space-y-1">
+                        <div className="w-full h-0.5 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-0.5 bg-slate-300 rounded" />
+                        <div className="w-10/12 h-0.5 bg-slate-300 rounded" />
+                        <div className="w-9/12 h-0.5 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
+                      <div className="space-y-1">
+                        <div className="w-full h-0.5 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-0.5 bg-slate-300 rounded" />
+                        <div className="w-10/12 h-0.5 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
+                      <div className="space-y-1">
+                        <div className="w-full h-0.5 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-0.5 bg-slate-300 rounded" />
+                        <div className="w-9/12 h-0.5 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
+                      <div className="space-y-1">
+                        <div className="w-full h-0.5 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-0.5 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Button>
+
+            {/* Executive Layout */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                handleSettingsChange({
+                  ...documentSettings,
+                  header_name_size: 26,
+                  skills_margin_top: 5,
+                  document_font_size: 10.5,
+                  projects_margin_top: 5,
+                  skills_item_spacing: 3.5,
+                  document_line_height: 1.55,
+                  education_margin_top: 5,
+                  skills_margin_bottom: 5,
+                  experience_margin_top: 5,
+                  projects_item_spacing: 5,
+                  education_item_spacing: 5,
+                  projects_margin_bottom: 5,
+                  education_margin_bottom: 5,
+                  experience_item_spacing: 5,
+                  document_margin_vertical: 40,
+                  experience_margin_bottom: 5,
+                  skills_margin_horizontal: 4,
+                  document_margin_horizontal: 38,
+                  header_name_bottom_spacing: 28,
+                  projects_margin_horizontal: 4,
+                  education_margin_horizontal: 4,
+                  experience_margin_horizontal: 4,
+                  certifications_margin_top: 5,
+                  certifications_margin_bottom: 5,
+                  certifications_item_spacing: 3.5,
+                  certifications_margin_horizontal: 4,
+                })
+              }
+              className="relative h-60 group p-0 overflow-hidden border-slate-200 hover:border-amber-600/40 transition-colors"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative h-full w-full flex flex-col items-center">
+                <div className="w-full p-2 text-xs font-medium text-amber-600 border-b border-slate-200 bg-slate-50/80">
+                  <LayoutTemplate className="w-3 h-3 inline-block mr-1" />
+                  Executive Layout
+                </div>
+                <div className="flex-1 w-full p-2 flex flex-col justify-start">
+                  {/* Mock resume content - Executive */}
+                  <div className="mb-4">
+                    <div className="w-4/5 h-2 bg-slate-300 rounded mb-7" />
+                    <div className="flex space-x-2.5 mb-5">
+                      <div className="w-1/3 h-1 bg-slate-300 rounded" />
+                      <div className="w-1/3 h-1 bg-slate-300 rounded" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2.5 pl-1">
+                      <div className="w-2/5 h-1.5 bg-slate-300 rounded" />
+                      <div className="space-y-1.5">
+                        <div className="w-full h-1 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-1 bg-slate-300 rounded" />
+                        <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2.5 pl-1">
+                      <div className="w-2/5 h-1.5 bg-slate-300 rounded" />
+                      <div className="space-y-1.5">
+                        <div className="w-full h-1 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-1 bg-slate-300 rounded" />
+                        <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2.5 pl-1">
+                      <div className="w-2/5 h-1.5 bg-slate-300 rounded" />
+                      <div className="space-y-1.5">
+                        <div className="w-full h-1 bg-slate-300 rounded" />
+                        <div className="w-11/12 h-1 bg-slate-300 rounded" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-8">

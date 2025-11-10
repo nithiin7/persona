@@ -868,6 +868,221 @@ function getTemplateStyles(template: string) {
         },
       };
     
+    case "executive":
+      return {
+        page: {
+          backgroundColor: "#fffbeb",
+        },
+        header: {
+          backgroundColor: "#fef3c7",
+          padding: 18,
+          borderLeftWidth: 5,
+          borderLeftColor: "#d97706",
+          marginBottom: 26,
+          borderRadius: 2,
+        },
+        name: {
+          color: "#92400e",
+          fontFamily: "Helvetica-Bold",
+          fontSize: 30,
+        },
+        contactInfo: {
+          color: "#78350f",
+          fontSize: 9,
+        },
+        sectionTitle: {
+          color: "#d97706",
+          fontSize: 13,
+          fontFamily: "Helvetica-Bold",
+          textTransform: "uppercase" as const,
+          letterSpacing: 1.2,
+          borderBottomWidth: 2,
+          borderBottomColor: "#fbbf24",
+          paddingBottom: 3,
+          marginBottom: 10,
+          marginTop: 6,
+        },
+        link: {
+          color: "#d97706",
+          textDecoration: "none",
+        },
+        bulletSeparator: {
+          color: "#d97706",
+        },
+      };
+    
+    case "tech":
+      return {
+        page: {
+          backgroundColor: "#ffffff",
+        },
+        header: {
+          backgroundColor: "#d1fae5",
+          padding: 20,
+          borderWidth: 2,
+          borderColor: "#10b981",
+          marginBottom: 24,
+          borderRadius: 6,
+        },
+        name: {
+          color: "#065f46",
+          fontFamily: "Helvetica-Bold",
+          fontSize: 28,
+        },
+        contactInfo: {
+          color: "#047857",
+          fontSize: 9,
+        },
+        sectionTitle: {
+          color: "#10b981",
+          fontSize: 13,
+          fontFamily: "Helvetica-Bold",
+          textTransform: "uppercase" as const,
+          letterSpacing: 1.5,
+          borderBottomWidth: 2,
+          borderBottomColor: "#6ee7b7",
+          paddingBottom: 4,
+          marginBottom: 10,
+          marginTop: 6,
+        },
+        link: {
+          color: "#059669",
+          textDecoration: "none",
+        },
+        bulletSeparator: {
+          color: "#10b981",
+        },
+      };
+    
+    case "academic":
+      return {
+        page: {
+          backgroundColor: "#faf5ff",
+        },
+        header: {
+          backgroundColor: "#f3e8ff",
+          padding: 18,
+          borderBottomWidth: 4,
+          borderBottomColor: "#7c3aed",
+          marginBottom: 28,
+        },
+        name: {
+          color: "#5b21b6",
+          fontFamily: "Helvetica-Bold",
+          fontSize: 27,
+        },
+        contactInfo: {
+          color: "#6b21a8",
+          fontSize: 9,
+        },
+        sectionTitle: {
+          color: "#7c3aed",
+          fontSize: 12,
+          fontFamily: "Helvetica-Bold",
+          textTransform: "uppercase" as const,
+          letterSpacing: 1.8,
+          borderBottomWidth: 2.5,
+          borderBottomColor: "#a78bfa",
+          paddingBottom: 4,
+          marginBottom: 10,
+          marginTop: 6,
+        },
+        link: {
+          color: "#7c3aed",
+          textDecoration: "none",
+        },
+        bulletSeparator: {
+          color: "#7c3aed",
+        },
+      };
+    
+    case "bold":
+      return {
+        page: {
+          backgroundColor: "#fff1f2",
+        },
+        header: {
+          backgroundColor: "#fee2e2",
+          padding: 22,
+          borderWidth: 3,
+          borderColor: "#dc2626",
+          marginBottom: 26,
+          borderRadius: 4,
+        },
+        name: {
+          color: "#991b1b",
+          fontFamily: "Helvetica-Bold",
+          fontSize: 32,
+        },
+        contactInfo: {
+          color: "#b91c1c",
+          fontSize: 9.5,
+        },
+        sectionTitle: {
+          color: "#dc2626",
+          fontSize: 15,
+          fontFamily: "Helvetica-Bold",
+          textTransform: "uppercase" as const,
+          letterSpacing: 2,
+          borderBottomWidth: 4,
+          borderBottomColor: "#f87171",
+          paddingBottom: 5,
+          marginBottom: 12,
+          marginTop: 8,
+        },
+        link: {
+          color: "#dc2626",
+          textDecoration: "none",
+        },
+        bulletSeparator: {
+          color: "#dc2626",
+        },
+      };
+    
+    case "elegant":
+      return {
+        page: {
+          backgroundColor: "#fff1f2",
+        },
+        header: {
+          backgroundColor: "#fce7f3",
+          padding: 20,
+          borderWidth: 1,
+          borderColor: "#e11d48",
+          marginBottom: 28,
+          borderRadius: 8,
+        },
+        name: {
+          color: "#9f1239",
+          fontFamily: "Helvetica-Bold",
+          fontSize: 29,
+          letterSpacing: 0.5,
+        },
+        contactInfo: {
+          color: "#881337",
+          fontSize: 9,
+        },
+        sectionTitle: {
+          color: "#e11d48",
+          fontSize: 13,
+          fontFamily: "Helvetica-Bold",
+          textTransform: "uppercase" as const,
+          letterSpacing: 1.5,
+          borderBottomWidth: 1.5,
+          borderBottomColor: "#f9a8d4",
+          paddingBottom: 4,
+          marginBottom: 10,
+          marginTop: 6,
+        },
+        link: {
+          color: "#e11d48",
+          textDecoration: "none",
+        },
+        bulletSeparator: {
+          color: "#e11d48",
+        },
+      };
+    
     case "classic":
     default:
       return {

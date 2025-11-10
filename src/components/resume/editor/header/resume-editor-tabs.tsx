@@ -80,7 +80,7 @@ export function ResumeEditorTabs() {
         </TabsList>
       </div>
 
-      <TabsList className="h-full w-full relative bg-white/80 backdrop-blur-xl border border-white/40 rounded-lg overflow-x-auto flex gap-0.5 p-0.5 shadow-lg">
+      <TabsList className="h-full w-full relative bg-white/80 backdrop-blur-xl border border-white/40 rounded-lg grid grid-cols-3 gap-0.5 p-0.5 shadow-lg">
         {/* Basic Info Tab */}
         <TabsTrigger
           value="basic"

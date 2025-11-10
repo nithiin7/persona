@@ -73,7 +73,12 @@ export type ResumeTemplate =
   | "modern"
   | "minimal"
   | "professional"
-  | "creative";
+  | "creative"
+  | "executive"
+  | "tech"
+  | "academic"
+  | "bold"
+  | "elegant";
 
 export interface Resume {
   id: string;
