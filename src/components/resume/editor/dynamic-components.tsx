@@ -7,6 +7,7 @@ import type {
   Education,
   Skill,
   Project,
+  Certification,
   DocumentSettings,
 } from "@/lib/types";
 
@@ -33,6 +34,12 @@ interface SkillsFormProps {
   skills: Skill[];
   onChange: (skills: Skill[]) => void;
   profile: { skills: Skill[] };
+}
+
+interface CertificationsFormProps {
+  certifications: Certification[];
+  onChange: (certifications: Certification[]) => void;
+  profile: { certifications?: Certification[] };
 }
 
 export const WorkExperienceForm = dynamic(
@@ -73,6 +80,17 @@ export const ProjectsForm = dynamic(
     import("./forms/projects-form").then((mod) => ({
       default: mod.ProjectsForm,
     })) as Promise<ComponentType<ProjectsFormProps>>,
+  {
+    loading: () => <LoadingFallback lines={1} />,
+    ssr: false,
+  }
+);
+
+export const CertificationsForm = dynamic(
+  () =>
+    import("./forms/certifications-form").then((mod) => ({
+      default: mod.CertificationsForm,
+    })) as Promise<ComponentType<CertificationsFormProps>>,
   {
     loading: () => <LoadingFallback lines={1} />,
     ssr: false,

@@ -6,6 +6,7 @@ import {
   Profile,
   Education,
   Skill,
+  Certification,
 } from "@/lib/types";
 import {
   Dialog,
@@ -24,12 +25,12 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 
-type ImportItem = WorkExperience | Project | Education | Skill;
+type ImportItem = WorkExperience | Project | Education | Skill | Certification;
 
 interface ImportFromProfileDialogProps<T extends ImportItem> {
   profile: Profile;
   onImport: (items: T[]) => void;
-  type: "work_experience" | "projects" | "education" | "skills";
+  type: "work_experience" | "projects" | "education" | "skills" | "certifications";
   buttonClassName?: string;
 }
 
@@ -49,7 +50,9 @@ export function ImportFromProfileDialog<T extends ImportItem>({
         ? profile.projects
         : type === "education"
           ? profile.education
-          : profile.skills;
+          : type === "certifications"
+            ? profile.certifications || []
+            : profile.skills;
 
   const title =
     type === "work_experience"
@@ -58,7 +61,9 @@ export function ImportFromProfileDialog<T extends ImportItem>({
         ? "Projects"
         : type === "education"
           ? "Education"
-          : "Skills";
+          : type === "certifications"
+            ? "Certifications"
+            : "Skills";
 
   const handleImport = () => {
     const itemsToImport = items.filter((item) => {
@@ -80,6 +85,9 @@ export function ImportFromProfileDialog<T extends ImportItem>({
     } else if (type === "education") {
       const edu = item as Education;
       return `${edu.school}-${edu.degree}-${edu.field}`;
+    } else if (type === "certifications") {
+      const cert = item as Certification;
+      return `${cert.name}-${cert.provider}`;
     } else {
       return (item as Skill).category;
     }
@@ -93,6 +101,8 @@ export function ImportFromProfileDialog<T extends ImportItem>({
     } else if (type === "education") {
       const edu = item as Education;
       return `${edu.degree} in ${edu.field}`;
+    } else if (type === "certifications") {
+      return (item as Certification).name;
     } else {
       return (item as Skill).category;
     }
@@ -105,6 +115,8 @@ export function ImportFromProfileDialog<T extends ImportItem>({
       return ((item as Project).technologies || []).join(", ");
     } else if (type === "education") {
       return (item as Education).school;
+    } else if (type === "certifications") {
+      return (item as Certification).provider;
     } else {
       return null;
     }
@@ -120,6 +132,9 @@ export function ImportFromProfileDialog<T extends ImportItem>({
     } else if (type === "education") {
       const edu = item as Education;
       return edu.date;
+    } else if (type === "certifications") {
+      const cert = item as Certification;
+      return cert.date || "";
     }
     return "";
   };

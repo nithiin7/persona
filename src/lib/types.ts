@@ -31,6 +31,14 @@ export interface Skill {
   items: string[];
 }
 
+export interface Certification {
+  name: string;
+  provider: string;
+  date?: string;
+  credential_id?: string;
+  credential_url?: string;
+}
+
 export interface Job {
   id: string;
   user_id: string;
@@ -86,6 +94,7 @@ export interface Resume {
   education: Education[];
   skills: Skill[];
   projects: Project[];
+  certifications?: Certification[];
   created_at: string;
   updated_at: string;
   document_settings?: DocumentSettings;
@@ -144,8 +153,11 @@ export interface DocumentSettings {
   education_margin_horizontal: number;
   education_item_spacing: number;
 
-  show_ubc_footer?: boolean;
-  footer_width?: number; // Percentage width of the footer
+  // Certifications Section
+  certifications_margin_top?: number;
+  certifications_margin_bottom?: number;
+  certifications_margin_horizontal?: number;
+  certifications_item_spacing?: number;
 }
 
 export interface Profile {
@@ -163,6 +175,7 @@ export interface Profile {
   education: Education[];
   skills: Skill[];
   projects: Project[];
+  certifications?: Certification[];
   created_at: string;
   updated_at: string;
 }

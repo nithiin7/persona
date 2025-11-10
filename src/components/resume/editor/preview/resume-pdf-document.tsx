@@ -362,6 +362,45 @@ const EducationSection = memo(function EducationSection({
   );
 });
 
+const CertificationsSection = memo(function CertificationsSection({
+  certifications,
+  styles,
+}: {
+  certifications: Resume["certifications"];
+  styles: ReturnType<typeof createResumeStyles>;
+}) {
+  const processText = useTextProcessor();
+  if (!certifications?.length) return null;
+
+  return (
+    <View style={styles.certificationsSection}>
+      <Text style={styles.sectionTitle}>Certifications</Text>
+      {certifications.map((cert, index) => (
+        <View key={index} style={styles.certificationItem}>
+          <View style={styles.certificationHeader}>
+            <View style={styles.certificationInfo}>
+              <Text style={styles.certificationName}>
+                {processText(cert.name, true)}
+              </Text>
+              <Text style={styles.certificationProvider}>
+                {processText(cert.provider, true)}
+              </Text>
+            </View>
+            {cert.date && (
+              <Text style={styles.dateRange}>{cert.date}</Text>
+            )}
+          </View>
+          {cert.credential_id && (
+            <Text style={styles.credentialId}>
+              Credential ID: {cert.credential_id}
+            </Text>
+          )}
+        </View>
+      ))}
+    </View>
+  );
+});
+
 // Style factory function
 function createResumeStyles(
   settings: Resume["document_settings"] = {
@@ -387,7 +426,10 @@ function createResumeStyles(
     education_margin_bottom: 2,
     education_margin_horizontal: 0,
     education_item_spacing: 4,
-    footer_width: 80,
+    certifications_margin_top: 2,
+    certifications_margin_bottom: 2,
+    certifications_margin_horizontal: 0,
+    certifications_item_spacing: 4,
   }
 ) {
   const {
@@ -413,7 +455,10 @@ function createResumeStyles(
     education_margin_bottom = 2,
     education_margin_horizontal = 0,
     education_item_spacing = 4,
-    footer_width = 95,
+    certifications_margin_top = 2,
+    certifications_margin_bottom = 2,
+    certifications_margin_horizontal = 0,
+    certifications_item_spacing = 4,
   } = settings;
 
   return StyleSheet.create({
@@ -614,19 +659,38 @@ function createResumeStyles(
       fontSize: document_font_size,
       color: "#111827",
     },
-    footer: {
-      position: "absolute",
-      bottom: 20,
-      left: 0,
-      right: 0,
-      height: "auto",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+    // Certifications section
+    certificationsSection: {
+      marginTop: certifications_margin_top,
+      marginBottom: certifications_margin_bottom,
+      marginLeft: certifications_margin_horizontal,
+      marginRight: certifications_margin_horizontal,
     },
-    footerImage: {
-      width: `${footer_width}%`,
-      height: "auto",
+    certificationItem: {
+      marginBottom: certifications_item_spacing,
+    },
+    certificationHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 2,
+    },
+    certificationInfo: {
+      flex: 1,
+    },
+    certificationName: {
+      fontSize: document_font_size,
+      fontFamily: "Helvetica-Bold",
+      color: "#111827",
+    },
+    certificationProvider: {
+      fontSize: document_font_size,
+      color: "#111827",
+    },
+    credentialId: {
+      fontSize: document_font_size - 1,
+      color: "#6b7280",
+      marginTop: 1,
     },
   });
 }
@@ -891,15 +955,7 @@ export const ResumePDFDocument = memo(
         />
         <ProjectsSection projects={resume.projects} styles={styles} />
         <EducationSection education={resume.education} styles={styles} />
-
-        {resume.document_settings?.show_ubc_footer && (
-          <View style={styles.footer}>
-            <Image
-              src="/images/ubc-science-footer.png"
-              style={styles.footerImage}
-            />
-          </View>
-        )}
+        <CertificationsSection certifications={resume.certifications} styles={styles} />
       </>
     );
 

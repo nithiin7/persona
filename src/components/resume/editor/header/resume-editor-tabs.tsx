@@ -7,6 +7,7 @@ import {
   GraduationCap,
   Wrench,
   LayoutTemplate,
+  Award,
 } from "lucide-react";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -79,11 +80,11 @@ export function ResumeEditorTabs() {
         </TabsList>
       </div>
 
-      <TabsList className="h-full w-full relative bg-white/80 backdrop-blur-xl border border-white/40 rounded-lg overflow-hidden grid grid-cols-3 @[500px]:grid-cols-6 gap-0.5 p-0.5 shadow-lg">
+      <TabsList className="h-full w-full relative bg-white/80 backdrop-blur-xl border border-white/40 rounded-lg overflow-x-auto flex gap-0.5 p-0.5 shadow-lg">
         {/* Basic Info Tab */}
         <TabsTrigger
           value="basic"
-          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300
+          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300 flex-shrink-0
             data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500/10 data-[state=active]:to-cyan-500/10
             data-[state=active]:border-teal-500/20 data-[state=active]:shadow-md hover:bg-white/60
             data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-gray-900"
@@ -100,7 +101,7 @@ export function ResumeEditorTabs() {
         {/* Work Tab */}
         <TabsTrigger
           value="work"
-          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300
+          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300 flex-shrink-0
             data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500/10 data-[state=active]:to-blue-500/10
             data-[state=active]:border-cyan-500/20 data-[state=active]:shadow-md hover:bg-white/60
             data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-gray-900"
@@ -117,7 +118,7 @@ export function ResumeEditorTabs() {
         {/* Projects Tab */}
         <TabsTrigger
           value="projects"
-          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300
+          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300 flex-shrink-0
             data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-500/10 data-[state=active]:to-purple-500/10
             data-[state=active]:border-violet-500/20 data-[state=active]:shadow-md hover:bg-white/60
             data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-gray-900"
@@ -134,7 +135,7 @@ export function ResumeEditorTabs() {
         {/* Education Tab */}
         <TabsTrigger
           value="education"
-          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300
+          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300 flex-shrink-0
             data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500/10 data-[state=active]:to-blue-500/10
             data-[state=active]:border-indigo-500/20 data-[state=active]:shadow-md hover:bg-white/60
             data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-gray-900"
@@ -151,7 +152,7 @@ export function ResumeEditorTabs() {
         {/* Skills Tab */}
         <TabsTrigger
           value="skills"
-          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300
+          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300 flex-shrink-0
             data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500/10 data-[state=active]:to-pink-500/10
             data-[state=active]:border-rose-500/20 data-[state=active]:shadow-md hover:bg-white/60
             data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-gray-900"
@@ -165,10 +166,27 @@ export function ResumeEditorTabs() {
           </span>
         </TabsTrigger>
 
+        {/* Certifications Tab */}
+        <TabsTrigger
+          value="certifications"
+          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300 flex-shrink-0
+            data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500/10 data-[state=active]:to-orange-500/10
+            data-[state=active]:border-amber-500/20 data-[state=active]:shadow-md hover:bg-white/60
+            data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-gray-900"
+        >
+          <div className="p-1 rounded-md bg-amber-100/80 transition-transform duration-300 group-data-[state=active]:scale-105 group-data-[state=active]:bg-amber-100">
+            <Award className="h-3.5 w-3.5 text-amber-600 transition-colors group-data-[state=inactive]:text-amber-500/70" />
+          </div>
+          <span className="relative text-xs whitespace-nowrap">
+            Certifications
+            <div className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-amber-500 scale-x-0 transition-transform duration-300 group-data-[state=active]:scale-x-100"></div>
+          </span>
+        </TabsTrigger>
+
         {/* Settings Tab */}
         <TabsTrigger
           value="settings"
-          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300
+          className="group flex items-center gap-1.5 px-2 py-1 rounded-md font-medium relative transition-all duration-300 flex-shrink-0
             data-[state=active]:bg-gradient-to-r data-[state=active]:from-gray-500/10 data-[state=active]:to-slate-500/10
             data-[state=active]:border-gray-500/20 data-[state=active]:shadow-md hover:bg-white/60
             data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-gray-900"

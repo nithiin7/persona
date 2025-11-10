@@ -56,9 +56,10 @@ function generateResumeHash(resume: Resume): string {
       experience: resume.work_experience,
       projects: resume.projects,
       education: resume.education,
+      certifications: resume.certifications,
     },
     settings: resume.document_settings,
-    template: resume.template || "classic", // Include template in hash
+    template: resume.template || "classic",
   });
 
   // Simple hash function

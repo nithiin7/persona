@@ -16,6 +16,7 @@ import {
   EducationForm,
   SkillsForm,
   ProjectsForm,
+  CertificationsForm,
   DocumentSettingsForm,
 } from "../dynamic-components";
 import { ResumeEditorTabs } from "../header/resume-editor-tabs";
@@ -154,6 +155,26 @@ export function EditorPanel({
                   <SkillsForm
                     skills={resume.skills}
                     onChange={(skills) => onResumeChange("skills", skills)}
+                    profile={profile}
+                  />
+                </Suspense>
+              </TabsContent>
+
+              {/* Certifications Form */}
+              <TabsContent value="certifications">
+                <Suspense
+                  fallback={
+                    <div className="space-y-4 animate-pulse">
+                      <div className="h-8 bg-muted rounded-md w-1/3" />
+                      <div className="h-24 bg-muted rounded-md" />
+                    </div>
+                  }
+                >
+                  <CertificationsForm
+                    certifications={resume.certifications || []}
+                    onChange={(certifications) =>
+                      onResumeChange("certifications", certifications)
+                    }
                     profile={profile}
                   />
                 </Suspense>
