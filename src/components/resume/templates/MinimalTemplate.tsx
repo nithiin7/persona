@@ -26,7 +26,8 @@ function createMinimalStyles(settings: Resume["document_settings"]) {
     },
     name: {
       fontSize: settings?.header_name_size || 26,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#111827",
       marginBottom: 8,
       letterSpacing: -0.5,
@@ -44,7 +45,8 @@ function createMinimalStyles(settings: Resume["document_settings"]) {
     },
     sectionTitle: {
       fontSize: 11,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#374151",
       marginBottom: 8,
       textTransform: "uppercase",

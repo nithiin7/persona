@@ -3,6 +3,7 @@
 import { Profile, Resume } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Mail,
   Phone,
@@ -13,6 +14,7 @@ import {
   User,
   UserCircle2,
   LucideIcon,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useResumeContext } from "../resume-editor-context";
@@ -171,6 +173,33 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
               icon={MapPin}
               placeholder="City, State, Country"
             />
+
+            {/* Professional Summary */}
+            <div className="relative group">
+              <div className="absolute right-2.5 top-3">
+                <div className="p-1 rounded-full bg-teal-100/80 transition-transform duration-300 group-focus-within:scale-110">
+                  <FileText className="h-3.5 w-3.5 text-teal-600" />
+                </div>
+              </div>
+              <Textarea
+                value={resume.professional_summary || ""}
+                onChange={(e) => {
+                  dispatch({
+                    type: "UPDATE_FIELD",
+                    field: "professional_summary",
+                    value: e.target.value,
+                  });
+                }}
+                className="pr-10 text-sm bg-white/50 border-gray-200 rounded-lg min-h-[100px]
+                  focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
+                  hover:border-teal-500/30 hover:bg-white/60 transition-colors
+                  placeholder:text-gray-400 resize-y"
+                placeholder="Write a brief professional summary highlighting your key qualifications, experience, and career goals..."
+              />
+              <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[9px] font-medium text-teal-700">
+                PROFESSIONAL SUMMARY
+              </div>
+            </div>
 
             <div className="space-y-2 sm:space-y-3">
               <BasicInfoField

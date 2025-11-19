@@ -95,6 +95,7 @@ export interface Resume {
   website?: string;
   linkedin_url?: string;
   github_url?: string;
+  professional_summary?: string | null;
   work_experience: WorkExperience[];
   education: Education[];
   skills: Skill[];

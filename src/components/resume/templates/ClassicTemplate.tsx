@@ -28,7 +28,8 @@ function createClassicStyles(settings: Resume["document_settings"]) {
     },
     name: {
       fontSize: settings?.header_name_size || 24,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       marginBottom: 4,
     },
     contactInfo: {
@@ -43,7 +44,8 @@ function createClassicStyles(settings: Resume["document_settings"]) {
     },
     sectionTitle: {
       fontSize: 12,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#1f2937",
       marginBottom: 6,
       textTransform: "uppercase",

@@ -30,7 +30,8 @@ function createModernStyles(settings: Resume["document_settings"]) {
     },
     name: {
       fontSize: settings?.header_name_size || 28,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#1f2937",
       marginBottom: 6,
     },
@@ -46,7 +47,8 @@ function createModernStyles(settings: Resume["document_settings"]) {
     },
     sectionTitle: {
       fontSize: 13,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#6366f1",
       marginBottom: 8,
       textTransform: "uppercase",

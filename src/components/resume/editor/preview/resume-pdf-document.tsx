@@ -54,7 +54,7 @@ function useTextProcessor() {
     const processed = parts.map((part, index) => {
       if (part.startsWith("**") && part.endsWith("**")) {
         return (
-          <Text key={index} style={{ fontFamily: "Helvetica-Bold" }}>
+          <Text key={index} style={{ fontFamily: "Helvetica", fontWeight: "bold" }}>
             {part.slice(2, -2)}
           </Text>
         );
@@ -158,6 +158,36 @@ const HeaderSection = memo(function HeaderSection({
             <Text style={styles.link}>{resume.github_url}</Text>
           </Link>
         )}
+      </View>
+    </View>
+  );
+});
+
+const ProfessionalSummarySection = memo(function ProfessionalSummarySection({
+  summary,
+  styles,
+  sectionConfigs,
+}: {
+  summary: string | null | undefined;
+  styles: ReturnType<typeof createResumeStyles>;
+  sectionConfigs?: Resume["section_configs"];
+}) {
+  const processText = useTextProcessor();
+  
+  // Check if section is visible (default to true if not specified)
+  const isVisible = sectionConfigs?.professional_summary?.visible !== false;
+  
+  if (!summary || !isVisible) return null;
+
+  const processedText = processText(summary);
+
+  return (
+    <View style={styles.professionalSummarySection}>
+      <Text style={styles.sectionTitle}>Professional Summary</Text>
+      <View style={styles.professionalSummaryContent}>
+        <View style={styles.professionalSummaryText}>
+          {processedText}
+        </View>
       </View>
     </View>
   );
@@ -337,13 +367,20 @@ const EducationSection = memo(function EducationSection({
       {education.map((edu, index) => (
         <View key={index} style={styles.educationItem}>
           <View style={styles.educationHeader}>
-            <View>
+            <View style={styles.educationInfo}>
               <Text style={styles.schoolName}>
                 {processText(edu.school, true)}
               </Text>
-              <Text style={styles.degree}>
-                {processText(`${edu.degree} ${edu.field}`)}
-              </Text>
+              <View style={styles.degreeRow}>
+                <Text style={styles.degree}>
+                  {processText(edu.field ? `${edu.degree}, ${edu.field}` : edu.degree, true)}
+                </Text>
+                {edu.gpa && (
+                  <Text style={styles.gpa}>
+                    {`GPA: ${edu.gpa}`}
+                  </Text>
+                )}
+              </View>
             </View>
             <Text style={styles.dateRange}>{edu.date}</Text>
           </View>
@@ -481,7 +518,8 @@ function createResumeStyles(
     },
     name: {
       fontSize: header_name_size,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       marginBottom: header_name_bottom_spacing,
       color: "#111827",
       textAlign: "center",
@@ -496,12 +534,28 @@ function createResumeStyles(
     },
     sectionTitle: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       marginBottom: 4,
       color: "#111827",
       textTransform: "uppercase",
       borderBottom: "0.5pt solid #e5e7eb",
       paddingBottom: 0,
+    },
+    // Professional Summary section
+    professionalSummarySection: {
+      marginTop: 2,
+      marginBottom: 2,
+      marginLeft: 0,
+      marginRight: 0,
+    },
+    professionalSummaryContent: {
+      marginTop: 4,
+    },
+    professionalSummaryText: {
+      fontSize: document_font_size,
+      color: "#374151",
+      lineHeight: document_line_height,
     },
     // Skills section
     skillsSection: {
@@ -522,7 +576,8 @@ function createResumeStyles(
     },
     skillCategoryTitle: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#111827",
       marginRight: 4,
       width: "auto",
@@ -552,7 +607,8 @@ function createResumeStyles(
     },
     companyName: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#111827",
     },
     jobTitle: {
@@ -616,13 +672,15 @@ function createResumeStyles(
     },
     projectTitle: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#111827",
     },
     projectTechnologies: {
       fontSize: document_font_size,
       color: "#374151",
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       marginBottom: 0,
     },
     projectDescription: {
@@ -650,14 +708,30 @@ function createResumeStyles(
       alignItems: "flex-start",
       marginBottom: 4,
     },
+    educationInfo: {
+      flex: 1,
+    },
     schoolName: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#111827",
+    },
+    degreeRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginTop: 2,
+      flexWrap: "wrap",
     },
     degree: {
       fontSize: document_font_size,
       color: "#111827",
+    },
+    gpa: {
+      fontSize: document_font_size,
+      color: "#374151",
+      fontFamily: "Helvetica",
     },
     // Certifications section
     certificationsSection: {
@@ -680,7 +754,8 @@ function createResumeStyles(
     },
     certificationName: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica-Bold",
+      fontFamily: "Helvetica",
+      fontWeight: "bold",
       color: "#111827",
     },
     certificationProvider: {
@@ -713,7 +788,8 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#1e3a8a",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           fontSize: 28,
         },
         contactInfo: {
@@ -723,7 +799,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           color: "#6366f1",
           fontSize: 14,
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.5,
           borderBottomWidth: 0,
@@ -765,7 +842,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           color: "#334155",
           fontSize: 10,
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 3,
           borderBottomWidth: 0,
@@ -796,7 +874,8 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#1e3a8a",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           fontSize: 26,
         },
         contactInfo: {
@@ -806,7 +885,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           color: "#1e40af",
           fontSize: 13,
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1,
           borderBottomWidth: 3,
@@ -840,7 +920,8 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#9f1239",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           fontSize: 28,
         },
         contactInfo: {
@@ -850,7 +931,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           color: "#e11d48",
           fontSize: 14,
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.5,
           borderBottomWidth: 3,
@@ -883,7 +965,8 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#92400e",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           fontSize: 30,
         },
         contactInfo: {
@@ -893,7 +976,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           color: "#d97706",
           fontSize: 13,
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.2,
           borderBottomWidth: 2,
@@ -926,7 +1010,8 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#065f46",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           fontSize: 28,
         },
         contactInfo: {
@@ -936,7 +1021,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           color: "#10b981",
           fontSize: 13,
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.5,
           borderBottomWidth: 2,
@@ -968,7 +1054,8 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#5b21b6",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           fontSize: 27,
         },
         contactInfo: {
@@ -978,7 +1065,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           color: "#7c3aed",
           fontSize: 12,
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.8,
           borderBottomWidth: 2.5,
@@ -1011,7 +1099,8 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#991b1b",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           fontSize: 32,
         },
         contactInfo: {
@@ -1021,7 +1110,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           color: "#dc2626",
           fontSize: 15,
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 2,
           borderBottomWidth: 4,
@@ -1054,7 +1144,8 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#9f1239",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           fontSize: 29,
           letterSpacing: 0.5,
         },
@@ -1065,7 +1156,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           color: "#e11d48",
           fontSize: 13,
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.5,
           borderBottomWidth: 1.5,
@@ -1097,7 +1189,8 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#111827",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           fontSize: 24,
         },
         contactInfo: {
@@ -1107,7 +1200,8 @@ function getTemplateStyles(template: string) {
         sectionTitle: {
           fontSize: 12,
           color: "#1f2937",
-          fontFamily: "Helvetica-Bold",
+          fontFamily: "Helvetica",
+      fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 0.8,
           borderBottomWidth: 1.5,
@@ -1163,6 +1257,11 @@ export const ResumePDFDocument = memo(
     // Content sections (same for all templates)
     const contentSections = (
       <>
+        <ProfessionalSummarySection
+          summary={resume.professional_summary}
+          styles={styles}
+          sectionConfigs={resume.section_configs}
+        />
         <SkillsSection skills={resume.skills} styles={styles} />
         <ExperienceSection
           experiences={resume.work_experience}
