@@ -41,20 +41,20 @@ function WorkExperienceSuggestion({
             className={cn(
               "text-base font-bold text-gray-900",
               !currentWork ||
-                (currentWork.position !== work.position &&
-                  DIFF_HIGHLIGHT_CLASSES)
+                (currentWork.company !== work.company && DIFF_HIGHLIGHT_CLASSES)
             )}
           >
-            {work.position.replace(/\*\*/g, "")}
+            {work.company}
           </h3>
           <p
             className={cn(
               "text-xs text-gray-700",
               !currentWork ||
-                (currentWork.company !== work.company && DIFF_HIGHLIGHT_CLASSES)
+                (currentWork.position !== work.position &&
+                  DIFF_HIGHLIGHT_CLASSES)
             )}
           >
-            {work.company}
+            {work.position.replace(/\*\*/g, "")}
           </p>
         </div>
         <span

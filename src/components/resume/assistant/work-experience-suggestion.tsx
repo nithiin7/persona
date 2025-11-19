@@ -85,18 +85,6 @@ export function WorkExperienceSuggestion({
               className={cn(
                 "text-base font-bold text-gray-900",
                 getHighlightClass(
-                  currentWork.position,
-                  suggestedWork.position,
-                  suggestedWork.position
-                )
-              )}
-            >
-              {suggestedWork.position}
-            </h3>
-            <p
-              className={cn(
-                "text-xs text-gray-700",
-                getHighlightClass(
                   currentWork.company,
                   suggestedWork.company,
                   suggestedWork.company
@@ -104,6 +92,18 @@ export function WorkExperienceSuggestion({
               )}
             >
               {suggestedWork.company}
+            </h3>
+            <p
+              className={cn(
+                "text-xs text-gray-700",
+                getHighlightClass(
+                  currentWork.position,
+                  suggestedWork.position,
+                  suggestedWork.position
+                )
+              )}
+            >
+              {suggestedWork.position}
             </p>
           </div>
           <span

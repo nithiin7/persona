@@ -239,11 +239,11 @@ const ExperienceSection = memo(function ExperienceSection({
           <View style={styles.experienceHeader}>
             <View>
               <Text style={styles.companyName}>
-                {processText(experience.position, true)}
+                {processText(experience.company, true)}
               </Text>
               <View style={styles.companyLocationRow}>
                 <Text style={styles.jobTitle}>
-                  {processText(experience.company, true)}
+                  {processText(experience.position, true)}
                 </Text>
                 {experience.location && (
                   <>

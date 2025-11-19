@@ -389,13 +389,13 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
             <CardContent className="p-3 sm:p-4 space-y-3 sm:space-y-4">
               {/* Header with Delete Button */}
               <div className="space-y-2 sm:space-y-3">
-                {/* Position Title - Full Width */}
+                {/* Company Name - Full Width */}
                 <div className="flex items-start gap-2 sm:gap-3">
                   <div className="relative flex-1">
                     <Input
-                      value={exp.position}
+                      value={exp.company}
                       onChange={(e) =>
-                        updateExperience(index, "position", e.target.value)
+                        updateExperience(index, "company", e.target.value)
                       }
                       className={cn(
                         "text-sm font-semibold tracking-tight h-9",
@@ -404,10 +404,10 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                         "hover:border-cyan-500/30 hover:bg-white/60 transition-colors",
                         "placeholder:text-gray-400"
                       )}
-                      placeholder="Position Title"
+                      placeholder="Company Name"
                     />
                     <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-gray-500">
-                      POSITION
+                      COMPANY
                     </div>
                   </div>
                   <Button
@@ -420,13 +420,13 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                   </Button>
                 </div>
 
-                {/* Company and Location Row */}
+                {/* Position and Location Row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   <div className="relative">
                     <Input
-                      value={exp.company}
+                      value={exp.position}
                       onChange={(e) =>
-                        updateExperience(index, "company", e.target.value)
+                        updateExperience(index, "position", e.target.value)
                       }
                       className={cn(
                         "text-sm font-medium bg-white/50 border-gray-200 rounded-lg h-9",
@@ -434,10 +434,10 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                         "hover:border-cyan-500/30 hover:bg-white/60 transition-colors",
                         "placeholder:text-gray-400"
                       )}
-                      placeholder="Company Name"
+                      placeholder="Position Title"
                     />
                     <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-gray-500">
-                      COMPANY
+                      POSITION
                     </div>
                   </div>
                   <div className="relative">

@@ -95,7 +95,7 @@ export function ImportFromProfileDialog<T extends ImportItem>({
 
   const getItemTitle = (item: ImportItem): string => {
     if (type === "work_experience") {
-      return (item as WorkExperience).position;
+      return (item as WorkExperience).company;
     } else if (type === "projects") {
       return (item as Project).name;
     } else if (type === "education") {
@@ -110,7 +110,7 @@ export function ImportFromProfileDialog<T extends ImportItem>({
 
   const getItemSubtitle = (item: ImportItem): string | null => {
     if (type === "work_experience") {
-      return (item as WorkExperience).company;
+      return (item as WorkExperience).position;
     } else if (type === "projects") {
       return ((item as Project).technologies || []).join(", ");
     } else if (type === "education") {

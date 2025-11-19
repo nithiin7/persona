@@ -48,7 +48,7 @@ export function ResumeContextMenu({
 
   const formatWorkExperience = (exp: WorkExperience) => {
     const lines = [
-      `${exp.position} at ${exp.company}`,
+      `${exp.company}${exp.position ? ` • ${exp.position}` : ""}`,
       exp.location ? `Location: ${exp.location}` : "",
       `Date: ${exp.date}`,
       "",

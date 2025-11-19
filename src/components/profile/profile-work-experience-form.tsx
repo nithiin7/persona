@@ -80,8 +80,8 @@ export function ProfileWorkExperienceForm({
             <AccordionTrigger className="px-4 py-2 hover:no-underline">
               <div className="flex items-center justify-between gap-3 flex-1">
                 <div className="flex-1 text-left text-sm font-medium text-cyan-900">
-                  {exp.position || "Untitled Position"}{" "}
-                  {exp.company && `at ${exp.company}`}
+                  {exp.company || "Untitled Company"}{" "}
+                  {exp.position && `• ${exp.position}`}
                 </div>
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   {exp.date && <span>{exp.date}</span>}

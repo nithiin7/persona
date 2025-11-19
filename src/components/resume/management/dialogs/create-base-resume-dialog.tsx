@@ -743,13 +743,13 @@ export function CreateBaseResumeDialog({
                                               <div className="text-xs font-medium truncate">
                                                 {
                                                   (item as WorkExperience)
-                                                    .position
+                                                    .company
                                                 }
                                               </div>
                                               <div className="text-xs text-gray-500">
                                                 {
                                                   (item as WorkExperience)
-                                                    .company
+                                                    .position
                                                 }{" "}
                                                 •{" "}
                                                 {(item as WorkExperience).date}
