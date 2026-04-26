@@ -221,6 +221,35 @@ const SkillsSection = memo(function SkillsSection({
   );
 });
 
+type ExperienceGroup = {
+  company: string;
+  items: Resume["work_experience"];
+};
+
+function groupConsecutiveExperiencesByCompany(
+  experiences: Resume["work_experience"]
+): ExperienceGroup[] {
+  const groups: ExperienceGroup[] = [];
+
+  experiences.forEach((experience) => {
+    const companyKey = experience.company.trim().toLowerCase();
+    const lastGroup = groups[groups.length - 1];
+    const lastGroupKey = lastGroup?.company.trim().toLowerCase();
+
+    if (lastGroup && lastGroupKey === companyKey) {
+      lastGroup.items.push(experience);
+      return;
+    }
+
+    groups.push({
+      company: experience.company,
+      items: [experience],
+    });
+  });
+
+  return groups;
+}
+
 const ExperienceSection = memo(function ExperienceSection({
   experiences,
   styles,
@@ -230,41 +259,43 @@ const ExperienceSection = memo(function ExperienceSection({
 }) {
   const processText = useTextProcessor();
   if (!experiences?.length) return null;
+  const groupedExperiences = groupConsecutiveExperiencesByCompany(experiences);
 
   return (
     <View style={styles.experienceSection}>
       <Text style={styles.sectionTitle}>Experience</Text>
-      {experiences.map((experience, index) => (
-        <View key={index} style={styles.experienceItem}>
-          <View style={styles.experienceHeader}>
-            <View>
-              <Text style={styles.companyName}>
-                {processText(experience.company, true)}
-              </Text>
-              <View style={styles.companyLocationRow}>
-                <Text style={styles.jobTitle}>
-                  {processText(experience.position, true)}
-                </Text>
-                {experience.location && (
-                  <>
-                    <Text style={styles.bulletSeparator}>•</Text>
-                    <Text style={styles.locationText}>
-                      {experience.location}
+      {groupedExperiences.map((group, groupIndex) => (
+        <View key={groupIndex} style={styles.experienceItem}>
+          <Text style={styles.companyName}>{processText(group.company, true)}</Text>
+          {group.items.map((experience, roleIndex) => (
+            <View
+              key={`${groupIndex}-${roleIndex}`}
+              style={roleIndex > 0 ? styles.experienceRoleItem : undefined}
+            >
+              <View style={styles.experienceHeader}>
+                <View style={styles.companyLocationRow}>
+                  <Text style={styles.jobTitle}>
+                    {processText(experience.position, true)}
+                  </Text>
+                  {experience.location && (
+                    <>
+                      <Text style={styles.bulletSeparator}>•</Text>
+                      <Text style={styles.locationText}>{experience.location}</Text>
+                    </>
+                  )}
+                </View>
+                <Text style={styles.dateRange}>{experience.date}</Text>
+              </View>
+              {experience.description.map((bullet, bulletIndex) => (
+                <View key={bulletIndex} style={styles.bulletPoint}>
+                  <Text style={styles.bulletDot}>•</Text>
+                  <View style={styles.bulletText}>
+                    <Text style={styles.bulletTextContent}>
+                      {processText(bullet)}
                     </Text>
-                  </>
-                )}
-              </View>
-            </View>
-            <Text style={styles.dateRange}>{experience.date}</Text>
-          </View>
-          {experience.description.map((bullet, bulletIndex) => (
-            <View key={bulletIndex} style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
-              <View style={styles.bulletText}>
-                <Text style={styles.bulletTextContent}>
-                  {processText(bullet)}
-                </Text>
-              </View>
+                  </View>
+                </View>
+              ))}
             </View>
           ))}
         </View>
@@ -598,6 +629,9 @@ function createResumeStyles(
     },
     experienceItem: {
       marginBottom: experience_item_spacing,
+    },
+    experienceRoleItem: {
+      marginTop: 2,
     },
     experienceHeader: {
       flexDirection: "row",
