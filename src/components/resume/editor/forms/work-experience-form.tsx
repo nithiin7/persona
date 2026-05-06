@@ -214,11 +214,11 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
   };
 
   const approveSuggestion = (expIndex: number, suggestion: AISuggestion) => {
-    const updated = [...experiences];
-    updated[expIndex].description = [
-      ...updated[expIndex].description,
-      suggestion.point,
-    ];
+    const updated = experiences.map((exp, i) =>
+      i === expIndex
+        ? { ...exp, description: [...exp.description, suggestion.point] }
+        : exp
+    );
     onChange(updated);
 
     // Remove the suggestion after approval
@@ -278,8 +278,16 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
       }));
 
       // Update the experience with the improved version
-      const updated = [...experiences];
-      updated[expIndex].description[pointIndex] = improvedPoint;
+      const updated = experiences.map((exp, i) =>
+        i === expIndex
+          ? {
+              ...exp,
+              description: exp.description.map((d, j) =>
+                j === pointIndex ? improvedPoint : d
+              ),
+            }
+          : exp
+      );
       onChange(updated);
     } catch (error: Error | unknown) {
       if (
@@ -312,8 +320,16 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
   const undoImprovement = (expIndex: number, pointIndex: number) => {
     const improvedPoint = improvedPoints[expIndex]?.[pointIndex];
     if (improvedPoint) {
-      const updated = [...experiences];
-      updated[expIndex].description[pointIndex] = improvedPoint.original;
+      const updated = experiences.map((exp, i) =>
+        i === expIndex
+          ? {
+              ...exp,
+              description: exp.description.map((d, j) =>
+                j === pointIndex ? improvedPoint.original : d
+              ),
+            }
+          : exp
+      );
       onChange(updated);
 
       // Remove the improvement from state
@@ -499,9 +515,17 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                           <Tiptap
                             content={desc}
                             onChange={(newContent) => {
-                              const updated = [...experiences];
-                              updated[index].description[descIndex] =
-                                newContent;
+                              const updated = experiences.map((exp, i) =>
+                                i === index
+                                  ? {
+                                      ...exp,
+                                      description: exp.description.map(
+                                        (d, j) =>
+                                          j === descIndex ? newContent : d
+                                      ),
+                                    }
+                                  : exp
+                              );
                               onChange(updated);
 
                               if (improvedPoints[index]?.[descIndex]) {
@@ -605,11 +629,15 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => {
-                                  const updated = [...experiences];
-                                  updated[index].description = updated[
-                                    index
-                                  ].description.filter(
-                                    (_, i) => i !== descIndex
+                                  const updated = experiences.map((exp, i) =>
+                                    i === index
+                                      ? {
+                                          ...exp,
+                                          description: exp.description.filter(
+                                            (_, j) => j !== descIndex
+                                          ),
+                                        }
+                                      : exp
                                   );
                                   onChange(updated);
                                 }}
@@ -716,11 +744,11 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        const updated = [...experiences];
-                        updated[index].description = [
-                          ...updated[index].description,
-                          "",
-                        ];
+                        const updated = experiences.map((exp, i) =>
+                          i === index
+                            ? { ...exp, description: [...exp.description, ""] }
+                            : exp
+                        );
                         onChange(updated);
                       }}
                       className={cn(
