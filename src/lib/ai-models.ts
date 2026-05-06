@@ -112,12 +112,59 @@ export const AI_MODELS: AIModel[] = [
     },
   },
   {
+    id: "o3",
+    name: "o3",
+    provider: "openai",
+    features: {
+      isRecommended: true,
+      isUnstable: false,
+      maxTokens: 200000,
+      supportsVision: true,
+      supportsTools: true,
+    },
+    availability: {
+      requiresApiKey: true,
+      requiresPro: false,
+    },
+  },
+  {
+    id: "o4-mini",
+    name: "o4-mini",
+    provider: "openai",
+    features: {
+      isRecommended: false,
+      isUnstable: false,
+      maxTokens: 200000,
+      supportsVision: true,
+      supportsTools: true,
+    },
+    availability: {
+      requiresApiKey: true,
+      requiresPro: false,
+    },
+  },
+  {
     id: "gpt-4.1",
-    name: "GPT 4.1",
+    name: "GPT-4.1",
     provider: "openai",
     features: {
       isUnstable: false,
-      maxTokens: 128000,
+      maxTokens: 1047576,
+      supportsVision: true,
+      supportsTools: true,
+    },
+    availability: {
+      requiresApiKey: true,
+      requiresPro: false,
+    },
+  },
+  {
+    id: "gpt-4.1-mini",
+    name: "GPT-4.1 Mini",
+    provider: "openai",
+    features: {
+      isUnstable: false,
+      maxTokens: 1047576,
       supportsVision: true,
       supportsTools: true,
     },
@@ -128,7 +175,7 @@ export const AI_MODELS: AIModel[] = [
   },
   {
     id: "gpt-4.1-nano",
-    name: "GPT 4.1 Nano",
+    name: "GPT-4.1 Nano",
     provider: "openai",
     features: {
       isFree: true,
@@ -147,7 +194,6 @@ export const AI_MODELS: AIModel[] = [
     name: "GPT-4o",
     provider: "openai",
     features: {
-      isRecommended: true,
       isUnstable: false,
       maxTokens: 128000,
       supportsVision: true,
@@ -163,7 +209,6 @@ export const AI_MODELS: AIModel[] = [
     name: "GPT OSS 120B",
     provider: "openai", // Show under OpenAI section
     features: {
-      isRecommended: true,
       isUnstable: false,
       maxTokens: 128000,
       supportsVision: false,
@@ -179,7 +224,6 @@ export const AI_MODELS: AIModel[] = [
     name: "GPT OSS 20B",
     provider: "openai", // Show under OpenAI section
     features: {
-      isRecommended: false,
       isUnstable: false,
       maxTokens: 128000,
       supportsVision: false,
@@ -195,7 +239,6 @@ export const AI_MODELS: AIModel[] = [
     name: "Qwen3 235B Thinking",
     provider: "openai", // Show under OpenAI section (uses OpenRouter)
     features: {
-      isRecommended: true,
       isUnstable: false,
       maxTokens: 128000,
       supportsVision: false,
@@ -209,11 +252,11 @@ export const AI_MODELS: AIModel[] = [
 
   // Anthropic Models
   {
-    id: "claude-sonnet-4-20250514",
-    name: "Claude Sonnet 4",
+    id: "claude-opus-4-7",
+    name: "Claude Opus 4.7",
     provider: "anthropic",
     features: {
-      isRecommended: false,
+      isRecommended: true,
       isUnstable: false,
       maxTokens: 200000,
       supportsVision: true,
@@ -225,11 +268,11 @@ export const AI_MODELS: AIModel[] = [
     },
   },
   {
-    id: "claude-sonnet-4-5-20250929",
-    name: "Claude Sonnet 4.5",
+    id: "claude-sonnet-4-6",
+    name: "Claude Sonnet 4.6",
     provider: "anthropic",
     features: {
-      isRecommended: false,
+      isRecommended: true,
       isUnstable: false,
       maxTokens: 200000,
       supportsVision: true,
@@ -245,7 +288,36 @@ export const AI_MODELS: AIModel[] = [
     name: "Claude Haiku 4.5",
     provider: "anthropic",
     features: {
-      isRecommended: true,
+      isUnstable: false,
+      maxTokens: 200000,
+      supportsVision: true,
+      supportsTools: true,
+    },
+    availability: {
+      requiresApiKey: true,
+      requiresPro: false,
+    },
+  },
+  {
+    id: "claude-sonnet-4-5-20250929",
+    name: "Claude Sonnet 4.5",
+    provider: "anthropic",
+    features: {
+      isUnstable: false,
+      maxTokens: 200000,
+      supportsVision: true,
+      supportsTools: true,
+    },
+    availability: {
+      requiresApiKey: true,
+      requiresPro: false,
+    },
+  },
+  {
+    id: "claude-sonnet-4-20250514",
+    name: "Claude Sonnet 4",
+    provider: "anthropic",
+    features: {
       isUnstable: false,
       maxTokens: 200000,
       supportsVision: true,
@@ -264,12 +336,11 @@ export const AI_MODELS: AIModel[] = [
 
 // Map legacy or shorthand model IDs to current canonical IDs
 const MODEL_ALIASES: Record<string, string> = {
-  // Old shorthand → Current Anthropic Sonnet 4 (dated ID)
-  "claude-4-sonnet": "claude-sonnet-4-20250514",
-  // Older legacy model not present anymore → best current equivalent
-  "claude-3-sonnet-20240229": "claude-sonnet-4-20250514",
-  // Shorthand for Claude Sonnet 4.5
+  // Old Claude shorthand/dated IDs → latest equivalent
+  "claude-4-sonnet": "claude-sonnet-4-6",
+  "claude-3-sonnet-20240229": "claude-sonnet-4-6",
   "claude-sonnet-4.5": "claude-sonnet-4-5-20250929",
+  "claude-sonnet-4-20250514": "claude-sonnet-4-20250514", // keep exact ID
 };
 
 // ========================
@@ -277,7 +348,7 @@ const MODEL_ALIASES: Record<string, string> = {
 // ========================
 
 export const DEFAULT_MODELS = {
-  PRO_USER: "claude-sonnet-4-20250514",
+  PRO_USER: "claude-sonnet-4-6",
   FREE_USER: "gpt-4.1-nano",
 } as const;
 
@@ -297,19 +368,19 @@ export const MODEL_DESIGNATIONS = {
   FAST_CHEAP_FREE: "gpt-4.1-nano",
 
   // Frontier model for complex tasks, deep analysis, best quality
-  FRONTIER: "claude-sonnet-4-20250514",
+  FRONTIER: "claude-opus-4-7",
 
   // Alternative frontier model
   FRONTIER_ALT: "gpt-5",
 
   // Balanced model - good quality but faster/cheaper than frontier
-  BALANCED: "openai/gpt-oss-120b:nitro",
+  BALANCED: "claude-sonnet-4-6",
 
   // Vision-capable model for image analysis
   VISION: "gpt-4o",
 
   // Default models by user type
-  DEFAULT_PRO: "claude-sonnet-4-20250514",
+  DEFAULT_PRO: "claude-sonnet-4-6",
   DEFAULT_FREE: "gpt-4.1-nano",
 } as const;
 
