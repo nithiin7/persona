@@ -8,8 +8,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader2,
+  Pencil,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -31,7 +33,19 @@ import {
   type SortDirection,
 } from "@/components/resume/management/resume-sort-controls";
 import type { Profile, ResumeSummary } from "@/lib/types";
-import { deleteResume, copyResume } from "@/utils/actions/resumes/actions";
+import {
+  deleteResume,
+  copyResume,
+  updateResume,
+} from "@/utils/actions/resumes/actions";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -98,10 +112,16 @@ export function ResumesSection({
   );
 
   const [, startTransition] = useTransition();
+  const router = useRouter();
   const [deletingResumes, setDeletingResumes] = useState<Set<string>>(
     new Set()
   );
   const [copyingResumes, setCopyingResumes] = useState<Set<string>>(new Set());
+  const [renamingResume, setRenamingResume] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [renameValue, setRenameValue] = useState("");
 
   const config = {
     base: {
@@ -162,6 +182,23 @@ export function ResumesSection({
         const newSet = new Set(prev);
         newSet.delete(resumeId);
         return newSet;
+      });
+    }
+  };
+
+  const handleRenameResume = async () => {
+    if (!renamingResume || !renameValue.trim()) return;
+    const trimmed = renameValue.trim();
+    const { id, name: oldName } = renamingResume;
+    setRenamingResume(null);
+    toast.loading(`Renaming to "${trimmed}"...`, { id: `rename-${id}` });
+    try {
+      await updateResume(id, { name: trimmed });
+      toast.success(`Renamed to "${trimmed}"`, { id: `rename-${id}` });
+      router.refresh();
+    } catch {
+      toast.error(`Failed to rename "${oldName}". Please try again.`, {
+        id: `rename-${id}`,
       });
     }
   };
@@ -466,6 +503,29 @@ export function ResumesSection({
                   </Button>
                 </AlertDialogTrigger>
 
+                {/* Rename Button */}
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => {
+                    setRenamingResume({ id: resume.id, name: resume.name });
+                    setRenameValue(resume.name);
+                  }}
+                  disabled={isDeleting}
+                  className={cn(
+                    "h-8 w-8 rounded-lg",
+                    "bg-indigo-50/80 hover:bg-indigo-100/80",
+                    "text-indigo-600 hover:text-indigo-700",
+                    "border border-indigo-200/60",
+                    "shadow-sm",
+                    "transition-all duration-300",
+                    "hover:scale-105 hover:shadow-md",
+                    "hover:-translate-y-0.5"
+                  )}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+
                 {/* Copy Button - Check if can create more */}
                 {canCreateMore ? (
                   <Button
@@ -725,6 +785,38 @@ export function ResumesSection({
             )}
         </div>
       </div>
+
+      {/* Rename Dialog */}
+      <Dialog
+        open={!!renamingResume}
+        onOpenChange={(open) => !open && setRenamingResume(null)}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Rename Resume</DialogTitle>
+          </DialogHeader>
+          <Input
+            value={renameValue}
+            onChange={(e) => setRenameValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleRenameResume();
+            }}
+            placeholder="Resume name"
+            autoFocus
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRenamingResume(null)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleRenameResume}
+              disabled={!renameValue.trim()}
+            >
+              Rename
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
