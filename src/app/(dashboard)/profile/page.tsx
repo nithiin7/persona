@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getDashboardData } from "@/utils/actions";
 import { ProfileEditForm } from "@/components/profile/profile-edit-form";
 import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
 // Force dynamic behavior and disable caching
 export const dynamic = "force-dynamic";
@@ -36,7 +37,13 @@ export default async function EditProfilePage() {
 
       {/* Main Content Layer */}
       <div className="relative z-10">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+            </div>
+          }
+        >
           <ProfileEditForm profile={profile} />
         </Suspense>
       </div>
