@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Copy, Check } from "lucide-react";
+import { Eye, EyeOff, Copy, Check, Loader2, RefreshCw } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ServiceName } from "@/lib/types";
 import { toast } from "sonner";
@@ -16,9 +16,12 @@ import {
   getProvidersArray,
   type ApiKey,
 } from "@/lib/ai-models";
+import { fetchOllamaModels } from "@/utils/actions/ollama";
 
 const LOCAL_STORAGE_KEY = "persona-api-keys";
 const MODEL_STORAGE_KEY = "persona-default-model";
+const OLLAMA_URL_KEY = "persona-ollama-url";
+const OLLAMA_MODELS_KEY = "persona-ollama-models";
 
 export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
@@ -31,6 +34,12 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
   const [defaultModel, setDefaultModel] = useState<string>("");
   const [copiedKey, setCopiedKey] = useState<ServiceName | null>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
+
+  // Ollama state
+  const [ollamaUrl, setOllamaUrl] = useState("http://localhost:11434");
+  const [ollamaModels, setOllamaModels] = useState<string[]>([]);
+  const [ollamaLoading, setOllamaLoading] = useState(false);
+  const [ollamaError, setOllamaError] = useState<string | null>(null);
 
   // Load stored data on mount
   useEffect(() => {
@@ -56,6 +65,19 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
       // Set free model for non-Pro users
       setDefaultModel(MODEL_DESIGNATIONS.DEFAULT_FREE);
       localStorage.setItem(MODEL_STORAGE_KEY, MODEL_DESIGNATIONS.DEFAULT_FREE);
+    }
+
+    // Load Ollama settings
+    const storedOllamaUrl = localStorage.getItem(OLLAMA_URL_KEY);
+    if (storedOllamaUrl) setOllamaUrl(storedOllamaUrl);
+
+    const storedOllamaModels = localStorage.getItem(OLLAMA_MODELS_KEY);
+    if (storedOllamaModels) {
+      try {
+        setOllamaModels(JSON.parse(storedOllamaModels));
+      } catch {
+        // ignore
+      }
     }
 
     // Mark initial load as complete
@@ -174,6 +196,44 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
     setTimeout(() => setCopiedKey(null), 1000);
   };
 
+  const handleDiscoverOllamaModels = async () => {
+    setOllamaLoading(true);
+    setOllamaError(null);
+    localStorage.setItem(OLLAMA_URL_KEY, ollamaUrl);
+
+    const { models, error } = await fetchOllamaModels(ollamaUrl);
+
+    setOllamaLoading(false);
+
+    if (error) {
+      setOllamaError(error);
+      toast.error("Could not connect to Ollama");
+      return;
+    }
+
+    setOllamaModels(models);
+    localStorage.setItem(OLLAMA_MODELS_KEY, JSON.stringify(models));
+    window.dispatchEvent(new CustomEvent("persona-ollama-updated", { detail: models }));
+
+    if (models.length === 0) {
+      toast.info("Connected but no models found. Pull a model with: ollama pull llama3.2");
+    } else {
+      toast.success(`Found ${models.length} Ollama model${models.length !== 1 ? "s" : ""}`);
+    }
+  };
+
+  const handleClearOllama = () => {
+    setOllamaModels([]);
+    setOllamaError(null);
+    localStorage.removeItem(OLLAMA_MODELS_KEY);
+    window.dispatchEvent(new CustomEvent("persona-ollama-updated", { detail: [] }));
+    if (defaultModel.startsWith("ollama::")) {
+      setDefaultModel(MODEL_DESIGNATIONS.DEFAULT_FREE);
+      localStorage.setItem(MODEL_STORAGE_KEY, MODEL_DESIGNATIONS.DEFAULT_FREE);
+    }
+    toast.success("Ollama disconnected");
+  };
+
   return (
     <div className="space-y-6">
       {/* Model Selection Card */}
@@ -192,6 +252,7 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
           isProPlan={isProPlan}
           className="w-full mt-1"
           placeholder="Select an AI model"
+          ollamaModels={ollamaModels}
         />
       </div>
 
@@ -389,6 +450,108 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
                 </div>
               );
             })}
+
+          {/* Ollama (Local AI) Section */}
+          <div className="mt-6 pt-6 border-t border-emerald-200/50">
+            <div className="mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-lg leading-none">🦙</span>
+                <Label className="text-sm font-semibold text-gray-800">
+                  Ollama (Local AI)
+                </Label>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Run AI models locally on your machine — free, private, no API
+                key required. Requires{" "}
+                <a
+                  href="https://ollama.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
+                >
+                  Ollama
+                </a>{" "}
+                to be installed and running.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-lg bg-white/30 border border-emerald-100 transition-all hover:bg-white/40">
+              <Label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                Ollama URL
+              </Label>
+              <div className="flex gap-2 mt-2">
+                <Input
+                  type="text"
+                  value={ollamaUrl}
+                  onChange={(e) => setOllamaUrl(e.target.value)}
+                  placeholder="http://localhost:11434"
+                  className="bg-white/50 flex-1 h-9 text-sm border-black/20 focus:border-black/30 hover:border-black/25 transition-colors font-mono"
+                />
+                <Button
+                  className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:from-emerald-700 hover:to-teal-700 h-9 px-4 text-sm transition-colors gap-1.5"
+                  onClick={handleDiscoverOllamaModels}
+                  disabled={ollamaLoading}
+                >
+                  {ollamaLoading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <RefreshCw className="h-3.5 w-3.5" />
+                  )}
+                  {ollamaLoading ? "Connecting…" : "Connect"}
+                </Button>
+              </div>
+
+              {ollamaError && (
+                <p className="mt-2 text-xs text-rose-600 bg-rose-50 border border-rose-200/50 px-3 py-2 rounded-md">
+                  {ollamaError}. Make sure Ollama is running and the URL is
+                  correct.
+                </p>
+              )}
+
+              {ollamaModels.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-medium text-emerald-700">
+                      {ollamaModels.length} model
+                      {ollamaModels.length !== 1 ? "s" : ""} available
+                    </p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleClearOllama}
+                      className="h-6 px-2 text-xs text-rose-500 hover:text-rose-600 hover:bg-rose-50"
+                    >
+                      Disconnect
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ollamaModels.map((model) => (
+                      <span
+                        key={model}
+                        className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/60 rounded-full text-xs font-mono"
+                      >
+                        {model}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Select an Ollama model from the{" "}
+                    <strong>Default AI Model</strong> dropdown above.
+                  </p>
+                </div>
+              )}
+
+              {ollamaModels.length === 0 && !ollamaError && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Pull models with{" "}
+                  <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700">
+                    ollama pull llama3.2
+                  </code>
+                  , then click Connect.
+                </p>
+              )}
+            </div>
+          </div>
 
           {/* Unstable Providers Section */}
           <div className="mt-8 pt-6 border-t border-amber-200/50">

@@ -28,6 +28,7 @@ export function AppHeader({ children, isProPlan = true }: AppHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [defaultModel, setDefaultModel] = useState<string>("");
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
+  const [ollamaModels, setOllamaModels] = useState<string[]>([]);
 
   // Load stored data on mount
   useEffect(() => {
@@ -51,6 +52,30 @@ export function AppHeader({ children, isProPlan = true }: AppHeaderProps) {
       setDefaultModel(defaultModelId);
       localStorage.setItem("persona-default-model", defaultModelId);
     }
+
+    // Load Ollama models
+    const storedOllamaModels = localStorage.getItem("persona-ollama-models");
+    if (storedOllamaModels) {
+      try {
+        setOllamaModels(JSON.parse(storedOllamaModels));
+      } catch {
+        // ignore
+      }
+    }
+
+    // Keep Ollama models in sync when updated from settings
+    const handleOllamaUpdate = (e: CustomEvent<string[]>) => {
+      setOllamaModels(e.detail);
+    };
+    window.addEventListener(
+      "persona-ollama-updated",
+      handleOllamaUpdate as EventListener
+    );
+    return () =>
+      window.removeEventListener(
+        "persona-ollama-updated",
+        handleOllamaUpdate as EventListener
+      );
   }, [isProPlan]);
 
   const handleModelChange = (modelId: string) => {
@@ -99,6 +124,7 @@ export function AppHeader({ children, isProPlan = true }: AppHeaderProps) {
                     className="w-[220px] lg:w-[260px] xl:w-[300px] h-8 text-xs"
                     placeholder="Select AI model"
                     showToast={false}
+                    ollamaModels={ollamaModels}
                   />
                 </div>
                 <div className="h-4 w-px bg-purple-200/50" />
@@ -144,6 +170,7 @@ export function AppHeader({ children, isProPlan = true }: AppHeaderProps) {
                         className="w-full h-10 text-sm"
                         placeholder="Select AI model"
                         showToast={false}
+                        ollamaModels={ollamaModels}
                       />
                     </div>
 

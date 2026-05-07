@@ -1,6 +1,7 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { createOllama } from "ollama-ai-provider";
 import { LanguageModelV1 } from "ai";
 import { getModelById, getModelProvider, type AIConfig } from "@/lib/ai-models";
 
@@ -17,6 +18,15 @@ export function initializeAIClient(
   useThinking?: boolean
 ) {
   void useThinking; // Keep for future use
+
+  // Handle Ollama local models (identified by "ollama::" prefix, no API key needed)
+  if (config?.model.startsWith("ollama::")) {
+    const ollamaModelName = config.model.slice("ollama::".length);
+    const baseUrl = config.ollamaBaseUrl || "http://localhost:11434";
+    return createOllama({ baseURL: `${baseUrl}/api` })(
+      ollamaModelName
+    ) as LanguageModelV1;
+  }
 
   // Handle Pro subscription with environment variables
   if (isPro && config) {

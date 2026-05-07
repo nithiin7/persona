@@ -39,6 +39,7 @@ interface ModelSelectorProps {
   className?: string;
   placeholder?: string;
   showToast?: boolean;
+  ollamaModels?: string[];
 }
 
 // Helper component for unavailable model popover
@@ -154,12 +155,20 @@ export function ModelSelector({
   className,
   placeholder = "Select an AI model",
   showToast = true,
+  ollamaModels,
 }: ModelSelectorProps) {
   const isModelSelectable = (modelId: string) => {
     return isModelAvailable(modelId, isProPlan, apiKeys);
   };
 
   const handleModelChange = (modelId: string) => {
+    // Ollama models are always available when listed
+    if (modelId.startsWith("ollama::")) {
+      onValueChange(modelId);
+      if (showToast) toast.success("Model updated successfully");
+      return;
+    }
+
     const selectedModel = getModelById(modelId);
     if (!selectedModel) return;
 
@@ -281,6 +290,43 @@ export function ModelSelector({
             )}
           </div>
         ))}
+
+        {/* Ollama (Local) models */}
+        {ollamaModels && ollamaModels.length > 0 && (
+          <>
+            <SelectSeparator />
+            <SelectGroup>
+              <SelectLabel className="text-xs font-semibold text-muted-foreground px-2 py-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-base leading-none">🦙</span>
+                  Ollama (Local)
+                </div>
+              </SelectLabel>
+              {ollamaModels.map((modelName) => {
+                const ollamaId = `ollama::${modelName}`;
+                return (
+                  <SelectItem
+                    key={ollamaId}
+                    value={ollamaId}
+                    className="hover:bg-emerald-50 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <span className="text-base leading-none flex-shrink-0">
+                        🦙
+                      </span>
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <span className="truncate font-medium">{modelName}</span>
+                        <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0">
+                          Local
+                        </span>
+                      </div>
+                    </div>
+                  </SelectItem>
+                );
+              })}
+            </SelectGroup>
+          </>
+        )}
       </SelectContent>
     </Select>
   );

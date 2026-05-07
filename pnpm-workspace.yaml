@@ -1,0 +1,6 @@
+allowBuilds:
+  canvas: false
+  core-js: false
+  esbuild: false
+  sharp: false
+  unrs-resolver: false

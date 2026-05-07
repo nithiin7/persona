@@ -222,18 +222,8 @@ export type ServiceName =
   | "openai"
   // | 'azure'
   | "anthropic"
-  | "openrouter";
-// | 'bedrock'
-// | 'google'
-// | 'vertex'
-// | 'mistral'
-// | 'xai'
-// | 'together'
-// | 'cohere'
-// | 'fireworks'
-// | 'deepinfra'
-// | 'groq'
-// | 'deepseek';
+  | "openrouter"
+  | "ollama";
 
 // Re-export AI model types from centralized location (except AIProvider to avoid conflict)
 export type { AIModel, ApiKey, AIConfig } from "./ai-models";

@@ -49,6 +49,7 @@ import { getDefaultModel, type ApiKey } from "@/lib/ai-models";
 
 const LOCAL_STORAGE_KEY = "persona-api-keys";
 const MODEL_STORAGE_KEY = "persona-default-model";
+const OLLAMA_URL_KEY = "persona-ollama-url";
 
 interface ChatBotProps {
   resume: Resume;
@@ -85,6 +86,9 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
   const [defaultModel, setDefaultModel] = React.useState<string>(
     getDefaultModel(false)
   );
+  const [ollamaBaseUrl, setOllamaBaseUrl] = React.useState<string>(
+    "http://localhost:11434"
+  );
   const [originalResume, setOriginalResume] = React.useState<Resume | null>(
     null
   );
@@ -97,6 +101,7 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
   useEffect(() => {
     const storedKeys = localStorage.getItem(LOCAL_STORAGE_KEY);
     const storedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+    const storedOllamaUrl = localStorage.getItem(OLLAMA_URL_KEY);
 
     if (storedKeys) {
       try {
@@ -109,11 +114,16 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
     if (storedModel) {
       setDefaultModel(storedModel);
     }
+
+    if (storedOllamaUrl) {
+      setOllamaBaseUrl(storedOllamaUrl);
+    }
   }, []);
 
   const config = {
     model: defaultModel,
     apiKeys,
+    ollamaBaseUrl,
   };
 
   const {

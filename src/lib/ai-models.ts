@@ -47,6 +47,7 @@ export interface ApiKey {
 export interface AIConfig {
   model: string;
   apiKeys: ApiKey[];
+  ollamaBaseUrl?: string;
 }
 
 export interface GroupedModels {
