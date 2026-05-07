@@ -15,6 +15,7 @@ Persona is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) wi
 - **Cover letter generator** — one-click drafts based on your resume and the job
 - **Multiple templates** — Classic, Modern, and Minimal layouts with full style control
 - **Profile as source of truth** — maintain one master profile; spin off tailored resumes from it
+- **Application status tracking** — track each job application through Saved → Applied → Phone Screen → Onsite → Offer / Rejected, visible on dashboard cards and in the resume editor
 
 ---
 

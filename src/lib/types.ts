@@ -39,6 +39,14 @@ export interface Certification {
   credential_url?: string;
 }
 
+export type ApplicationStatus =
+  | "saved"
+  | "applied"
+  | "phone_screen"
+  | "onsite"
+  | "offer"
+  | "rejected";
+
 export interface Job {
   id: string;
   user_id: string;
@@ -57,6 +65,7 @@ export interface Job {
     | "internship"
     | "contract"
     | null;
+  application_status: ApplicationStatus | null;
   created_at: string;
   updated_at: string;
   is_active: boolean;
@@ -120,6 +129,7 @@ export interface ResumeSummary {
   name: string;
   target_role: string;
   is_base_resume: boolean;
+  application_status?: ApplicationStatus | null;
   created_at: string;
   updated_at: string;
 }

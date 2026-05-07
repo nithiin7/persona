@@ -32,12 +32,18 @@ import {
   type SortOption,
   type SortDirection,
 } from "@/components/resume/management/resume-sort-controls";
-import type { Profile, ResumeSummary } from "@/lib/types";
+import type { ApplicationStatus, Profile, ResumeSummary } from "@/lib/types";
 import {
   deleteResume,
   copyResume,
   updateResume,
 } from "@/utils/actions/resumes/actions";
+import { updateJobStatus } from "@/utils/actions/jobs/actions";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Dialog,
   DialogContent,
@@ -65,6 +71,78 @@ import { toast } from "sonner";
 interface OptimisticResume extends ResumeSummary {
   isOptimistic?: boolean;
   originalId?: string;
+}
+
+const STATUS_CONFIG: Record<
+  ApplicationStatus,
+  { label: string; color: string; dot: string }
+> = {
+  saved:        { label: "Saved",        color: "bg-gray-100 text-gray-600 border-gray-200",   dot: "bg-gray-400"   },
+  applied:      { label: "Applied",      color: "bg-blue-50 text-blue-700 border-blue-200",    dot: "bg-blue-500"   },
+  phone_screen: { label: "Phone Screen", color: "bg-amber-50 text-amber-700 border-amber-200", dot: "bg-amber-500"  },
+  onsite:       { label: "Onsite",       color: "bg-purple-50 text-purple-700 border-purple-200", dot: "bg-purple-500" },
+  offer:        { label: "Offer",        color: "bg-green-50 text-green-700 border-green-200", dot: "bg-green-500"  },
+  rejected:     { label: "Rejected",     color: "bg-red-50 text-red-600 border-red-200",       dot: "bg-red-400"    },
+};
+
+function StatusBadge({ resume }: { resume: OptimisticResume }) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const status = (resume.application_status ?? "saved") as ApplicationStatus;
+  const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.saved;
+
+  const handleSelect = async (next: ApplicationStatus) => {
+    if (!resume.job_id || next === status) { setOpen(false); return; }
+    setUpdating(true);
+    setOpen(false);
+    try {
+      await updateJobStatus(resume.job_id, next);
+      router.refresh();
+    } catch {
+      toast.error("Failed to update status");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          onClick={(e) => e.preventDefault()}
+          disabled={updating || !resume.job_id}
+          className={cn(
+            "flex items-center gap-1 px-1.5 py-0.5 rounded-full border text-[9px] font-semibold",
+            "transition-all duration-200 hover:opacity-80",
+            cfg.color,
+            (updating || !resume.job_id) && "opacity-50 cursor-not-allowed"
+          )}
+        >
+          <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", cfg.dot)} />
+          {updating ? "..." : cfg.label}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-40 p-1" align="start" side="bottom">
+        <div className="flex flex-col gap-0.5">
+          {(Object.entries(STATUS_CONFIG) as [ApplicationStatus, typeof STATUS_CONFIG[ApplicationStatus]][]).map(([key, val]) => (
+            <button
+              key={key}
+              onClick={() => handleSelect(key)}
+              className={cn(
+                "flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-left",
+                "hover:bg-gray-100 transition-colors duration-150",
+                key === status && "font-semibold"
+              )}
+            >
+              <span className={cn("w-2 h-2 rounded-full shrink-0", val.dot)} />
+              {val.label}
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 interface ResumesSectionProps {
@@ -477,6 +555,13 @@ export function ResumesSection({
                   className="hover:-translate-y-1 transition-transform duration-300"
                 />
               </Link>
+            )}
+
+            {/* Application Status Badge (tailored only) */}
+            {!resume.isOptimistic && type === "tailored" && resume.job_id && (
+              <div className="absolute top-1.5 right-1.5 z-10">
+                <StatusBadge resume={resume} />
+              </div>
             )}
 
             {/* Action Buttons */}

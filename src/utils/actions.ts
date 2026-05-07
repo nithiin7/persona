@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { Profile, ResumeSummary } from "@/lib/types";
+import { type ApplicationStatus, Profile, ResumeSummary } from "@/lib/types";
 
 interface DashboardData {
   profile: Profile | null;
@@ -88,9 +88,32 @@ export async function getDashboardData(): Promise<DashboardData> {
     const baseResumes = sanitizedResumes.filter(
       (resume) => resume.is_base_resume
     );
-    const tailoredResumes = sanitizedResumes.filter(
+    const rawTailored = sanitizedResumes.filter(
       (resume) => !resume.is_base_resume
     );
+
+    // Fetch application_status for tailored resumes from their linked jobs
+    const jobIds = rawTailored
+      .map((r) => r.job_id)
+      .filter((id): id is string => !!id);
+
+    let jobStatusMap: Record<string, string | null> = {};
+    if (jobIds.length > 0) {
+      const { data: jobs } = await supabase
+        .from("jobs")
+        .select("id, application_status")
+        .in("id", jobIds);
+      jobStatusMap = Object.fromEntries(
+        (jobs ?? []).map((j) => [j.id, j.application_status])
+      );
+    }
+
+    const tailoredResumes = rawTailored.map((resume) => ({
+      ...resume,
+      application_status: (resume.job_id
+        ? (jobStatusMap[resume.job_id] ?? null)
+        : null) as ApplicationStatus | null,
+    }));
 
     return {
       profile,

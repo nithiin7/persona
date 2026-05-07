@@ -42,6 +42,77 @@ import {
 } from "@/components/ui/accordion";
 import { BriefcaseIcon } from "lucide-react";
 import { formatJobListing } from "@/utils/actions/jobs/ai";
+import { updateJobStatus } from "@/utils/actions/jobs/actions";
+import type { ApplicationStatus } from "@/lib/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const STATUS_OPTIONS: { value: ApplicationStatus; label: string; dot: string }[] = [
+  { value: "saved",        label: "Saved",        dot: "bg-gray-400" },
+  { value: "applied",      label: "Applied",      dot: "bg-blue-500" },
+  { value: "phone_screen", label: "Phone Screen", dot: "bg-amber-500" },
+  { value: "onsite",       label: "Onsite",       dot: "bg-purple-500" },
+  { value: "offer",        label: "Offer",        dot: "bg-green-500" },
+  { value: "rejected",     label: "Rejected",     dot: "bg-red-400" },
+];
+
+function ApplicationStatusSelect({ job }: { job: Job }) {
+  const router = useRouter();
+  const [updating, setUpdating] = useState(false);
+  const current = job.application_status ?? "saved";
+
+  const handleChange = async (next: string) => {
+    if (next === current) return;
+    setUpdating(true);
+    try {
+      await updateJobStatus(job.id, next as ApplicationStatus);
+      router.refresh();
+    } catch {
+      toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const cfg = STATUS_OPTIONS.find((o) => o.value === current);
+
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
+        Application Status
+      </span>
+      <Select value={current} onValueChange={handleChange} disabled={updating}>
+        <SelectTrigger
+          className={cn(
+            "h-8 text-xs border rounded-full px-3",
+            "bg-white/80 backdrop-blur-sm",
+            "focus:ring-pink-400/30"
+          )}
+        >
+          <div className="flex items-center gap-1.5">
+            <span className={cn("w-2 h-2 rounded-full", cfg?.dot ?? "bg-gray-400")} />
+            <SelectValue />
+          </div>
+        </SelectTrigger>
+        <SelectContent>
+          {STATUS_OPTIONS.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value}>
+              <div className="flex items-center gap-2">
+                <span className={cn("w-2 h-2 rounded-full", opt.dot)} />
+                {opt.label}
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
 
 interface TailoredJobCardProps {
   jobId: string | null;
@@ -474,6 +545,9 @@ export function TailoredJobCard({
                   </motion.div>
                 ))}
               </div>
+
+              {/* Application Status */}
+              <ApplicationStatusSelect job={effectiveJob} />
 
               {/* Description */}
               {effectiveJob.description && (

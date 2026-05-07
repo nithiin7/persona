@@ -3,7 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { simplifiedJobSchema } from "@/lib/zod-schemas";
-import type { Job } from "@/lib/types";
+import type { ApplicationStatus, Job } from "@/lib/types";
 import { z } from "zod";
 import { JobListingParams } from "./schema";
 
@@ -147,6 +147,29 @@ export async function deleteTailoredJob(jobId: string): Promise<void> {
   if (error) {
     throw new Error("Failed to delete job");
   }
+
+  revalidatePath("/", "layout");
+}
+
+export async function updateJobStatus(
+  jobId: string,
+  status: ApplicationStatus
+): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) throw new Error("User not authenticated");
+
+  const { error } = await supabase
+    .from("jobs")
+    .update({ application_status: status })
+    .eq("id", jobId)
+    .eq("user_id", user.id);
+
+  if (error) throw new Error("Failed to update application status");
 
   revalidatePath("/", "layout");
 }
