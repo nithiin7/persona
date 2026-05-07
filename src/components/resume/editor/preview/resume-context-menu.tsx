@@ -11,6 +11,7 @@ import { toast } from "@/hooks/use-toast";
 import { Resume, WorkExperience, Education, Project } from "@/lib/types";
 import { pdf } from "@react-pdf/renderer";
 import { ResumePDFDocument } from "../preview/resume-pdf-document";
+import { generateResumeDocx } from "@/lib/docx-export";
 
 interface ResumeContextMenuProps {
   children: React.ReactNode;
@@ -21,6 +22,31 @@ export function ResumeContextMenu({
   children,
   resume,
 }: ResumeContextMenuProps) {
+  const handleDownloadDocx = async () => {
+    try {
+      const blob = await generateResumeDocx(resume);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${resume.first_name}_${resume.last_name}_Resume.docx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast({
+        title: "Download started",
+        description: "Your resume DOCX is being downloaded.",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Download failed",
+        description: "Unable to download your resume. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleDownloadPDF = async () => {
     try {
       const blob = await pdf(<ResumePDFDocument resume={resume} />).toBlob();
@@ -175,6 +201,13 @@ export function ResumeContextMenu({
         >
           <Download className="w-4 h-4" />
           <span>Download as PDF</span>
+        </ContextMenuItem>
+        <ContextMenuItem
+          onClick={handleDownloadDocx}
+          className="flex items-center gap-2 cursor-pointer"
+        >
+          <Download className="w-4 h-4" />
+          <span>Download as DOCX</span>
         </ContextMenuItem>
         <ContextMenuItem
           onClick={handleCopyToClipboard}

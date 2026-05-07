@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { generateResumeDocx } from "@/lib/docx-export";
 
 interface ResumeEditorActionsProps {
   onResumeChange: (field: keyof Resume, value: Resume[keyof Resume]) => void;
@@ -32,6 +33,7 @@ export function ResumeEditorActions({
   const [downloadOptions, setDownloadOptions] = useState({
     resume: true,
     coverLetter: true,
+    resumeFormat: "pdf" as "pdf" | "docx",
   });
 
   // Save Resume
@@ -123,13 +125,21 @@ export function ResumeEditorActions({
                   try {
                     // Download Resume if selected
                     if (downloadOptions.resume) {
-                      const blob = await pdf(
-                        <ResumePDFDocument resume={resume} />
-                      ).toBlob();
+                      let blob: Blob;
+                      let filename: string;
+                      if (downloadOptions.resumeFormat === "docx") {
+                        blob = await generateResumeDocx(resume);
+                        filename = `${resume.first_name}_${resume.last_name}_Resume.docx`;
+                      } else {
+                        blob = await pdf(
+                          <ResumePDFDocument resume={resume} />
+                        ).toBlob();
+                        filename = `${resume.first_name}_${resume.last_name}_Resume.pdf`;
+                      }
                       const url = URL.createObjectURL(blob);
                       const link = document.createElement("a");
                       link.href = url;
-                      link.download = `${resume.first_name}_${resume.last_name}_Resume.pdf`;
+                      link.download = filename;
                       document.body.appendChild(link);
                       link.click();
                       document.body.removeChild(link);
@@ -210,25 +220,53 @@ export function ResumeEditorActions({
               )}
             >
               <div className="space-y-3">
-                <label className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={downloadOptions.resume}
-                    onCheckedChange={(checked) =>
-                      setDownloadOptions((prev) => ({
-                        ...prev,
-                        resume: checked as boolean,
-                      }))
-                    }
-                    className={cn(
-                      resume.is_base_resume
-                        ? "border-indigo-400 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
-                        : "border-rose-400 data-[state=checked]:bg-rose-600 data-[state=checked]:border-rose-600"
-                    )}
-                  />
-                  <span className="text-sm font-medium text-foreground">
-                    Resume
-                  </span>
-                </label>
+                <div className="space-y-1.5">
+                  <label className="flex items-center space-x-2">
+                    <Checkbox
+                      checked={downloadOptions.resume}
+                      onCheckedChange={(checked) =>
+                        setDownloadOptions((prev) => ({
+                          ...prev,
+                          resume: checked as boolean,
+                        }))
+                      }
+                      className={cn(
+                        resume.is_base_resume
+                          ? "border-indigo-400 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
+                          : "border-rose-400 data-[state=checked]:bg-rose-600 data-[state=checked]:border-rose-600"
+                      )}
+                    />
+                    <span className="text-sm font-medium text-foreground">
+                      Resume
+                    </span>
+                  </label>
+                  {downloadOptions.resume && (
+                    <div className="ml-6 flex gap-1">
+                      {(["pdf", "docx"] as const).map((fmt) => (
+                        <button
+                          key={fmt}
+                          type="button"
+                          onClick={() =>
+                            setDownloadOptions((prev) => ({
+                              ...prev,
+                              resumeFormat: fmt,
+                            }))
+                          }
+                          className={cn(
+                            "px-2 py-0.5 text-[10px] font-medium rounded border transition-colors",
+                            downloadOptions.resumeFormat === fmt
+                              ? resume.is_base_resume
+                                ? "bg-indigo-600 text-white border-indigo-600"
+                                : "bg-rose-600 text-white border-rose-600"
+                              : "bg-transparent text-muted-foreground border-muted-foreground/40 hover:border-muted-foreground"
+                          )}
+                        >
+                          {fmt.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <label className="flex items-center space-x-2">
                   <Checkbox
                     checked={downloadOptions.coverLetter}
