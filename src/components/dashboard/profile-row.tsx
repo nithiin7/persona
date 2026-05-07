@@ -2,8 +2,9 @@
 
 import { Profile } from "@/lib/types";
 import { User, Briefcase, GraduationCap, Code, Pencil } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, calculateProfileCompleteness } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 
 interface ProfileRowProps {
@@ -11,6 +12,14 @@ interface ProfileRowProps {
 }
 
 export function ProfileRow({ profile }: ProfileRowProps) {
+  const { score, missing } = calculateProfileCompleteness(profile);
+  const scoreColor =
+    score >= 80
+      ? "text-teal-600"
+      : score >= 50
+        ? "text-amber-600"
+        : "text-rose-600";
+
   return (
     <div className="group relative">
       {/* Animated background gradient */}
@@ -112,7 +121,7 @@ export function ProfileRow({ profile }: ProfileRowProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full sm:w-auto bg-gradient-to-r from-teal-50 to-cyan-50 border-teal-200 hover:border-teal-300 text-teal-700 
+                className="w-full sm:w-auto bg-gradient-to-r from-teal-50 to-cyan-50 border-teal-200 hover:border-teal-300 text-teal-700
                            hover:bg-gradient-to-r hover:from-teal-100 hover:to-cyan-100
                            transition-all duration-500 hover:-translate-y-0.5 hover:shadow-md shadow-sm"
               >
@@ -120,6 +129,25 @@ export function ProfileRow({ profile }: ProfileRowProps) {
                 Edit Profile
               </Button>
             </Link>
+          </div>
+
+          {/* Profile completeness strip */}
+          <div className="mt-2.5 max-w-7xl mx-auto">
+            <div className="flex items-center gap-3">
+              <span
+                className={cn("text-xs font-semibold whitespace-nowrap tabular-nums", scoreColor)}
+              >
+                {score}%
+              </span>
+              <Progress value={score} className="h-1 flex-1" />
+              <span className="text-xs text-muted-foreground whitespace-nowrap hidden sm:block">
+                {score === 100
+                  ? "Profile complete"
+                  : missing.length === 1
+                    ? `Missing: ${missing[0]}`
+                    : `${missing.length} sections missing`}
+              </span>
+            </div>
           </div>
         </div>
       </div>
