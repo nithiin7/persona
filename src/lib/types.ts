@@ -198,18 +198,7 @@ export interface Subscription {
 
 export const AI_PROVIDERS = {
   OPENAI: "openai",
-  // AZURE: 'azure',
   ANTHROPIC: "anthropic",
-  // BEDROCK: 'bedrock',
-  // GOOGLE: 'google',
-  // VERTEX: 'vertex',
-  // MISTRAL: 'mistral',
-  // XAI: 'xai',
-  // TOGETHER: 'together',
-  // COHERE: 'cohere',
-  // FIREWORKS: 'fireworks',
-  // DEEPINFRA: 'deepinfra',
-  // GROQ: 'groq'
   DEEPSEEK: "deepseek",
 } as const;
 
@@ -218,7 +207,6 @@ export type AIProviderOld = (typeof AI_PROVIDERS)[keyof typeof AI_PROVIDERS];
 // ServiceName is used across the app for API key management
 export type ServiceName =
   | "openai"
-  // | 'azure'
   | "anthropic"
   | "openrouter"
   | "ollama";
