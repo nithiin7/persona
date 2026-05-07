@@ -45,18 +45,6 @@ export async function updateSession(request: NextRequest) {
   // Debug logging
   console.log("👤 User authenticated:", !!user);
 
-  // Create a new headers object with the existing headers
-  // Given an incoming request...
-  const requestHeaders = new Headers(request.headers);
-
-  // Create new response with enriched headers
-  supabaseResponse = NextResponse.next({
-    request: {
-      ...request,
-      headers: requestHeaders,
-    },
-  });
-
   supabaseResponse.cookies.set("show-banner", "false");
 
   // Check if user is authenticated and redirect if needed
