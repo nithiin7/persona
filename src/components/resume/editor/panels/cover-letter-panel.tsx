@@ -6,10 +6,16 @@ import { useState } from "react";
 import { readStreamableValue } from "ai/rsc";
 import type { AIConfig } from "@/utils/ai-tools";
 import { AIImprovementPrompt } from "../../shared/ai-improvement-prompt";
-import { generate } from "@/utils/actions/cover-letter/actions";
+import { generate, type CoverLetterStyle } from "@/utils/actions/cover-letter/actions";
 import { useResumeContext } from "../resume-editor-context";
 import { ApiErrorDialog } from "@/components/ui/api-error-dialog";
 import { CreateTailoredResumeDialog } from "@/components/resume/management/dialogs/create-tailored-resume-dialog";
+
+const STYLES: { value: CoverLetterStyle; label: string; description: string }[] = [
+  { value: "professional", label: "Professional", description: "Formal, metric-driven, 6 paragraphs" },
+  { value: "casual", label: "Casual", description: "Conversational, warm, human tone" },
+  { value: "startup", label: "Startup", description: "Punchy, bold, gets to the point fast" },
+];
 
 interface CoverLetterPanelProps {
   resume: Resume;
@@ -25,6 +31,7 @@ export function CoverLetterPanel({
   const { dispatch } = useResumeContext();
   const [isGenerating, setIsGenerating] = useState(false);
   const [customPrompt, setCustomPrompt] = useState("");
+  const [selectedStyle, setSelectedStyle] = useState<CoverLetterStyle>("professional");
   const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
     title: "",
@@ -45,7 +52,6 @@ export function CoverLetterPanel({
     setIsGenerating(true);
 
     try {
-      // Get model and API key from local storage
       const MODEL_STORAGE_KEY = "persona-default-model";
       const LOCAL_STORAGE_KEY = "persona-api-keys";
 
@@ -59,12 +65,11 @@ export function CoverLetterPanel({
         console.error("Error parsing API keys:", error);
       }
 
-      // Prompt
-      const prompt = `Write a professional cover letter for the following job using my resume information:
+      const prompt = `Write a cover letter for the following job using my resume information:
       ${JSON.stringify(job)}
-      
+
       ${JSON.stringify(resume)}
-      
+
       Today's date is ${new Date().toLocaleDateString()}.
 
       Please use my contact information in the letter:
@@ -76,24 +81,17 @@ export function CoverLetterPanel({
 
       ${customPrompt ? `\nAdditional requirements: ${customPrompt}` : ""}`;
 
-      // Call The Model
-      const { output } = await generate(prompt, {
-        ...aiConfig,
-        model: selectedModel || "",
-        apiKeys,
-      });
+      const { output } = await generate(
+        prompt,
+        { ...aiConfig, model: selectedModel || "", apiKeys },
+        selectedStyle
+      );
 
-      // Generated Content
       let generatedContent = "";
 
-      // Update Resume Context
       for await (const delta of readStreamableValue(output)) {
         generatedContent += delta;
-        // Update resume context directly
-        // console.log('Generated Content:', generatedContent);
-        updateField("cover_letter", {
-          content: generatedContent,
-        });
+        updateField("cover_letter", { content: generatedContent });
       }
     } catch (error: Error | unknown) {
       console.error("Generation error:", error);
@@ -172,7 +170,29 @@ export function CoverLetterPanel({
       </div>
 
       {resume.has_cover_letter ? (
-        <div className="space-y-6">
+        <div className="space-y-4">
+          {/* Style selector */}
+          <div className="space-y-1.5">
+            <p className="text-xs font-medium text-emerald-800">Style</p>
+            <div className="grid grid-cols-3 gap-1.5">
+              {STYLES.map((s) => (
+                <button
+                  key={s.value}
+                  onClick={() => setSelectedStyle(s.value)}
+                  className={cn(
+                    "flex flex-col items-start gap-0.5 rounded-md border px-2.5 py-2 text-left transition-all",
+                    selectedStyle === s.value
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-900"
+                      : "border-border bg-white text-muted-foreground hover:border-emerald-300 hover:bg-emerald-50/50"
+                  )}
+                >
+                  <span className="text-xs font-semibold leading-tight">{s.label}</span>
+                  <span className="text-[10px] leading-tight opacity-70">{s.description}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div
             className={cn(
               "w-full p-4",
