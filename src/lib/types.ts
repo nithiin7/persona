@@ -174,6 +174,10 @@ export interface DocumentSettings {
   certifications_margin_bottom?: number;
   certifications_margin_horizontal?: number;
   certifications_item_spacing?: number;
+
+  // Style overrides
+  accent_color?: string;
+  font_family?: "helvetica" | "times-roman";
 }
 
 export interface Profile {

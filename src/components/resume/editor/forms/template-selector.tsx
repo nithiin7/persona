@@ -94,18 +94,18 @@ const templates: TemplateOption[] = [
   {
     id: "bold",
     name: "Bold",
-    description: "Strong, impactful design that commands attention",
-    preview: "🔥",
-    features: ["Bold", "Impactful", "Attention-grabbing"],
-    gradient: "from-red-600 to-orange-600",
+    description: "Dark navy header, left-aligned — commands attention",
+    preview: "◼",
+    features: ["Navy header", "Left-aligned", "High contrast"],
+    gradient: "from-slate-800 to-slate-900",
   },
   {
     id: "elegant",
     name: "Elegant",
-    description: "Refined and graceful design with premium feel",
-    preview: "✨",
-    features: ["Refined", "Graceful", "Premium"],
-    gradient: "from-rose-600 to-pink-600",
+    description: "Warm gold and champagne tones with a refined feel",
+    preview: "✦",
+    features: ["Gold accents", "Warm tones", "Premium feel"],
+    gradient: "from-amber-600 to-yellow-600",
   },
 ];
 
@@ -226,15 +226,15 @@ export function TemplateSelector({
                       </div>
                     )}
                     {template.id === "bold" && (
-                      <div className="bg-red-50 border-2 border-red-600 p-2 rounded-lg">
-                        <div className="h-3 w-20 bg-red-800 rounded mb-1"></div>
-                        <div className="h-1.5 w-24 bg-red-600 rounded"></div>
+                      <div className="bg-slate-900 p-2 rounded-lg">
+                        <div className="h-3 w-20 bg-white rounded mb-1"></div>
+                        <div className="h-1.5 w-24 bg-slate-400 rounded"></div>
                       </div>
                     )}
                     {template.id === "elegant" && (
-                      <div className="bg-rose-50 border border-rose-300 p-3 rounded-lg shadow-inner">
-                        <div className="h-2 w-16 bg-rose-800 rounded mb-1.5"></div>
-                        <div className="h-1 w-20 bg-rose-600 rounded"></div>
+                      <div className="bg-amber-50 border-b-2 border-amber-600 p-3 rounded-t-lg">
+                        <div className="h-2 w-16 bg-amber-900 rounded mb-1.5"></div>
+                        <div className="h-1 w-20 bg-amber-600 rounded"></div>
                       </div>
                     )}
                     
@@ -248,8 +248,8 @@ export function TemplateSelector({
                         template.id === "executive" ? "bg-amber-600" :
                         template.id === "tech" ? "bg-emerald-600" :
                         template.id === "academic" ? "bg-violet-600" :
-                        template.id === "bold" ? "bg-red-600" :
-                        template.id === "elegant" ? "bg-rose-600" :
+                        template.id === "bold" ? "bg-slate-900" :
+                        template.id === "elegant" ? "bg-amber-600" :
                         "bg-gray-700"
                       )}></div>
                       <div className="space-y-0.5">

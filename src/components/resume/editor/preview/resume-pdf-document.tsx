@@ -8,7 +8,6 @@ import {
   View,
   StyleSheet,
   Link,
-  Image,
 } from "@react-pdf/renderer";
 import { memo, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
@@ -32,11 +31,11 @@ const baseStyles = {
 // Create a cache outside of components to persist between renders
 const textProcessingCache = new Map<string, ReactNode[]>();
 
-// Memoized text processing function
-function useTextProcessor() {
+// Memoized text processing function — accepts fontFamily so bold spans use the right font
+function useTextProcessor(fontFamily: string = "Helvetica") {
   const processText = useCallback((text: string, ignoreMarkdown = false) => {
     // Check cache first
-    const cacheKey = `${text}-${ignoreMarkdown}`;
+    const cacheKey = `${text}-${ignoreMarkdown}-${fontFamily}`;
     if (textProcessingCache.has(cacheKey)) {
       return textProcessingCache.get(cacheKey);
     }
@@ -54,7 +53,7 @@ function useTextProcessor() {
     const processed = parts.map((part, index) => {
       if (part.startsWith("**") && part.endsWith("**")) {
         return (
-          <Text key={index} style={{ fontFamily: "Helvetica", fontWeight: "bold" }}>
+          <Text key={index} style={{ fontFamily, fontWeight: "bold" }}>
             {part.slice(2, -2)}
           </Text>
         );
@@ -65,7 +64,7 @@ function useTextProcessor() {
     // Store in cache
     textProcessingCache.set(cacheKey, processed);
     return processed;
-  }, []);
+  }, [fontFamily]);
 
   return processText;
 }
@@ -166,18 +165,17 @@ const HeaderSection = memo(function HeaderSection({
 const ProfessionalSummarySection = memo(function ProfessionalSummarySection({
   summary,
   styles,
-  sectionConfigs,
+  visible = true,
+  fontFamily = "Helvetica",
 }: {
   summary: string | null | undefined;
   styles: ReturnType<typeof createResumeStyles>;
-  sectionConfigs?: Resume["section_configs"];
+  visible?: boolean;
+  fontFamily?: string;
 }) {
-  const processText = useTextProcessor();
-  
-  // Check if section is visible (default to true if not specified)
-  const isVisible = sectionConfigs?.professional_summary?.visible !== false;
-  
-  if (!summary || !isVisible) return null;
+  const processText = useTextProcessor(fontFamily);
+
+  if (!summary || !visible) return null;
 
   const processedText = processText(summary);
 
@@ -196,11 +194,13 @@ const ProfessionalSummarySection = memo(function ProfessionalSummarySection({
 const SkillsSection = memo(function SkillsSection({
   skills,
   styles,
+  visible = true,
 }: {
   skills: Resume["skills"];
   styles: ReturnType<typeof createResumeStyles>;
+  visible?: boolean;
 }) {
-  if (!skills?.length) return null;
+  if (!skills?.length || !visible) return null;
 
   return (
     <View style={styles.skillsSection}>
@@ -253,12 +253,16 @@ function groupConsecutiveExperiencesByCompany(
 const ExperienceSection = memo(function ExperienceSection({
   experiences,
   styles,
+  visible = true,
+  fontFamily = "Helvetica",
 }: {
   experiences: Resume["work_experience"];
   styles: ReturnType<typeof createResumeStyles>;
+  visible?: boolean;
+  fontFamily?: string;
 }) {
-  const processText = useTextProcessor();
-  if (!experiences?.length) return null;
+  const processText = useTextProcessor(fontFamily);
+  if (!experiences?.length || !visible) return null;
   const groupedExperiences = groupConsecutiveExperiencesByCompany(experiences);
 
   return (
@@ -307,12 +311,16 @@ const ExperienceSection = memo(function ExperienceSection({
 const ProjectsSection = memo(function ProjectsSection({
   projects,
   styles,
+  visible = true,
+  fontFamily = "Helvetica",
 }: {
   projects: Resume["projects"];
   styles: ReturnType<typeof createResumeStyles>;
+  visible?: boolean;
+  fontFamily?: string;
 }) {
-  const processText = useTextProcessor();
-  if (!projects?.length) return null;
+  const processText = useTextProcessor(fontFamily);
+  if (!projects?.length || !visible) return null;
 
   return (
     <View style={styles.projectsSection}>
@@ -385,12 +393,16 @@ const ProjectsSection = memo(function ProjectsSection({
 const EducationSection = memo(function EducationSection({
   education,
   styles,
+  visible = true,
+  fontFamily = "Helvetica",
 }: {
   education: Resume["education"];
   styles: ReturnType<typeof createResumeStyles>;
+  visible?: boolean;
+  fontFamily?: string;
 }) {
-  const processText = useTextProcessor();
-  if (!education?.length) return null;
+  const processText = useTextProcessor(fontFamily);
+  if (!education?.length || !visible) return null;
 
   return (
     <View style={styles.educationSection}>
@@ -433,12 +445,16 @@ const EducationSection = memo(function EducationSection({
 const CertificationsSection = memo(function CertificationsSection({
   certifications,
   styles,
+  visible = true,
+  fontFamily = "Helvetica",
 }: {
   certifications: Resume["certifications"];
   styles: ReturnType<typeof createResumeStyles>;
+  visible?: boolean;
+  fontFamily?: string;
 }) {
-  const processText = useTextProcessor();
-  if (!certifications?.length) return null;
+  const processText = useTextProcessor(fontFamily);
+  if (!certifications?.length || !visible) return null;
 
   return (
     <View style={styles.certificationsSection}>
@@ -498,7 +514,8 @@ function createResumeStyles(
     certifications_margin_bottom: 2,
     certifications_margin_horizontal: 0,
     certifications_item_spacing: 4,
-  }
+  },
+  fontFamily: string = "Helvetica"
 ) {
   const {
     document_font_size = 10,
@@ -537,7 +554,7 @@ function createResumeStyles(
       paddingBottom: document_margin_vertical + 28,
       paddingLeft: document_margin_horizontal,
       paddingRight: document_margin_horizontal,
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
       color: "#111827",
       fontSize: document_font_size,
       lineHeight: document_line_height,
@@ -549,7 +566,7 @@ function createResumeStyles(
     },
     name: {
       fontSize: header_name_size,
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
       fontWeight: "bold",
       marginBottom: header_name_bottom_spacing,
       color: "#111827",
@@ -565,7 +582,7 @@ function createResumeStyles(
     },
     sectionTitle: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
       fontWeight: "bold",
       marginBottom: 4,
       color: "#111827",
@@ -607,7 +624,7 @@ function createResumeStyles(
     },
     skillCategoryTitle: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
       fontWeight: "bold",
       color: "#111827",
       marginRight: 4,
@@ -641,7 +658,7 @@ function createResumeStyles(
     },
     companyName: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
       fontWeight: "bold",
       color: "#111827",
     },
@@ -706,14 +723,14 @@ function createResumeStyles(
     },
     projectTitle: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
       fontWeight: "bold",
       color: "#111827",
     },
     projectTechnologies: {
       fontSize: document_font_size,
       color: "#374151",
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
       fontWeight: "bold",
       marginBottom: 0,
     },
@@ -747,7 +764,7 @@ function createResumeStyles(
     },
     schoolName: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
       fontWeight: "bold",
       color: "#111827",
     },
@@ -765,7 +782,7 @@ function createResumeStyles(
     gpa: {
       fontSize: document_font_size,
       color: "#374151",
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
     },
     // Certifications section
     certificationsSection: {
@@ -788,7 +805,7 @@ function createResumeStyles(
     },
     certificationName: {
       fontSize: document_font_size,
-      fontFamily: "Helvetica",
+      fontFamily: fontFamily,
       fontWeight: "bold",
       color: "#111827",
     },
@@ -804,14 +821,15 @@ function createResumeStyles(
   });
 }
 
-// Template-specific style overrides
-function getTemplateStyles(template: string) {
+// Template-specific style overrides — only visual properties (colors, borders, backgrounds,
+// alignment). Font sizes are intentionally omitted so document_settings always win.
+function getTemplateStyles(template: string, accentColor?: string) {
+  let styles: Record<string, Record<string, unknown>>;
+
   switch (template) {
     case "modern":
-      return {
-        page: {
-          backgroundColor: "#ffffff",
-        },
+      styles = {
+        page: { backgroundColor: "#ffffff" },
         header: {
           backgroundColor: "#f0f9ff",
           padding: 20,
@@ -820,41 +838,25 @@ function getTemplateStyles(template: string) {
           marginBottom: 28,
           borderRadius: 4,
         },
-        name: {
-          color: "#1e3a8a",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
-          fontSize: 28,
-        },
-        contactInfo: {
-          color: "#64748b",
-          fontSize: 9,
-        },
+        name: { color: "#1e3a8a", fontWeight: "bold" },
+        contactInfo: { color: "#64748b" },
         sectionTitle: {
           color: "#6366f1",
-          fontSize: 14,
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.5,
           borderBottomWidth: 0,
           marginBottom: 10,
           marginTop: 6,
         },
-        link: {
-          color: "#6366f1",
-          textDecoration: "none",
-        },
-        bulletSeparator: {
-          color: "#6366f1",
-        },
+        link: { color: "#6366f1", textDecoration: "none" },
+        bulletSeparator: { color: "#6366f1" },
       };
-    
+      break;
+
     case "minimal":
-      return {
-        page: {
-          backgroundColor: "#ffffff",
-        },
+      styles = {
+        page: { backgroundColor: "#ffffff" },
         header: {
           alignItems: "center" as const,
           marginBottom: 36,
@@ -864,41 +866,29 @@ function getTemplateStyles(template: string) {
         name: {
           letterSpacing: -0.5,
           color: "#0f172a",
-          fontFamily: "Helvetica",
-          fontSize: 26,
           textAlign: "center" as const,
         },
         contactInfo: {
           justifyContent: "center" as const,
           color: "#64748b",
-          fontSize: 9,
         },
         sectionTitle: {
           color: "#334155",
-          fontSize: 10,
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 3,
           borderBottomWidth: 0,
           marginBottom: 10,
           marginTop: 8,
         },
-        bulletSeparator: {
-          color: "#cbd5e1",
-          marginHorizontal: 8,
-        },
-        link: {
-          color: "#0f172a",
-          textDecoration: "none",
-        },
+        bulletSeparator: { color: "#cbd5e1", marginHorizontal: 8 },
+        link: { color: "#0f172a", textDecoration: "none" },
       };
-    
+      break;
+
     case "professional":
-      return {
-        page: {
-          backgroundColor: "#fafafa",
-        },
+      styles = {
+        page: { backgroundColor: "#fafafa" },
         header: {
           backgroundColor: "#dbeafe",
           padding: 16,
@@ -906,21 +896,11 @@ function getTemplateStyles(template: string) {
           borderBottomColor: "#1e40af",
           marginBottom: 24,
         },
-        name: {
-          color: "#1e3a8a",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
-          fontSize: 26,
-        },
-        contactInfo: {
-          color: "#475569",
-          fontSize: 9,
-        },
+        name: { color: "#1e3a8a", fontWeight: "bold" },
+        contactInfo: { color: "#475569" },
         sectionTitle: {
           color: "#1e40af",
-          fontSize: 13,
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1,
           borderBottomWidth: 3,
@@ -929,20 +909,14 @@ function getTemplateStyles(template: string) {
           marginBottom: 10,
           marginTop: 6,
         },
-        link: {
-          color: "#2563eb",
-          textDecoration: "none",
-        },
-        bulletSeparator: {
-          color: "#2563eb",
-        },
+        link: { color: "#2563eb", textDecoration: "none" },
+        bulletSeparator: { color: "#2563eb" },
       };
-    
+      break;
+
     case "creative":
-      return {
-        page: {
-          backgroundColor: "#fffbf5",
-        },
+      styles = {
+        page: { backgroundColor: "#fffbf5" },
         header: {
           backgroundColor: "#fef2f2",
           padding: 20,
@@ -952,21 +926,11 @@ function getTemplateStyles(template: string) {
           borderBottomColor: "#e11d48",
           marginBottom: 24,
         },
-        name: {
-          color: "#9f1239",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
-          fontSize: 28,
-        },
-        contactInfo: {
-          color: "#881337",
-          fontSize: 9,
-        },
+        name: { color: "#9f1239", fontWeight: "bold" },
+        contactInfo: { color: "#881337" },
         sectionTitle: {
           color: "#e11d48",
-          fontSize: 14,
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.5,
           borderBottomWidth: 3,
@@ -975,21 +939,17 @@ function getTemplateStyles(template: string) {
           marginBottom: 10,
           marginTop: 6,
         },
-        link: {
-          color: "#e11d48",
-          textDecoration: "none",
-        },
-        bulletSeparator: {
-          color: "#e11d48",
-        },
+        link: { color: "#e11d48", textDecoration: "none" },
+        bulletSeparator: { color: "#e11d48" },
       };
-    
+      break;
+
     case "executive":
-      return {
-        page: {
-          backgroundColor: "#fffbeb",
-        },
+      // Left-aligned for a polished executive feel
+      styles = {
+        page: { backgroundColor: "#fffbeb" },
         header: {
+          alignItems: "flex-start" as const,
           backgroundColor: "#fef3c7",
           padding: 18,
           borderLeftWidth: 5,
@@ -999,19 +959,16 @@ function getTemplateStyles(template: string) {
         },
         name: {
           color: "#92400e",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
-          fontSize: 30,
+          fontWeight: "bold",
+          textAlign: "left" as const,
         },
         contactInfo: {
           color: "#78350f",
-          fontSize: 9,
+          justifyContent: "flex-start" as const,
         },
         sectionTitle: {
           color: "#d97706",
-          fontSize: 13,
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.2,
           borderBottomWidth: 2,
@@ -1020,20 +977,14 @@ function getTemplateStyles(template: string) {
           marginBottom: 10,
           marginTop: 6,
         },
-        link: {
-          color: "#d97706",
-          textDecoration: "none",
-        },
-        bulletSeparator: {
-          color: "#d97706",
-        },
+        link: { color: "#d97706", textDecoration: "none" },
+        bulletSeparator: { color: "#d97706" },
       };
-    
+      break;
+
     case "tech":
-      return {
-        page: {
-          backgroundColor: "#ffffff",
-        },
+      styles = {
+        page: { backgroundColor: "#ffffff" },
         header: {
           backgroundColor: "#d1fae5",
           padding: 20,
@@ -1042,21 +993,11 @@ function getTemplateStyles(template: string) {
           marginBottom: 24,
           borderRadius: 6,
         },
-        name: {
-          color: "#065f46",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
-          fontSize: 28,
-        },
-        contactInfo: {
-          color: "#047857",
-          fontSize: 9,
-        },
+        name: { color: "#065f46", fontWeight: "bold" },
+        contactInfo: { color: "#047857" },
         sectionTitle: {
           color: "#10b981",
-          fontSize: 13,
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.5,
           borderBottomWidth: 2,
@@ -1065,20 +1006,14 @@ function getTemplateStyles(template: string) {
           marginBottom: 10,
           marginTop: 6,
         },
-        link: {
-          color: "#059669",
-          textDecoration: "none",
-        },
-        bulletSeparator: {
-          color: "#10b981",
-        },
+        link: { color: "#059669", textDecoration: "none" },
+        bulletSeparator: { color: "#10b981" },
       };
-    
+      break;
+
     case "academic":
-      return {
-        page: {
-          backgroundColor: "#faf5ff",
-        },
+      styles = {
+        page: { backgroundColor: "#faf5ff" },
         header: {
           backgroundColor: "#f3e8ff",
           padding: 18,
@@ -1086,21 +1021,11 @@ function getTemplateStyles(template: string) {
           borderBottomColor: "#7c3aed",
           marginBottom: 28,
         },
-        name: {
-          color: "#5b21b6",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
-          fontSize: 27,
-        },
-        contactInfo: {
-          color: "#6b21a8",
-          fontSize: 9,
-        },
+        name: { color: "#5b21b6", fontWeight: "bold" },
+        contactInfo: { color: "#6b21a8" },
         sectionTitle: {
           color: "#7c3aed",
-          fontSize: 12,
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.8,
           borderBottomWidth: 2.5,
@@ -1109,133 +1034,90 @@ function getTemplateStyles(template: string) {
           marginBottom: 10,
           marginTop: 6,
         },
-        link: {
-          color: "#7c3aed",
-          textDecoration: "none",
-        },
-        bulletSeparator: {
-          color: "#7c3aed",
-        },
+        link: { color: "#7c3aed", textDecoration: "none" },
+        bulletSeparator: { color: "#7c3aed" },
       };
-    
+      break;
+
     case "bold":
-      return {
-        page: {
-          backgroundColor: "#fff1f2",
-        },
+      // Dark navy header, left-aligned — visually distinct from all other templates
+      styles = {
+        page: { backgroundColor: "#ffffff" },
         header: {
-          backgroundColor: "#fee2e2",
+          alignItems: "flex-start" as const,
+          backgroundColor: "#0f172a",
           padding: 22,
-          borderWidth: 3,
-          borderColor: "#dc2626",
           marginBottom: 26,
-          borderRadius: 4,
         },
         name: {
-          color: "#991b1b",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
-          fontSize: 32,
+          color: "#f8fafc",
+          fontWeight: "bold",
+          textAlign: "left" as const,
         },
         contactInfo: {
-          color: "#b91c1c",
-          fontSize: 9.5,
+          color: "#94a3b8",
+          justifyContent: "flex-start" as const,
         },
         sectionTitle: {
-          color: "#dc2626",
-          fontSize: 15,
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          color: "#0f172a",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 2,
-          borderBottomWidth: 4,
-          borderBottomColor: "#f87171",
-          paddingBottom: 5,
-          marginBottom: 12,
+          borderBottomWidth: 3,
+          borderBottomColor: "#0f172a",
+          paddingBottom: 4,
+          marginBottom: 10,
           marginTop: 8,
         },
-        link: {
-          color: "#dc2626",
-          textDecoration: "none",
-        },
-        bulletSeparator: {
-          color: "#dc2626",
-        },
+        link: { color: "#1e40af", textDecoration: "none" },
+        bulletSeparator: { color: "#0f172a" },
       };
-    
+      break;
+
     case "elegant":
-      return {
-        page: {
-          backgroundColor: "#fff1f2",
-        },
+      // Warm gold/champagne — distinct from creative (pink) and bold (navy)
+      styles = {
+        page: { backgroundColor: "#fffdf7" },
         header: {
-          backgroundColor: "#fce7f3",
+          backgroundColor: "#fef9e7",
           padding: 20,
-          borderWidth: 1,
-          borderColor: "#e11d48",
+          borderBottomWidth: 2,
+          borderBottomColor: "#b45309",
           marginBottom: 28,
-          borderRadius: 8,
         },
-        name: {
-          color: "#9f1239",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
-          fontSize: 29,
-          letterSpacing: 0.5,
-        },
-        contactInfo: {
-          color: "#881337",
-          fontSize: 9,
-        },
+        name: { color: "#78350f", fontWeight: "bold", letterSpacing: 0.5 },
+        contactInfo: { color: "#92400e" },
         sectionTitle: {
-          color: "#e11d48",
-          fontSize: 13,
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          color: "#b45309",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 1.5,
-          borderBottomWidth: 1.5,
-          borderBottomColor: "#f9a8d4",
+          borderBottomWidth: 1,
+          borderBottomColor: "#fde68a",
           paddingBottom: 4,
           marginBottom: 10,
           marginTop: 6,
         },
-        link: {
-          color: "#e11d48",
-          textDecoration: "none",
-        },
-        bulletSeparator: {
-          color: "#e11d48",
-        },
+        link: { color: "#b45309", textDecoration: "none" },
+        bulletSeparator: { color: "#b45309" },
       };
-    
+      break;
+
     case "classic":
     default:
-      return {
-        page: {
-          backgroundColor: "#ffffff",
-        },
+      styles = {
+        page: { backgroundColor: "#ffffff" },
         header: {
           borderBottomWidth: 2.5,
           borderBottomColor: "#1f2937",
           paddingBottom: 10,
           marginBottom: 20,
         },
-        name: {
-          color: "#111827",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
-          fontSize: 24,
-        },
-        contactInfo: {
-          color: "#4b5563",
-          fontSize: 9,
-        },
+        name: { color: "#111827", fontWeight: "bold" },
+        contactInfo: { color: "#4b5563" },
         sectionTitle: {
-          fontSize: 12,
           color: "#1f2937",
-          fontFamily: "Helvetica",
-      fontWeight: "bold",
+          fontWeight: "bold",
           textTransform: "uppercase" as const,
           letterSpacing: 0.8,
           borderBottomWidth: 1.5,
@@ -1244,15 +1126,19 @@ function getTemplateStyles(template: string) {
           marginBottom: 8,
           marginTop: 4,
         },
-        link: {
-          color: "#374151",
-          textDecoration: "none",
-        },
-        bulletSeparator: {
-          color: "#6b7280",
-        },
+        link: { color: "#374151", textDecoration: "none" },
+        bulletSeparator: { color: "#6b7280" },
       };
   }
+
+  // Apply custom accent color over template defaults (affects accent elements)
+  if (accentColor) {
+    if (styles.sectionTitle) styles.sectionTitle = { ...styles.sectionTitle, color: accentColor };
+    if (styles.link) styles.link = { color: accentColor, textDecoration: "none" };
+    if (styles.bulletSeparator) styles.bulletSeparator = { ...styles.bulletSeparator, color: accentColor };
+  }
+
+  return styles;
 }
 
 interface ResumePDFDocumentProps {
@@ -1260,67 +1146,133 @@ interface ResumePDFDocumentProps {
   variant?: "base" | "tailored";
 }
 
+// Key names must match the database default for section_order
+const DEFAULT_SECTION_ORDER = [
+  "professional_summary",
+  "skills",
+  "work_experience",
+  "projects",
+  "education",
+  "certifications",
+];
+
 export const ResumePDFDocument = memo(
   function ResumePDFDocument({ resume }: ResumePDFDocumentProps) {
-    // Get the template or default to classic
     const template = resume.template || "classic";
+    const fontFamily =
+      resume.document_settings?.font_family === "times-roman"
+        ? "Times-Roman"
+        : "Helvetica";
+    const accentColor = resume.document_settings?.accent_color;
 
-    // Create template-specific styles
+    // Base styles from document_settings win over template for sizes
     const styles = useMemo(() => {
-      const baseStyles = createResumeStyles(resume.document_settings);
-      const templateOverrides = getTemplateStyles(template);
-      
-      // Deep merge template overrides with base styles
-      const mergedStyles = { ...baseStyles } as any;
-      
-      (Object.keys(templateOverrides) as Array<keyof typeof templateOverrides>).forEach((key) => {
-        if (mergedStyles[key]) {
-          // Merge the style object for this key
-          mergedStyles[key] = {
-            ...mergedStyles[key],
-            ...templateOverrides[key],
-          };
-        } else {
-          mergedStyles[key] = templateOverrides[key];
-        }
-      });
-      
-      return mergedStyles;
-    }, [resume.document_settings, template]);
+      const base = createResumeStyles(resume.document_settings, fontFamily);
+      const overrides = getTemplateStyles(template, accentColor);
 
-    // Content sections (same for all templates)
-    const contentSections = (
-      <>
-        <ProfessionalSummarySection
-          summary={resume.professional_summary}
-          styles={styles}
-          sectionConfigs={resume.section_configs}
-        />
-        <SkillsSection skills={resume.skills} styles={styles} />
-        <ExperienceSection
-          experiences={resume.work_experience}
-          styles={styles}
-        />
-        <ProjectsSection projects={resume.projects} styles={styles} />
-        <EducationSection education={resume.education} styles={styles} />
-        <CertificationsSection certifications={resume.certifications} styles={styles} />
-      </>
-    );
+      const merged = { ...base } as any;
+      Object.keys(overrides).forEach((key) => {
+        merged[key] = merged[key]
+          ? { ...merged[key], ...overrides[key] }
+          : overrides[key];
+      });
+
+      // Re-apply document_settings sizes that templates must not override
+      if (resume.document_settings?.header_name_size != null) {
+        merged.name = {
+          ...merged.name,
+          fontSize: resume.document_settings.header_name_size,
+        };
+      }
+
+      return merged;
+    }, [resume.document_settings, template, fontFamily, accentColor]);
+
+    // Section visibility: only hide if explicitly set to false in section_configs
+    const sectionConfigs = resume.section_configs ?? {};
+    const isVisible = (key: string) => sectionConfigs[key]?.visible !== false;
+
+    // Use saved order or fall back to default
+    const order = resume.section_order?.length
+      ? resume.section_order
+      : DEFAULT_SECTION_ORDER;
+
+    const renderSection = (key: string) => {
+      switch (key) {
+        case "professional_summary":
+          return (
+            <ProfessionalSummarySection
+              key="professional_summary"
+              summary={resume.professional_summary}
+              styles={styles}
+              visible={isVisible("professional_summary")}
+              fontFamily={fontFamily}
+            />
+          );
+        case "skills":
+          return (
+            <SkillsSection
+              key="skills"
+              skills={resume.skills}
+              styles={styles}
+              visible={isVisible("skills")}
+            />
+          );
+        case "work_experience":
+          return (
+            <ExperienceSection
+              key="work_experience"
+              experiences={resume.work_experience}
+              styles={styles}
+              visible={isVisible("work_experience")}
+              fontFamily={fontFamily}
+            />
+          );
+        case "projects":
+          return (
+            <ProjectsSection
+              key="projects"
+              projects={resume.projects}
+              styles={styles}
+              visible={isVisible("projects")}
+              fontFamily={fontFamily}
+            />
+          );
+        case "education":
+          return (
+            <EducationSection
+              key="education"
+              education={resume.education}
+              styles={styles}
+              visible={isVisible("education")}
+              fontFamily={fontFamily}
+            />
+          );
+        case "certifications":
+          return (
+            <CertificationsSection
+              key="certifications"
+              certifications={resume.certifications}
+              styles={styles}
+              visible={isVisible("certifications")}
+              fontFamily={fontFamily}
+            />
+          );
+        default:
+          return null;
+      }
+    };
 
     return (
       <PDFDocument>
         <PDFPage size="LETTER" style={styles.page}>
           <HeaderSection resume={resume} styles={styles} />
-          {contentSections}
+          {order.map(renderSection)}
         </PDFPage>
       </PDFDocument>
     );
   },
-  (prevProps, nextProps) => {
-    // Custom comparison function
-    return (
-      prevProps.resume === nextProps.resume &&
-      prevProps.variant === nextProps.variant
-    );
-  }
+  (prevProps, nextProps) =>
+    prevProps.resume === nextProps.resume &&
+    prevProps.variant === nextProps.variant
 );

@@ -9,6 +9,8 @@ import type {
   Project,
   Certification,
   DocumentSettings,
+  Resume,
+  ResumeTemplate,
 } from "@/lib/types";
 
 interface WorkExperienceFormProps {
@@ -103,8 +105,13 @@ export const DocumentSettingsForm = dynamic(
       default: mod.DocumentSettingsForm,
     })) as Promise<
       ComponentType<{
+        resume?: Resume;
         documentSettings: DocumentSettings;
-        onChange: (field: "document_settings", value: DocumentSettings) => void;
+        onChange: (
+          field: "document_settings" | "template" | "section_order" | "section_configs",
+          value: DocumentSettings | ResumeTemplate | string[] | Record<string, { visible: boolean }>
+        ) => void;
+        onTemplateChange?: (template: ResumeTemplate) => void;
       }>
     >,
   {

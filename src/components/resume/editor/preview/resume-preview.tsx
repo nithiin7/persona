@@ -51,6 +51,7 @@ function generateResumeHash(resume: Resume): string {
         resume.github_url,
       ],
     },
+    summary: resume.professional_summary,
     sections: {
       skills: resume.skills,
       experience: resume.work_experience,
@@ -58,6 +59,8 @@ function generateResumeHash(resume: Resume): string {
       education: resume.education,
       certifications: resume.certifications,
     },
+    section_order: resume.section_order,
+    section_configs: resume.section_configs,
     settings: resume.document_settings,
     template: resume.template || "classic",
   });
