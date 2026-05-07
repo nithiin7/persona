@@ -8,7 +8,6 @@ import {
   ensureAdmin,
 } from "../actions"; // Import getResumesForUser and ensureAdmin
 import UserResumeList from "../components/user-resume-list"; // Import the new component
-import EditSubscriptionPlanForm from "../components/edit-subscription-plan-form"; // Import the new component
 import {
   Card,
   CardContent,
@@ -241,35 +240,18 @@ export default async function AdminUserDetailPage({
                   {/* Add other relevant subscription fields */}
                 </div>
 
-                <Separator className="my-4" />
-
-                <div>
-                  <h3 className="text-md font-semibold mb-2">
-                    Change Subscription Plan
-                  </h3>
-                  <EditSubscriptionPlanForm
-                    userId={targetUserId}
-                    currentPlan={subscription.subscription_plan}
-                  />
-                </div>
               </>
             ) : (
               <>
-                <p className="text-muted-foreground italic mb-4">
+                <p className="text-muted-foreground italic">
                   No subscription data found for this user.
                 </p>
-
-                <div>
-                  <h3 className="text-md font-semibold mb-2">
-                    Create Subscription
-                  </h3>
-                  <EditSubscriptionPlanForm
-                    userId={targetUserId}
-                    currentPlan={null}
-                  />
-                </div>
               </>
             )}
+            <Separator className="my-4" />
+            <p className="text-sm text-muted-foreground">
+              Subscriptions are not in use — all users have full pro access.
+            </p>
           </CardContent>
         </Card>
 
