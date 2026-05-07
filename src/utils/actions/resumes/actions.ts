@@ -131,14 +131,22 @@ export async function deleteResume(resumeId: string): Promise<void> {
     }
 
     if (!resume.is_base_resume && resume.job_id) {
-      const { error: jobDeleteError } = await supabase
-        .from("jobs")
-        .delete()
-        .eq("id", resume.job_id)
-        .eq("user_id", user.id);
+      const { count } = await supabase
+        .from("resumes")
+        .select("id", { count: "exact", head: true })
+        .eq("job_id", resume.job_id)
+        .neq("id", resumeId);
 
-      if (jobDeleteError) {
-        console.error("Failed to delete associated job:", jobDeleteError);
+      if (count === 0) {
+        const { error: jobDeleteError } = await supabase
+          .from("jobs")
+          .delete()
+          .eq("id", resume.job_id)
+          .eq("user_id", user.id);
+
+        if (jobDeleteError) {
+          console.error("Failed to delete associated job:", jobDeleteError);
+        }
       }
     }
 
