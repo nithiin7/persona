@@ -232,12 +232,6 @@ export default async function AdminUserDetailPage({
                     label="Current Period End"
                     value={formatDate(subscription.current_period_end)}
                   />
-                  <DetailItem
-                    label="Stripe Customer ID"
-                    value={subscription.stripe_customer_id}
-                    isCode
-                  />
-                  {/* Add other relevant subscription fields */}
                 </div>
 
               </>

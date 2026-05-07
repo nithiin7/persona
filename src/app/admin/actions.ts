@@ -155,8 +155,6 @@ interface Profile {
 
 interface Subscription {
   user_id: string;
-  stripe_customer_id?: string;
-  stripe_subscription_id?: string;
   subscription_plan?: string;
   subscription_status?: string;
   current_period_end?: string;

@@ -188,8 +188,6 @@ export interface Profile {
 
 export interface Subscription {
   user_id: string;
-  stripe_customer_id: string | null;
-  stripe_subscription_id: string | null;
   subscription_plan: "free" | "pro";
   subscription_status: "active" | "canceled";
   current_period_end: string | null;
