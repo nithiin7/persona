@@ -9,6 +9,8 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "knip": "knip",
+    "changelog": "changelogen --output CHANGELOG.md",
     "prepare": "husky"
   },
   "dependencies": {
@@ -102,6 +104,8 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.5.3",
+    "@commitlint/config-conventional": "^20.5.3",
     "@eslint/eslintrc": "^3",
     "@next/mdx": "^15.3.3",
     "@shadcn/ui": "^0.0.4",
@@ -112,11 +116,13 @@
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "autoprefixer": "^10.4.20",
+    "changelogen": "^0.6.2",
     "eslint": "^9.17.0",
     "eslint-config-next": "15.1.2",
     "eslint-config-prettier": "^10.1.8",
     "gray-matter": "^4.0.3",
     "husky": "^9.1.7",
+    "knip": "^6.12.0",
     "next-mdx-remote": "^5.0.0",
     "postcss": "^8.4.49",
     "prettier": "^3.6.2",
