@@ -1,4 +1,5 @@
 import { type NextRequest } from "next/server";
+import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
   // Handle OTP flow (token_hash and type) - older Supabase auth flow
   if (token_hash && type) {
     const { error } = await supabase.auth.verifyOtp({
-      type: type as any,
+      type: type as EmailOtpType,
       token_hash,
     });
     if (!error) {

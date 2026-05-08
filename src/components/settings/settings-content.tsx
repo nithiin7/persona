@@ -44,7 +44,6 @@ interface SettingsContentProps {
 export function SettingsContent({
   user,
   isProPlan,
-  subscriptionStatus,
 }: SettingsContentProps) {
   const [activeSection, setActiveSection] = useState<string>("security");
 

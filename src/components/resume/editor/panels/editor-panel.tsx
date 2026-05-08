@@ -1,6 +1,6 @@
 "use client";
 
-import { Resume, Profile, Job, DocumentSettings } from "@/lib/types";
+import { Resume, Profile, Job } from "@/lib/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Accordion } from "@/components/ui/accordion";
 import { Tabs, TabsContent } from "@/components/ui/tabs";

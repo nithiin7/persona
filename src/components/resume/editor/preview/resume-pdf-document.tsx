@@ -1170,12 +1170,13 @@ export const ResumePDFDocument = memo(
       const base = createResumeStyles(resume.document_settings, fontFamily);
       const overrides = getTemplateStyles(template, accentColor);
 
-      const merged = { ...base } as any;
+      const mergeMap = { ...base } as unknown as Record<string, Record<string, unknown>>;
       Object.keys(overrides).forEach((key) => {
-        merged[key] = merged[key]
-          ? { ...merged[key], ...overrides[key] }
+        mergeMap[key] = mergeMap[key]
+          ? { ...mergeMap[key], ...overrides[key] }
           : overrides[key];
       });
+      const merged = mergeMap as unknown as ReturnType<typeof createResumeStyles>;
 
       // Re-apply document_settings sizes that templates must not override
       if (resume.document_settings?.header_name_size != null) {

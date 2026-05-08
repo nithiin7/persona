@@ -11,7 +11,6 @@ import {
 import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 
 interface ErrorDialogProps {
   isOpen: boolean;
@@ -19,7 +18,6 @@ interface ErrorDialogProps {
 
 export function ErrorDialog({ isOpen: initialIsOpen }: ErrorDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     setIsOpen(initialIsOpen);
