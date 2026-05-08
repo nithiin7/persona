@@ -1,0 +1,47 @@
+# docker/docker-compose.ollama.yml
+#
+# Overlay that adds an Ollama sidecar for fully local AI — no API keys needed.
+#
+# Usage (CPU only):
+#   docker compose -f docker/docker-compose.yml -f docker/docker-compose.ollama.yml up --build
+#
+# Usage (GPU — NVIDIA):
+#   docker compose -f docker/docker-compose.yml -f docker/docker-compose.ollama.yml \
+#     --profile gpu up --build
+#
+# After the stack starts:
+#   1. Pull a model:  docker exec persona-ollama ollama pull llama3.2
+#   2. In Persona:    Settings → API Keys → Ollama (Local AI) → Connect
+#      URL:           http://ollama:11434
+
+services:
+  app:
+    environment:
+      # Point the app at the Ollama container (reachable via Docker's internal DNS)
+      OLLAMA_BASE_URL: http://ollama:11434
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: persona-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"      # also expose on host so you can run `ollama` CLI commands
+    volumes:
+      - ollama-data:/root/.ollama   # persist downloaded models across restarts
+
+    # ---- GPU support (NVIDIA) ----
+    # Uncomment the block below and run with --profile gpu
+    # profiles:
+    #   - gpu
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+volumes:
+  ollama-data:

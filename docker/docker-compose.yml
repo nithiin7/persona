@@ -1,0 +1,48 @@
+# docker/docker-compose.yml
+#
+# Runs Persona locally in Docker.
+#
+# Usage (from repo root):
+#   docker compose -f docker/docker-compose.yml up --build
+#
+# The app will be available at http://localhost:3000
+#
+# Supabase is NOT included here — use either:
+#   - A hosted Supabase project (https://supabase.com — free tier works)
+#   - Local Supabase via the CLI: `supabase start` (then point NEXT_PUBLIC_SUPABASE_URL
+#     at http://host.docker.internal:54321)
+#
+# To include Ollama for local AI, use docker-compose.ollama.yml:
+#   docker compose -f docker/docker-compose.yml -f docker/docker-compose.ollama.yml up --build
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      # NEXT_PUBLIC_* vars must be provided at build time — they get baked
+      # into the client bundle by Next.js.
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+    image: persona:latest
+    container_name: persona-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Server-only secrets — passed at runtime, never baked into the image
+      NODE_ENV: production
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      UPSTASH_REDIS_REST_URL: ${UPSTASH_REDIS_REST_URL:-}
+      UPSTASH_REDIS_REST_TOKEN: ${UPSTASH_REDIS_REST_TOKEN:-}
+      # Keep NEXT_PUBLIC_ vars here too so they're available server-side at runtime
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+    env_file:
+      - ../.env

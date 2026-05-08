@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
   pageExtensions: ["ts", "tsx", "mdx"],
   productionBrowserSourceMaps: false,
   reactStrictMode: false,
+  // Standalone output bundles the server into a self-contained directory,
+  // which is required for the Docker image to work correctly.
+  output: "standalone",
 };
 
 export default withMDX(nextConfig);
