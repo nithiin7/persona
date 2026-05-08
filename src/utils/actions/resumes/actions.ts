@@ -426,12 +426,14 @@ export async function copyResume(resumeId: string): Promise<Resume> {
   }
 
   // Exclude auto-generated fields that shouldn't be copied
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
     id: _id,
     created_at: _created_at,
     updated_at: _updated_at,
     ...resumeDataToCopy
-  } = sourceResume; // eslint-disable-line @typescript-eslint/no-unused-vars
+  } = sourceResume;
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   const newResume = {
     ...resumeDataToCopy,
