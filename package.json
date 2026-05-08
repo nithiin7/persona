@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.6",
@@ -115,6 +116,7 @@
     "eslint-config-next": "15.1.2",
     "eslint-config-prettier": "^10.1.8",
     "gray-matter": "^4.0.3",
+    "husky": "^9.1.7",
     "next-mdx-remote": "^5.0.0",
     "postcss": "^8.4.49",
     "prettier": "^3.6.2",
