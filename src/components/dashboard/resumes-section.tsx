@@ -77,12 +77,36 @@ const STATUS_CONFIG: Record<
   ApplicationStatus,
   { label: string; color: string; dot: string }
 > = {
-  saved:        { label: "Saved",        color: "bg-gray-100 text-gray-600 border-gray-200",   dot: "bg-gray-400"   },
-  applied:      { label: "Applied",      color: "bg-blue-50 text-blue-700 border-blue-200",    dot: "bg-blue-500"   },
-  phone_screen: { label: "Phone Screen", color: "bg-amber-50 text-amber-700 border-amber-200", dot: "bg-amber-500"  },
-  onsite:       { label: "Onsite",       color: "bg-purple-50 text-purple-700 border-purple-200", dot: "bg-purple-500" },
-  offer:        { label: "Offer",        color: "bg-green-50 text-green-700 border-green-200", dot: "bg-green-500"  },
-  rejected:     { label: "Rejected",     color: "bg-red-50 text-red-600 border-red-200",       dot: "bg-red-400"    },
+  saved: {
+    label: "Saved",
+    color: "bg-gray-100 text-gray-600 border-gray-200",
+    dot: "bg-gray-400",
+  },
+  applied: {
+    label: "Applied",
+    color: "bg-blue-50 text-blue-700 border-blue-200",
+    dot: "bg-blue-500",
+  },
+  phone_screen: {
+    label: "Phone Screen",
+    color: "bg-amber-50 text-amber-700 border-amber-200",
+    dot: "bg-amber-500",
+  },
+  onsite: {
+    label: "Onsite",
+    color: "bg-purple-50 text-purple-700 border-purple-200",
+    dot: "bg-purple-500",
+  },
+  offer: {
+    label: "Offer",
+    color: "bg-green-50 text-green-700 border-green-200",
+    dot: "bg-green-500",
+  },
+  rejected: {
+    label: "Rejected",
+    color: "bg-red-50 text-red-600 border-red-200",
+    dot: "bg-red-400",
+  },
 };
 
 function StatusBadge({ resume }: { resume: OptimisticResume }) {
@@ -93,7 +117,10 @@ function StatusBadge({ resume }: { resume: OptimisticResume }) {
   const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.saved;
 
   const handleSelect = async (next: ApplicationStatus) => {
-    if (!resume.job_id || next === status) { setOpen(false); return; }
+    if (!resume.job_id || next === status) {
+      setOpen(false);
+      return;
+    }
     setUpdating(true);
     setOpen(false);
     try {
@@ -125,7 +152,12 @@ function StatusBadge({ resume }: { resume: OptimisticResume }) {
       </PopoverTrigger>
       <PopoverContent className="w-40 p-1" align="start" side="bottom">
         <div className="flex flex-col gap-0.5">
-          {(Object.entries(STATUS_CONFIG) as [ApplicationStatus, typeof STATUS_CONFIG[ApplicationStatus]][]).map(([key, val]) => (
+          {(
+            Object.entries(STATUS_CONFIG) as [
+              ApplicationStatus,
+              (typeof STATUS_CONFIG)[ApplicationStatus],
+            ][]
+          ).map(([key, val]) => (
             <button
               key={key}
               onClick={() => handleSelect(key)}
@@ -893,10 +925,7 @@ export function ResumesSection({
             <Button variant="outline" onClick={() => setRenamingResume(null)}>
               Cancel
             </Button>
-            <Button
-              onClick={handleRenameResume}
-              disabled={!renameValue.trim()}
-            >
+            <Button onClick={handleRenameResume} disabled={!renameValue.trim()}>
               Rename
             </Button>
           </DialogFooter>

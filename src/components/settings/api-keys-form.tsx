@@ -213,12 +213,18 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
 
     setOllamaModels(models);
     localStorage.setItem(OLLAMA_MODELS_KEY, JSON.stringify(models));
-    window.dispatchEvent(new CustomEvent("persona-ollama-updated", { detail: models }));
+    window.dispatchEvent(
+      new CustomEvent("persona-ollama-updated", { detail: models })
+    );
 
     if (models.length === 0) {
-      toast.info("Connected but no models found. Pull a model with: ollama pull llama3.2");
+      toast.info(
+        "Connected but no models found. Pull a model with: ollama pull llama3.2"
+      );
     } else {
-      toast.success(`Found ${models.length} Ollama model${models.length !== 1 ? "s" : ""}`);
+      toast.success(
+        `Found ${models.length} Ollama model${models.length !== 1 ? "s" : ""}`
+      );
     }
   };
 
@@ -226,7 +232,9 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
     setOllamaModels([]);
     setOllamaError(null);
     localStorage.removeItem(OLLAMA_MODELS_KEY);
-    window.dispatchEvent(new CustomEvent("persona-ollama-updated", { detail: [] }));
+    window.dispatchEvent(
+      new CustomEvent("persona-ollama-updated", { detail: [] })
+    );
     if (defaultModel.startsWith("ollama::")) {
       setDefaultModel(MODEL_DESIGNATIONS.DEFAULT_FREE);
       localStorage.setItem(MODEL_STORAGE_KEY, MODEL_DESIGNATIONS.DEFAULT_FREE);

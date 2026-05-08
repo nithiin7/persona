@@ -23,7 +23,9 @@ function parseMarkdown(text: string): TextRun[] {
 
 function sectionHeading(title: string): Paragraph {
   return new Paragraph({
-    children: [new TextRun({ text: title.toUpperCase(), bold: true, size: 22 })],
+    children: [
+      new TextRun({ text: title.toUpperCase(), bold: true, size: 22 }),
+    ],
     border: {
       bottom: { color: "000000", space: 1, style: BorderStyle.SINGLE, size: 6 },
     },
@@ -122,7 +124,9 @@ export async function generateResumeDocx(resume: Resume): Promise<Blob> {
         if (exp.location) companyParts.push(exp.location);
         children.push(
           new Paragraph({
-            children: [new TextRun({ text: companyParts.join(" • "), italics: true })],
+            children: [
+              new TextRun({ text: companyParts.join(" • "), italics: true }),
+            ],
             spacing: { after: 60 },
           })
         );
@@ -154,7 +158,12 @@ export async function generateResumeDocx(resume: Resume): Promise<Blob> {
       for (const edu of resume.education) {
         children.push(
           rightAlignedRow(
-            [new TextRun({ text: `${edu.degree} in ${edu.field}`, bold: true })],
+            [
+              new TextRun({
+                text: `${edu.degree} in ${edu.field}`,
+                bold: true,
+              }),
+            ],
             edu.date
           )
         );
@@ -163,7 +172,9 @@ export async function generateResumeDocx(resume: Resume): Promise<Blob> {
         if (edu.gpa) schoolParts.push(`GPA: ${edu.gpa}`);
         children.push(
           new Paragraph({
-            children: [new TextRun({ text: schoolParts.join(" • "), italics: true })],
+            children: [
+              new TextRun({ text: schoolParts.join(" • "), italics: true }),
+            ],
             spacing: { after: 60 },
           })
         );
@@ -213,7 +224,9 @@ export async function generateResumeDocx(resume: Resume): Promise<Blob> {
         if (links.length > 0) {
           children.push(
             new Paragraph({
-              children: [new TextRun({ text: links.join(" • "), italics: true })],
+              children: [
+                new TextRun({ text: links.join(" • "), italics: true }),
+              ],
               spacing: { after: 60 },
             })
           );
@@ -230,7 +243,11 @@ export async function generateResumeDocx(resume: Resume): Promise<Blob> {
       }
     }
 
-    if (section === "certifications" && resume.certifications && resume.certifications.length > 0) {
+    if (
+      section === "certifications" &&
+      resume.certifications &&
+      resume.certifications.length > 0
+    ) {
       children.push(sectionHeading("Certifications"));
       for (const cert of resume.certifications) {
         children.push(
@@ -248,7 +265,9 @@ export async function generateResumeDocx(resume: Resume): Promise<Blob> {
         if (credParts.length > 0) {
           children.push(
             new Paragraph({
-              children: [new TextRun({ text: credParts.join(" • "), italics: true })],
+              children: [
+                new TextRun({ text: credParts.join(" • "), italics: true }),
+              ],
               spacing: { after: 60 },
             })
           );

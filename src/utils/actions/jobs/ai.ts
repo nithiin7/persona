@@ -23,8 +23,7 @@ const jobAISchema = simplifiedJobSchema.extend({
       const bullets = Array.isArray(obj.bullet_points)
         ? (obj.bullet_points as string[]).map((b) => `• ${b}`).join("\n")
         : "";
-      const paragraph =
-        typeof obj.paragraph === "string" ? obj.paragraph : "";
+      const paragraph = typeof obj.paragraph === "string" ? obj.paragraph : "";
       return [bullets, paragraph].filter(Boolean).join("\n\n");
     }
     return val;
@@ -85,7 +84,12 @@ function normalizeProject(item: unknown) {
 function normalizeSkills(val: unknown) {
   if (!Array.isArray(val)) return val;
   // Already [{category, items}] format
-  if (val.length > 0 && typeof val[0] === "object" && val[0] !== null && "items" in (val[0] as object)) {
+  if (
+    val.length > 0 &&
+    typeof val[0] === "object" &&
+    val[0] !== null &&
+    "items" in (val[0] as object)
+  ) {
     return val;
   }
   // Flat string array — group under one category
@@ -105,9 +109,7 @@ const resumeAISchema = z.object({
     .array(z.preprocess(normalizeEducation, educationSchema))
     .optional(),
   skills: z.preprocess(normalizeSkills, z.array(skillSchema).optional()),
-  projects: z
-    .array(z.preprocess(normalizeProject, projectSchema))
-    .optional(),
+  projects: z.array(z.preprocess(normalizeProject, projectSchema)).optional(),
   certifications: z.array(certificationSchema).optional(),
   // Models often omit this — we fill it in from the job listing after parsing.
   target_role: z.string().optional().default(""),

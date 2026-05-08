@@ -39,7 +39,9 @@ export function SecurityForm({ user }: SecurityFormProps) {
         return;
       }
 
-      toast.success("Email update request sent. Your email will be updated shortly.");
+      toast.success(
+        "Email update request sent. Your email will be updated shortly."
+      );
       setNewEmail("");
       setEmailCurrentPassword("");
     } catch {

@@ -33,38 +33,41 @@ const textProcessingCache = new Map<string, ReactNode[]>();
 
 // Memoized text processing function — accepts fontFamily so bold spans use the right font
 function useTextProcessor(fontFamily: string = "Helvetica") {
-  const processText = useCallback((text: string, ignoreMarkdown = false) => {
-    // Check cache first
-    const cacheKey = `${text}-${ignoreMarkdown}-${fontFamily}`;
-    if (textProcessingCache.has(cacheKey)) {
-      return textProcessingCache.get(cacheKey);
-    }
+  const processText = useCallback(
+    (text: string, ignoreMarkdown = false) => {
+      // Check cache first
+      const cacheKey = `${text}-${ignoreMarkdown}-${fontFamily}`;
+      if (textProcessingCache.has(cacheKey)) {
+        return textProcessingCache.get(cacheKey);
+      }
 
-    // If ignoring markdown, extract content between asterisks or return plain text
-    if (ignoreMarkdown) {
-      const content = text.match(/\*\*(.*?)\*\*/)?.[1] || text;
-      const processed = [<Text key={0}>{content}</Text>];
+      // If ignoring markdown, extract content between asterisks or return plain text
+      if (ignoreMarkdown) {
+        const content = text.match(/\*\*(.*?)\*\*/)?.[1] || text;
+        const processed = [<Text key={0}>{content}</Text>];
+        textProcessingCache.set(cacheKey, processed);
+        return processed;
+      }
+
+      // Process text if not in cache
+      const parts = text.split(/(\*\*.*?\*\*)/g);
+      const processed = parts.map((part, index) => {
+        if (part.startsWith("**") && part.endsWith("**")) {
+          return (
+            <Text key={index} style={{ fontFamily, fontWeight: "bold" }}>
+              {part.slice(2, -2)}
+            </Text>
+          );
+        }
+        return <Text key={index}>{part}</Text>;
+      });
+
+      // Store in cache
       textProcessingCache.set(cacheKey, processed);
       return processed;
-    }
-
-    // Process text if not in cache
-    const parts = text.split(/(\*\*.*?\*\*)/g);
-    const processed = parts.map((part, index) => {
-      if (part.startsWith("**") && part.endsWith("**")) {
-        return (
-          <Text key={index} style={{ fontFamily, fontWeight: "bold" }}>
-            {part.slice(2, -2)}
-          </Text>
-        );
-      }
-      return <Text key={index}>{part}</Text>;
-    });
-
-    // Store in cache
-    textProcessingCache.set(cacheKey, processed);
-    return processed;
-  }, [fontFamily]);
+    },
+    [fontFamily]
+  );
 
   return processText;
 }
@@ -183,9 +186,7 @@ const ProfessionalSummarySection = memo(function ProfessionalSummarySection({
     <View style={styles.professionalSummarySection}>
       <Text style={styles.sectionTitle}>Professional Summary</Text>
       <View style={styles.professionalSummaryContent}>
-        <View style={styles.professionalSummaryText}>
-          {processedText}
-        </View>
+        <View style={styles.professionalSummaryText}>{processedText}</View>
       </View>
     </View>
   );
@@ -270,7 +271,9 @@ const ExperienceSection = memo(function ExperienceSection({
       <Text style={styles.sectionTitle}>Experience</Text>
       {groupedExperiences.map((group, groupIndex) => (
         <View key={groupIndex} style={styles.experienceItem}>
-          <Text style={styles.companyName}>{processText(group.company, true)}</Text>
+          <Text style={styles.companyName}>
+            {processText(group.company, true)}
+          </Text>
           {group.items.map((experience, roleIndex) => (
             <View
               key={`${groupIndex}-${roleIndex}`}
@@ -284,7 +287,9 @@ const ExperienceSection = memo(function ExperienceSection({
                   {experience.location && (
                     <>
                       <Text style={styles.bulletSeparator}>•</Text>
-                      <Text style={styles.locationText}>{experience.location}</Text>
+                      <Text style={styles.locationText}>
+                        {experience.location}
+                      </Text>
                     </>
                   )}
                 </View>
@@ -416,13 +421,12 @@ const EducationSection = memo(function EducationSection({
               </Text>
               <View style={styles.degreeRow}>
                 <Text style={styles.degree}>
-                  {processText(edu.field ? `${edu.degree}, ${edu.field}` : edu.degree, true)}
+                  {processText(
+                    edu.field ? `${edu.degree}, ${edu.field}` : edu.degree,
+                    true
+                  )}
                 </Text>
-                {edu.gpa && (
-                  <Text style={styles.gpa}>
-                    {`GPA: ${edu.gpa}`}
-                  </Text>
-                )}
+                {edu.gpa && <Text style={styles.gpa}>{`GPA: ${edu.gpa}`}</Text>}
               </View>
             </View>
             <Text style={styles.dateRange}>{edu.date}</Text>
@@ -470,9 +474,7 @@ const CertificationsSection = memo(function CertificationsSection({
                 {processText(cert.provider, true)}
               </Text>
             </View>
-            {cert.date && (
-              <Text style={styles.dateRange}>{cert.date}</Text>
-            )}
+            {cert.date && <Text style={styles.dateRange}>{cert.date}</Text>}
           </View>
           {cert.credential_id && (
             <Text style={styles.credentialId}>
@@ -1133,9 +1135,15 @@ function getTemplateStyles(template: string, accentColor?: string) {
 
   // Apply custom accent color over template defaults (affects accent elements)
   if (accentColor) {
-    if (styles.sectionTitle) styles.sectionTitle = { ...styles.sectionTitle, color: accentColor };
-    if (styles.link) styles.link = { color: accentColor, textDecoration: "none" };
-    if (styles.bulletSeparator) styles.bulletSeparator = { ...styles.bulletSeparator, color: accentColor };
+    if (styles.sectionTitle)
+      styles.sectionTitle = { ...styles.sectionTitle, color: accentColor };
+    if (styles.link)
+      styles.link = { color: accentColor, textDecoration: "none" };
+    if (styles.bulletSeparator)
+      styles.bulletSeparator = {
+        ...styles.bulletSeparator,
+        color: accentColor,
+      };
   }
 
   return styles;
@@ -1170,13 +1178,18 @@ export const ResumePDFDocument = memo(
       const base = createResumeStyles(resume.document_settings, fontFamily);
       const overrides = getTemplateStyles(template, accentColor);
 
-      const mergeMap = { ...base } as unknown as Record<string, Record<string, unknown>>;
+      const mergeMap = { ...base } as unknown as Record<
+        string,
+        Record<string, unknown>
+      >;
       Object.keys(overrides).forEach((key) => {
         mergeMap[key] = mergeMap[key]
           ? { ...mergeMap[key], ...overrides[key] }
           : overrides[key];
       });
-      const merged = mergeMap as unknown as ReturnType<typeof createResumeStyles>;
+      const merged = mergeMap as unknown as ReturnType<
+        typeof createResumeStyles
+      >;
 
       // Re-apply document_settings sizes that templates must not override
       if (resume.document_settings?.header_name_size != null) {

@@ -41,10 +41,7 @@ interface SettingsContentProps {
   subscriptionStatus: string;
 }
 
-export function SettingsContent({
-  user,
-  isProPlan,
-}: SettingsContentProps) {
+export function SettingsContent({ user, isProPlan }: SettingsContentProps) {
   const [activeSection, setActiveSection] = useState<string>("security");
 
   useEffect(() => {

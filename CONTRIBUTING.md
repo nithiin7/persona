@@ -43,13 +43,13 @@ You don't have to write code to contribute:
 
 ### Prerequisites
 
-| Tool | Version | Notes |
-|---|---|---|
-| Node.js | ≥ 20 | Use [nvm](https://github.com/nvm-sh/nvm) to manage versions |
-| pnpm | ≥ 9 | `npm install -g pnpm` |
-| Supabase CLI | latest | `npm install -g supabase` — for local DB |
-| Docker | any | Optional, required for the containerized setup |
-| Ollama | any | Optional, for local AI models |
+| Tool         | Version | Notes                                                       |
+| ------------ | ------- | ----------------------------------------------------------- |
+| Node.js      | ≥ 20    | Use [nvm](https://github.com/nvm-sh/nvm) to manage versions |
+| pnpm         | ≥ 9     | `npm install -g pnpm`                                       |
+| Supabase CLI | latest  | `npm install -g supabase` — for local DB                    |
+| Docker       | any     | Optional, required for the containerized setup              |
+| Ollama       | any     | Optional, for local AI models                               |
 
 ### Step-by-step
 
@@ -147,16 +147,16 @@ We use ESLint and Prettier. They run automatically on `pnpm lint` and `pnpm form
 - **`cn()` for class names** — always use `cn()` from `src/lib/utils.ts` for conditional Tailwind classes
 - **Supabase client** — never import the Supabase client directly in components; use `createClient()` from `src/utils/supabase/server.ts` (server) or `src/utils/supabase/client.ts` (browser)
 - **Model references** — always use `MODEL_DESIGNATIONS.*` from `src/lib/ai-models.ts`, not raw model ID strings
-- **Comments** — write clear, concise comments that explain *why*, not *what*
+- **Comments** — write clear, concise comments that explain _why_, not _what_
 
 ### File naming
 
-| Type | Convention | Example |
-|---|---|---|
-| Components | kebab-case | `resume-score-panel.tsx` |
-| Server Actions | kebab-case | `resume-editor-actions.tsx` |
-| Hooks | `use-` prefix | `use-debounced-value.ts` |
-| Utility files | kebab-case | `ai-tools.ts` |
+| Type           | Convention    | Example                     |
+| -------------- | ------------- | --------------------------- |
+| Components     | kebab-case    | `resume-score-panel.tsx`    |
+| Server Actions | kebab-case    | `resume-editor-actions.tsx` |
+| Hooks          | `use-` prefix | `use-debounced-value.ts`    |
+| Utility files  | kebab-case    | `ai-tools.ts`               |
 
 ### Commit messages
 
@@ -261,8 +261,8 @@ export type ResumeTemplate =
   | "classic"
   | "modern"
   | "minimal"
-  | "your-new-template"   // ← add here
-  // ...
+  | "your-new-template"; // ← add here
+// ...
 ```
 
 ### Step 2 — Create the template component

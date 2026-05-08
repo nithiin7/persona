@@ -237,21 +237,31 @@ export function TemplateSelector({
                         <div className="h-1 w-20 bg-amber-600 rounded"></div>
                       </div>
                     )}
-                    
+
                     {/* Section titles preview */}
                     <div className="space-y-1.5">
-                      <div className={cn(
-                        "h-1.5 w-12 rounded",
-                        template.id === "modern" ? "bg-indigo-600" :
-                        template.id === "professional" ? "bg-blue-600" :
-                        template.id === "creative" ? "bg-pink-600" :
-                        template.id === "executive" ? "bg-amber-600" :
-                        template.id === "tech" ? "bg-emerald-600" :
-                        template.id === "academic" ? "bg-violet-600" :
-                        template.id === "bold" ? "bg-slate-900" :
-                        template.id === "elegant" ? "bg-amber-600" :
-                        "bg-gray-700"
-                      )}></div>
+                      <div
+                        className={cn(
+                          "h-1.5 w-12 rounded",
+                          template.id === "modern"
+                            ? "bg-indigo-600"
+                            : template.id === "professional"
+                              ? "bg-blue-600"
+                              : template.id === "creative"
+                                ? "bg-pink-600"
+                                : template.id === "executive"
+                                  ? "bg-amber-600"
+                                  : template.id === "tech"
+                                    ? "bg-emerald-600"
+                                    : template.id === "academic"
+                                      ? "bg-violet-600"
+                                      : template.id === "bold"
+                                        ? "bg-slate-900"
+                                        : template.id === "elegant"
+                                          ? "bg-amber-600"
+                                          : "bg-gray-700"
+                        )}
+                      ></div>
                       <div className="space-y-0.5">
                         <div className="h-1 w-full bg-gray-300 rounded"></div>
                         <div className="h-1 w-4/5 bg-gray-300 rounded"></div>
@@ -297,4 +307,3 @@ export function TemplateSelector({
     </Dialog>
   );
 }
-

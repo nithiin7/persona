@@ -52,13 +52,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const STATUS_OPTIONS: { value: ApplicationStatus; label: string; dot: string }[] = [
-  { value: "saved",        label: "Saved",        dot: "bg-gray-400" },
-  { value: "applied",      label: "Applied",      dot: "bg-blue-500" },
+const STATUS_OPTIONS: {
+  value: ApplicationStatus;
+  label: string;
+  dot: string;
+}[] = [
+  { value: "saved", label: "Saved", dot: "bg-gray-400" },
+  { value: "applied", label: "Applied", dot: "bg-blue-500" },
   { value: "phone_screen", label: "Phone Screen", dot: "bg-amber-500" },
-  { value: "onsite",       label: "Onsite",       dot: "bg-purple-500" },
-  { value: "offer",        label: "Offer",        dot: "bg-green-500" },
-  { value: "rejected",     label: "Rejected",     dot: "bg-red-400" },
+  { value: "onsite", label: "Onsite", dot: "bg-purple-500" },
+  { value: "offer", label: "Offer", dot: "bg-green-500" },
+  { value: "rejected", label: "Rejected", dot: "bg-red-400" },
 ];
 
 function ApplicationStatusSelect({ job }: { job: Job }) {
@@ -73,7 +77,11 @@ function ApplicationStatusSelect({ job }: { job: Job }) {
       await updateJobStatus(job.id, next as ApplicationStatus);
       router.refresh();
     } catch {
-      toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to update status",
+        variant: "destructive",
+      });
     } finally {
       setUpdating(false);
     }
@@ -95,7 +103,9 @@ function ApplicationStatusSelect({ job }: { job: Job }) {
           )}
         >
           <div className="flex items-center gap-1.5">
-            <span className={cn("w-2 h-2 rounded-full", cfg?.dot ?? "bg-gray-400")} />
+            <span
+              className={cn("w-2 h-2 rounded-full", cfg?.dot ?? "bg-gray-400")}
+            />
             <SelectValue />
           </div>
         </SelectTrigger>

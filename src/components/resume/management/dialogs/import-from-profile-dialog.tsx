@@ -30,7 +30,12 @@ type ImportItem = WorkExperience | Project | Education | Skill | Certification;
 interface ImportFromProfileDialogProps<T extends ImportItem> {
   profile: Profile;
   onImport: (items: T[]) => void;
-  type: "work_experience" | "projects" | "education" | "skills" | "certifications";
+  type:
+    | "work_experience"
+    | "projects"
+    | "education"
+    | "skills"
+    | "certifications";
   buttonClassName?: string;
 }
 

@@ -6,15 +6,34 @@ import { useState } from "react";
 import { readStreamableValue } from "ai/rsc";
 import type { AIConfig } from "@/utils/ai-tools";
 import { AIImprovementPrompt } from "../../shared/ai-improvement-prompt";
-import { generate, type CoverLetterStyle } from "@/utils/actions/cover-letter/actions";
+import {
+  generate,
+  type CoverLetterStyle,
+} from "@/utils/actions/cover-letter/actions";
 import { useResumeContext } from "../resume-editor-context";
 import { ApiErrorDialog } from "@/components/ui/api-error-dialog";
 import { CreateTailoredResumeDialog } from "@/components/resume/management/dialogs/create-tailored-resume-dialog";
 
-const STYLES: { value: CoverLetterStyle; label: string; description: string }[] = [
-  { value: "professional", label: "Professional", description: "Formal, metric-driven, 6 paragraphs" },
-  { value: "casual", label: "Casual", description: "Conversational, warm, human tone" },
-  { value: "startup", label: "Startup", description: "Punchy, bold, gets to the point fast" },
+const STYLES: {
+  value: CoverLetterStyle;
+  label: string;
+  description: string;
+}[] = [
+  {
+    value: "professional",
+    label: "Professional",
+    description: "Formal, metric-driven, 6 paragraphs",
+  },
+  {
+    value: "casual",
+    label: "Casual",
+    description: "Conversational, warm, human tone",
+  },
+  {
+    value: "startup",
+    label: "Startup",
+    description: "Punchy, bold, gets to the point fast",
+  },
 ];
 
 interface CoverLetterPanelProps {
@@ -31,7 +50,8 @@ export function CoverLetterPanel({
   const { dispatch } = useResumeContext();
   const [isGenerating, setIsGenerating] = useState(false);
   const [customPrompt, setCustomPrompt] = useState("");
-  const [selectedStyle, setSelectedStyle] = useState<CoverLetterStyle>("professional");
+  const [selectedStyle, setSelectedStyle] =
+    useState<CoverLetterStyle>("professional");
   const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
     title: "",
@@ -186,8 +206,12 @@ export function CoverLetterPanel({
                       : "border-border bg-white text-muted-foreground hover:border-emerald-300 hover:bg-emerald-50/50"
                   )}
                 >
-                  <span className="text-xs font-semibold leading-tight">{s.label}</span>
-                  <span className="text-[10px] leading-tight opacity-70">{s.description}</span>
+                  <span className="text-xs font-semibold leading-tight">
+                    {s.label}
+                  </span>
+                  <span className="text-[10px] leading-tight opacity-70">
+                    {s.description}
+                  </span>
                 </button>
               ))}
             </div>

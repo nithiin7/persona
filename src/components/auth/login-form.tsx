@@ -73,7 +73,10 @@ export function LoginForm() {
 
       const result = await login(formDataToSend);
       if (!result.success) {
-        setError(result.error || "Invalid credentials. Please check your email and password.");
+        setError(
+          result.error ||
+            "Invalid credentials. Please check your email and password."
+        );
       }
     } catch (error: unknown) {
       setError("An error occurred during login");

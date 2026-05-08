@@ -1,6 +1,12 @@
 "use client";
 
-import { Profile, WorkExperience, Education, Project, Certification } from "@/lib/types";
+import {
+  Profile,
+  WorkExperience,
+  Education,
+  Project,
+  Certification,
+} from "@/lib/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -1003,7 +1009,9 @@ export function ProfileEditForm({
                       <div className="relative p-8">
                         <ProfileCertificationsForm
                           certifications={profile.certifications || []}
-                          onChange={(certifications) => updateField("certifications", certifications)}
+                          onChange={(certifications) =>
+                            updateField("certifications", certifications)
+                          }
                         />
                       </div>
                     </Card>

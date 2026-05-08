@@ -135,7 +135,10 @@ export function ProfileRow({ profile }: ProfileRowProps) {
           <div className="mt-2.5 max-w-7xl mx-auto">
             <div className="flex items-center gap-3">
               <span
-                className={cn("text-xs font-semibold whitespace-nowrap tabular-nums", scoreColor)}
+                className={cn(
+                  "text-xs font-semibold whitespace-nowrap tabular-nums",
+                  scoreColor
+                )}
               >
                 {score}%
               </span>

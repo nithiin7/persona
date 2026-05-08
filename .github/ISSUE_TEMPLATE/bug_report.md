@@ -26,13 +26,13 @@ assignees: ""
 
 ## Environment
 
-| Field | Value |
-|---|---|
-| OS | <!-- e.g. macOS 14.5, Ubuntu 22.04, Windows 11 --> |
-| Node version | <!-- run: node -v --> |
-| pnpm version | <!-- run: pnpm -v --> |
-| Browser (if UI bug) | <!-- e.g. Chrome 125, Firefox 126 --> |
-| Running via | <!-- Docker / pnpm dev / other --> |
+| Field               | Value                                              |
+| ------------------- | -------------------------------------------------- |
+| OS                  | <!-- e.g. macOS 14.5, Ubuntu 22.04, Windows 11 --> |
+| Node version        | <!-- run: node -v -->                              |
+| pnpm version        | <!-- run: pnpm -v -->                              |
+| Browser (if UI bug) | <!-- e.g. Chrome 125, Firefox 126 -->              |
+| Running via         | <!-- Docker / pnpm dev / other -->                 |
 
 ## Relevant logs or error messages
 

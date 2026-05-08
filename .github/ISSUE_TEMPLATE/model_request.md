@@ -8,15 +8,15 @@ assignees: ""
 
 ## Model / provider details
 
-| Field | Value |
-|---|---|
-| Provider name | <!-- e.g. Mistral, Cohere, Groq --> |
-| Model ID | <!-- e.g. mistral-large-latest --> |
-| Provider docs | <!-- link to API docs or model card --> |
-| API key required? | <!-- Yes / No --> |
-| Supports tool use? | <!-- Yes / No / Unknown --> |
-| Supports vision? | <!-- Yes / No / Unknown --> |
-| Context window | <!-- e.g. 128k tokens --> |
+| Field              | Value                                   |
+| ------------------ | --------------------------------------- |
+| Provider name      | <!-- e.g. Mistral, Cohere, Groq -->     |
+| Model ID           | <!-- e.g. mistral-large-latest -->      |
+| Provider docs      | <!-- link to API docs or model card --> |
+| API key required?  | <!-- Yes / No -->                       |
+| Supports tool use? | <!-- Yes / No / Unknown -->             |
+| Supports vision?   | <!-- Yes / No / Unknown -->             |
+| Context window     | <!-- e.g. 128k tokens -->               |
 
 ## Why would this be useful?
 

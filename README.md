@@ -24,12 +24,12 @@ Persona is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) wi
 
 Persona routes AI calls through whichever provider you configure. Mix and match per your needs:
 
-| Provider | Notes |
-|---|---|
-| **Anthropic** (Claude) | Best quality; recommended for complex tailoring |
-| **OpenAI** (GPT) | GPT-4.1 Nano is included free — no key required |
-| **OpenRouter** | Access hundreds of models with one API key |
-| **Ollama** | Run models locally — free, private, no internet required |
+| Provider               | Notes                                                    |
+| ---------------------- | -------------------------------------------------------- |
+| **Anthropic** (Claude) | Best quality; recommended for complex tailoring          |
+| **OpenAI** (GPT)       | GPT-4.1 Nano is included free — no key required          |
+| **OpenRouter**         | Access hundreds of models with one API key               |
+| **Ollama**             | Run models locally — free, private, no internet required |
 
 ### Ollama (local AI)
 

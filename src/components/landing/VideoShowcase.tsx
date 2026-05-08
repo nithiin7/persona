@@ -2,7 +2,6 @@
 import Image from "next/image";
 
 export function VideoShowcase() {
-
   return (
     <section
       className="py-16 md:py-24 px-4 relative overflow-hidden"

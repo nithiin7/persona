@@ -8,7 +8,7 @@ assignees: ""
 
 ## Problem this solves
 
-<!-- Describe the problem or limitation you're running into. 
+<!-- Describe the problem or limitation you're running into.
      Focus on the "why" — what are you trying to accomplish?
      e.g. "I always have to manually reformat my resume when switching templates because..." -->
 

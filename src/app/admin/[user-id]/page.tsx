@@ -233,7 +233,6 @@ export default async function AdminUserDetailPage({
                     value={formatDate(subscription.current_period_end)}
                   />
                 </div>
-
               </>
             ) : (
               <>

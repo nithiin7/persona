@@ -27,9 +27,9 @@ services:
     container_name: persona-ollama
     restart: unless-stopped
     ports:
-      - "11434:11434"      # also expose on host so you can run `ollama` CLI commands
+      - "11434:11434" # also expose on host so you can run `ollama` CLI commands
     volumes:
-      - ollama-data:/root/.ollama   # persist downloaded models across restarts
+      - ollama-data:/root/.ollama # persist downloaded models across restarts
 
     # ---- GPU support (NVIDIA) ----
     # Uncomment the block below and run with --profile gpu

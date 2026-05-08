@@ -22,16 +22,16 @@ No test suite is configured.
 
 Copy `.env.example` to `.env`. Required variables:
 
-| Variable | Purpose |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase public key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Admin-level Supabase key (server only) |
-| `OPENAI_API_KEY` | OpenAI (used for free-tier model gpt-4.1-nano) |
-| `ANTHROPIC_API_KEY` | Anthropic (server-side pro models) |
-| `OPENROUTER_API_KEY` | OpenRouter (GPT OSS models via OpenRouter) |
-| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Rate limiting |
-| `NEXT_PUBLIC_SITE_URL` | Used in OpenRouter headers |
+| Variable                                              | Purpose                                        |
+| ----------------------------------------------------- | ---------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`                            | Supabase project URL                           |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`                       | Supabase public key                            |
+| `SUPABASE_SERVICE_ROLE_KEY`                           | Admin-level Supabase key (server only)         |
+| `OPENAI_API_KEY`                                      | OpenAI (used for free-tier model gpt-4.1-nano) |
+| `ANTHROPIC_API_KEY`                                   | Anthropic (server-side pro models)             |
+| `OPENROUTER_API_KEY`                                  | OpenRouter (GPT OSS models via OpenRouter)     |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Rate limiting                                  |
+| `NEXT_PUBLIC_SITE_URL`                                | Used in OpenRouter headers                     |
 
 ## Architecture
 
@@ -92,6 +92,7 @@ Also `src/app/(dashboard)/settings/actions.ts` for API key management and `src/a
 - `initializeAIClient(config, isPro)` in `src/utils/ai-tools.ts` — returns a `LanguageModelV1` from the Vercel AI SDK; handles OpenAI, Anthropic, and OpenRouter dispatch
 
 **AI usage patterns:**
+
 - Structured outputs: `generateObject()` with Zod schemas from `src/lib/zod-schemas.ts`
 - Streaming chat: `streamText()` via `POST /api/chat` with tool use (`src/lib/tools.ts`)
 - All AI system prompts live in `src/lib/prompts.ts`

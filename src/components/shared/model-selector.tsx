@@ -315,7 +315,9 @@ export function ModelSelector({
                         🦙
                       </span>
                       <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <span className="truncate font-medium">{modelName}</span>
+                        <span className="truncate font-medium">
+                          {modelName}
+                        </span>
                         <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0">
                           Local
                         </span>

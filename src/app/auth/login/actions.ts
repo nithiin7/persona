@@ -26,7 +26,8 @@ export async function login(formData: FormData): Promise<AuthResult> {
     password: formData.get("password") as string,
   };
 
-  const { data: authData, error } = await supabase.auth.signInWithPassword(data);
+  const { data: authData, error } =
+    await supabase.auth.signInWithPassword(data);
 
   if (error) {
     // If error is due to unconfirmed email, try to auto-confirm and retry
@@ -38,10 +39,10 @@ export async function login(formData: FormData): Promise<AuthResult> {
         // Get user by email using service client
         const { data: users, error: listError } =
           await serviceSupabase.auth.admin.listUsers();
-        
+
         if (!listError && users?.users) {
           const user = users.users.find((u) => u.email === data.email);
-          
+
           if (user) {
             // Auto-confirm the user
             const { error: confirmError } =
@@ -94,7 +95,8 @@ export async function signup(formData: FormData): Promise<AuthResult> {
       },
     },
   };
-  const { data: signupData, error: signupError } = await supabase.auth.signUp(data);
+  const { data: signupData, error: signupError } =
+    await supabase.auth.signUp(data);
 
   if (signupError) {
     // Log detailed error information
@@ -113,7 +115,7 @@ export async function signup(formData: FormData): Promise<AuthResult> {
       signupData.user.id,
       { email_confirm: true }
     );
-    
+
     if (confirmError) {
       console.error("Error auto-confirming user:", confirmError);
     }

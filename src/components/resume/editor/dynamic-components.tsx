@@ -108,8 +108,16 @@ export const DocumentSettingsForm = dynamic(
         resume?: Resume;
         documentSettings: DocumentSettings;
         onChange: (
-          field: "document_settings" | "template" | "section_order" | "section_configs",
-          value: DocumentSettings | ResumeTemplate | string[] | Record<string, { visible: boolean }>
+          field:
+            | "document_settings"
+            | "template"
+            | "section_order"
+            | "section_configs",
+          value:
+            | DocumentSettings
+            | ResumeTemplate
+            | string[]
+            | Record<string, { visible: boolean }>
         ) => void;
         onTemplateChange?: (template: ResumeTemplate) => void;
       }>
