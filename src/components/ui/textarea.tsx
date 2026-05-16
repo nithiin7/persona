@@ -16,7 +16,7 @@ const Textarea = React.forwardRef<
         "placeholder:text-gray-500/60",
         // Interactive states
         "hover:border-gray-400 hover:bg-white",
-        "focus:border-primary/60 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:ring-offset-0",
+        "focus:border-gray-400 focus:bg-white focus:ring-0 focus:ring-offset-0",
         "focus-visible:outline-none",
         // Disabled state
         "disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white/90",

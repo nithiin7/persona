@@ -97,16 +97,7 @@ export function SkillsForm({ skills, onChange, profile }: SkillsFormProps) {
         >
           <Button
             variant="outline"
-            className={cn(
-              "flex-1 h-9 min-w-[120px]",
-              "bg-gradient-to-r from-rose-500/5 via-rose-500/10 to-pink-500/5",
-              "hover:from-rose-500/10 hover:via-rose-500/15 hover:to-pink-500/10",
-              "border-2 border-dashed border-rose-500/30 hover:border-rose-500/40",
-              "text-rose-700 hover:text-rose-800",
-              "transition-all duration-300",
-              "rounded-xl",
-              "whitespace-nowrap text-[11px] @[300px]:text-sm"
-            )}
+            className="flex-1 h-9 min-w-[120px] border-dashed border-gray-200 text-gray-400 text-sm hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
             onClick={addSkillCategory}
           >
             <Plus className="h-4 w-4 mr-2 shrink-0" />
@@ -117,14 +108,7 @@ export function SkillsForm({ skills, onChange, profile }: SkillsFormProps) {
             profile={profile}
             onImport={handleImportFromProfile}
             type="skills"
-            buttonClassName={cn(
-              "flex-1 mb-0 h-9 min-w-[120px]",
-              "whitespace-nowrap text-[11px] @[300px]:text-sm",
-              "bg-gradient-to-r from-rose-500/5 via-rose-500/10 to-pink-500/5",
-              "hover:from-rose-500/10 hover:via-rose-500/15 hover:to-pink-500/10",
-              "border-2 border-dashed border-rose-500/30 hover:border-rose-500/40",
-              "text-rose-700 hover:text-rose-800"
-            )}
+            buttonClassName="flex-1 mb-0 h-9 min-w-[120px] text-sm border-dashed border-gray-200 text-gray-400 hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
           />
         </div>
       </div>
@@ -132,41 +116,30 @@ export function SkillsForm({ skills, onChange, profile }: SkillsFormProps) {
       {skills.map((skill, index) => (
         <Card
           key={index}
-          className={cn(
-            "relative group transition-all duration-300",
-            "bg-gradient-to-r from-rose-500/5 via-rose-500/10 to-pink-500/5",
-            "backdrop-blur-md border-2 border-rose-500/30",
-            "shadow-sm"
-          )}
+          className="bg-white border border-gray-200 rounded-lg shadow-sm"
         >
           <CardContent className="p-3 sm:p-4 space-y-3 sm:space-y-4">
             <div className="space-y-2 sm:space-y-3">
               {/* Category Name and Delete Button Row */}
-              <div className="flex items-center justify-between gap-2 sm:gap-3">
-                <div className="relative group flex-1">
+              <div className="flex items-end gap-2">
+                <div className="space-y-1 flex-1">
+                  <label className="text-xs font-medium text-gray-500">
+                    Category
+                  </label>
                   <Input
                     value={skill.category}
                     onChange={(e) =>
                       updateSkillCategory(index, "category", e.target.value)
                     }
-                    className={cn(
-                      "text-sm font-medium h-9",
-                      "bg-white/50 border-gray-200 rounded-lg",
-                      "focus:border-rose-500/40 focus:ring-2 focus:ring-rose-500/20",
-                      "hover:border-rose-500/30 hover:bg-white/60 transition-colors",
-                      "placeholder:text-gray-400"
-                    )}
+                    className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm font-medium focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
                     placeholder="Category Name"
                   />
-                  <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-rose-700">
-                    CATEGORY
-                  </div>
                 </div>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => removeSkillCategory(index)}
-                  className="text-gray-400 hover:text-red-500 transition-colors duration-300"
+                  className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -179,10 +152,7 @@ export function SkillsForm({ skills, onChange, profile }: SkillsFormProps) {
                     <Badge
                       key={skillIndex}
                       variant="secondary"
-                      className={cn(
-                        "bg-white/60 hover:bg-white/80 text-rose-700 border border-rose-200 py-0.5",
-                        "transition-all duration-300 group/badge cursor-default text-[10px] sm:text-xs"
-                      )}
+                      className="bg-gray-100 text-gray-700 border border-gray-200 py-0.5 text-xs cursor-default"
                     >
                       {item}
                       <button
@@ -203,26 +173,20 @@ export function SkillsForm({ skills, onChange, profile }: SkillsFormProps) {
                       setNewSkills({ ...newSkills, [index]: e.target.value })
                     }
                     onKeyPress={(e) => handleKeyPress(e, index)}
-                    className={cn(
-                      "h-9 bg-white/50 border-gray-200 rounded-lg",
-                      "focus:border-rose-500/40 focus:ring-2 focus:ring-rose-500/20",
-                      "hover:border-rose-500/30 hover:bg-white/60 transition-colors",
-                      "placeholder:text-gray-400",
-                      "text-[10px] sm:text-xs"
-                    )}
+                    className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
                     placeholder="Type a skill and press Enter or click +"
                   />
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => addSkill(index)}
-                    className="h-9 px-2 bg-white/50 hover:bg-white/60"
+                    className="h-8 w-9 border border-gray-200 hover:bg-gray-50 transition-colors duration-150"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
-                  <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-rose-700">
-                    ADD SKILL
-                  </div>
+                  <label className="text-xs font-medium text-gray-500 block mb-1">
+                    Add Skill
+                  </label>
                 </div>
               </div>
             </div>

@@ -131,25 +131,22 @@ export function TemplateSelector({
         <Button
           variant="outline"
           size="sm"
-          className="text-xs bg-white/80 hover:bg-gradient-to-r from-purple-500/10 to-pink-500/10 
-          border-purple-600 hover:border-purple-800 text-purple-700 hover:text-purple-800 
-          backdrop-blur-sm transition-all duration-500 hover:-translate-y-[1px] w-full 
-          shadow-sm hover:shadow-md"
+          className="text-xs w-full border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
         >
           <Layout className="w-3 h-3 mr-1" />
           Template: {currentTemplateName}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto bg-white border border-gray-200 shadow-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl bg-gradient-to-r from-purple-700 to-pink-700 bg-clip-text text-transparent font-semibold">
+          <DialogTitle className="text-lg font-semibold text-gray-900">
             Choose Resume Template
           </DialogTitle>
-          <DialogDescription className="text-slate-600">
+          <DialogDescription className="text-sm text-gray-500">
             Select a template that best fits your style and industry
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 py-4">
           {templates.map((template) => {
             const isSelected = selectedTemplate === template.id;
             return (
@@ -157,18 +154,16 @@ export function TemplateSelector({
                 key={template.id}
                 onClick={() => handleTemplateSelect(template.id)}
                 className={cn(
-                  "relative p-4 rounded-xl border-2 transition-all duration-300",
-                  "hover:shadow-lg hover:-translate-y-1",
-                  "text-left group",
+                  "relative p-4 rounded-xl border-2 transition-all duration-150",
+                  "text-left",
                   isSelected
-                    ? "border-purple-600 bg-gradient-to-br from-purple-50 to-pink-50 shadow-md"
-                    : "border-gray-200 hover:border-purple-300 bg-white"
+                    ? "border-gray-900 bg-gray-50 shadow-sm"
+                    : "border-gray-200 hover:border-gray-400 bg-white hover:bg-gray-50"
                 )}
               >
-                {/* Check mark for selected */}
                 {isSelected && (
-                  <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center">
-                    <Check className="w-4 h-4 text-white" />
+                  <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-gray-900 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-white" />
                   </div>
                 )}
 
@@ -271,29 +266,18 @@ export function TemplateSelector({
                 </div>
 
                 {/* Template info */}
-                <h3
-                  className={cn(
-                    "text-lg font-semibold mb-1",
-                    isSelected ? "text-purple-900" : "text-gray-900"
-                  )}
-                >
+                <h3 className="text-sm font-semibold text-gray-900 mb-1">
                   {template.name}
                 </h3>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-xs text-gray-500 mb-3">
                   {template.description}
                 </p>
 
-                {/* Features */}
                 <div className="flex flex-wrap gap-1.5">
                   {template.features.map((feature, idx) => (
                     <span
                       key={idx}
-                      className={cn(
-                        "text-xs px-2 py-1 rounded-full",
-                        isSelected
-                          ? "bg-purple-100 text-purple-700 border border-purple-200"
-                          : "bg-gray-100 text-gray-600 border border-gray-200"
-                      )}
+                      className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200"
                     >
                       {feature}
                     </span>

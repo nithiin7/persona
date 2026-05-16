@@ -3,12 +3,10 @@
 import { Education, Profile } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { ImportFromProfileDialog } from "../../management/dialogs/import-from-profile-dialog";
 import { memo } from "react";
-import { cn } from "@/lib/utils";
 import Tiptap from "@/components/ui/tiptap";
 
 interface EducationFormProps {
@@ -66,45 +64,26 @@ export const EducationForm = memo(function EducationFormComponent({
     onChange([...importedEducation, ...education]);
   };
 
+  const inputClass =
+    "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
+
   return (
-    <div className="space-y-2 sm:space-y-3">
+    <div className="space-y-2">
       <div className="@container">
-        <div
-          className={cn(
-            "flex flex-col @[400px]:flex-row gap-2",
-            "transition-all duration-300 ease-in-out"
-          )}
-        >
+        <div className="flex flex-col @[400px]:flex-row gap-2">
           <Button
             variant="outline"
-            className={cn(
-              "flex-1 h-9 min-w-[120px]",
-              "bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-blue-500/5",
-              "hover:from-indigo-500/10 hover:via-indigo-500/15 hover:to-blue-500/10",
-              "border-2 border-dashed border-indigo-500/30 hover:border-indigo-500/40",
-              "text-indigo-700 hover:text-indigo-800",
-              "transition-all duration-300",
-              "rounded-xl",
-              "whitespace-nowrap text-[11px] @[300px]:text-sm"
-            )}
+            className="flex-1 h-9 min-w-[120px] border-dashed border-gray-200 text-gray-400 text-sm hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
             onClick={addEducation}
           >
-            <Plus className="h-4 w-4 mr-2 shrink-0" />
+            <Plus className="h-3.5 w-3.5 mr-1.5 shrink-0" />
             Add Education
           </Button>
-
           <ImportFromProfileDialog<Education>
             profile={profile}
             onImport={handleImportFromProfile}
             type="education"
-            buttonClassName={cn(
-              "flex-1 mb-0 h-9 min-w-[120px]",
-              "whitespace-nowrap text-[11px] @[300px]:text-sm",
-              "bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-blue-500/5",
-              "hover:from-indigo-500/10 hover:via-indigo-500/15 hover:to-blue-500/10",
-              "border-2 border-dashed border-indigo-500/30 hover:border-indigo-500/40",
-              "text-indigo-700 hover:text-indigo-800"
-            )}
+            buttonClassName="flex-1 mb-0 h-9 min-w-[120px] text-sm border-dashed border-gray-200 text-gray-400 hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
           />
         </div>
       </div>
@@ -112,140 +91,96 @@ export const EducationForm = memo(function EducationFormComponent({
       {education.map((edu, index) => (
         <Card
           key={index}
-          className={cn(
-            "relative group transition-all duration-300",
-            "bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-blue-500/5",
-            "backdrop-blur-md border-2 border-indigo-500/30",
-            "shadow-sm"
-          )}
+          className="bg-white border border-gray-200 rounded-lg shadow-sm"
         >
-          <CardContent className="p-3 sm:p-4 space-y-3 sm:space-y-4">
-            <div className="space-y-2 sm:space-y-3">
-              {/* School Name and Delete Button Row */}
-              <div className="flex items-center justify-between gap-2 sm:gap-3">
-                <div className="relative group flex-1 min-w-0">
-                  <Input
-                    value={edu.school}
-                    onChange={(e) =>
-                      updateEducation(index, "school", e.target.value)
-                    }
-                    className={cn(
-                      "text-sm font-semibold h-9",
-                      "bg-white/50 border-gray-200 rounded-lg",
-                      "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
-                      "hover:border-indigo-500/30 hover:bg-white/60 transition-colors",
-                      "placeholder:text-gray-400"
-                    )}
-                    placeholder="Institution Name"
-                  />
-                  <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-indigo-700">
-                    INSTITUTION
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeEducation(index)}
-                  className="text-gray-400 hover:text-red-500 transition-colors duration-300"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-
-              {/* Location */}
-              <div className="relative group">
+          <CardContent className="p-3 space-y-3">
+            {/* Institution + delete */}
+            <div className="flex items-end gap-2">
+              <div className="space-y-1 flex-1 min-w-0">
+                <label className="text-xs font-medium text-gray-500">
+                  Institution
+                </label>
                 <Input
-                  value={edu.location}
+                  value={edu.school}
                   onChange={(e) =>
-                    updateEducation(index, "location", e.target.value)
+                    updateEducation(index, "school", e.target.value)
                   }
-                  className={cn(
-                    "h-9 bg-white/50 border-gray-200 rounded-lg",
-                    "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
-                    "hover:border-indigo-500/30 hover:bg-white/60 transition-colors",
-                    "placeholder:text-gray-400",
-                    "text-[10px] sm:text-xs"
-                  )}
-                  placeholder="City, Country"
+                  className={inputClass + " font-medium"}
+                  placeholder="University Name"
                 />
-                <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-indigo-700">
-                  LOCATION
-                </div>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => removeEducation(index)}
+                className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
 
-              {/* Degree and Field Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                <div className="relative group">
-                  <Input
-                    value={edu.degree}
-                    onChange={(e) =>
-                      updateEducation(index, "degree", e.target.value)
-                    }
-                    className={cn(
-                      "h-9 bg-white/50 border-gray-200 rounded-lg",
-                      "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
-                      "hover:border-indigo-500/30 hover:bg-white/60 transition-colors",
-                      "placeholder:text-gray-400",
-                      "text-[10px] sm:text-xs"
-                    )}
-                    placeholder="Bachelor's, Master's, etc."
-                  />
-                  <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-indigo-700">
-                    DEGREE
-                  </div>
-                </div>
-                <div className="relative group">
-                  <Input
-                    value={edu.field}
-                    onChange={(e) =>
-                      updateEducation(index, "field", e.target.value)
-                    }
-                    className={cn(
-                      "h-9 bg-white/50 border-gray-200 rounded-lg",
-                      "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
-                      "hover:border-indigo-500/30 hover:bg-white/60 transition-colors",
-                      "placeholder:text-gray-400",
-                      "text-[10px] sm:text-xs"
-                    )}
-                    placeholder="Field of Study"
-                  />
-                  <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-indigo-700">
-                    FIELD OF STUDY
-                  </div>
-                </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-gray-500">
+                Location
+              </label>
+              <Input
+                value={edu.location}
+                onChange={(e) =>
+                  updateEducation(index, "location", e.target.value)
+                }
+                className={inputClass}
+                placeholder="City, Country"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-gray-500">
+                  Degree
+                </label>
+                <Input
+                  value={edu.degree}
+                  onChange={(e) =>
+                    updateEducation(index, "degree", e.target.value)
+                  }
+                  className={inputClass}
+                  placeholder="Bachelor's…"
+                />
               </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-gray-500">
+                  Field
+                </label>
+                <Input
+                  value={edu.field}
+                  onChange={(e) =>
+                    updateEducation(index, "field", e.target.value)
+                  }
+                  className={inputClass}
+                  placeholder="Computer Science"
+                />
+              </div>
+            </div>
 
-              {/* Dates Row */}
-              <div className="relative group">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-gray-500">
+                  Date
+                </label>
                 <Input
                   type="text"
                   value={edu.date}
                   onChange={(e) =>
                     updateEducation(index, "date", e.target.value)
                   }
-                  className={cn(
-                    "w-full h-9 bg-white/50 border-gray-200 rounded-lg",
-                    "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
-                    "hover:border-indigo-500/30 hover:bg-white/60 transition-colors",
-                    "text-[10px] sm:text-xs"
-                  )}
-                  placeholder="e.g., '2019 - 2023' or '2020 - Present'"
+                  className={inputClass}
+                  placeholder="2019 – 2023"
                 />
-                <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-indigo-700">
-                  DATE
-                </div>
               </div>
-
-              {/* Current Status Note */}
-              <div className="flex items-center space-x-2 -mt-1">
-                <span className="text-[8px] sm:text-[10px] text-gray-500">
-                  Use &apos;Present&apos; in the date field for current
-                  education
-                </span>
-              </div>
-
-              {/* GPA */}
-              <div className="relative group w-full sm:w-1/2 lg:w-1/3">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-gray-500">
+                  GPA <span className="text-gray-400">(optional)</span>
+                </label>
                 <Input
                   type="number"
                   step="0.01"
@@ -259,54 +194,35 @@ export const EducationForm = memo(function EducationFormComponent({
                       e.target.value ? parseFloat(e.target.value) : undefined
                     )
                   }
-                  className={cn(
-                    "h-9 bg-white/50 border-gray-200 rounded-lg",
-                    "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
-                    "hover:border-indigo-500/30 hover:bg-white/60 transition-colors",
-                    "placeholder:text-gray-400",
-                    "text-[10px] sm:text-xs"
-                  )}
-                  placeholder="0.00"
+                  className={inputClass}
+                  placeholder="3.9"
                 />
-                <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-indigo-700">
-                  GPA (OPTIONAL)
-                </div>
               </div>
+            </div>
 
-              {/* Achievements */}
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-baseline">
-                  <Label className="text-[10px] sm:text-xs font-medium text-indigo-700">
-                    Achievements & Activities
-                  </Label>
-                  <span className="text-[8px] sm:text-[10px] text-gray-500">
-                    One achievement per line
-                  </span>
-                </div>
-                <Tiptap
-                  content={(edu.achievements || []).join("\n")}
-                  onChange={(newContent) =>
-                    updateEducation(
-                      index,
-                      "achievements",
-                      newContent.split("\n").filter(Boolean)
-                    )
-                  }
-                  editorProps={{
-                    attributes: {
-                      placeholder:
-                        "• Dean's List 2020-2021\n• President of Computer Science Club\n• First Place in Hackathon 2022",
-                    },
-                  }}
-                  className={cn(
-                    "min-h-[120px] bg-white/50 border-gray-200 rounded-lg",
-                    "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
-                    "hover:border-indigo-500/30 hover:bg-white/60 transition-colors",
-                    "placeholder:text-gray-400",
-                    "text-[10px] sm:text-xs"
-                  )}
-                />
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-gray-500">
+                  Achievements
+                </label>
+                <span className="text-[10px] text-gray-400">One per line</span>
               </div>
+              <Tiptap
+                content={(edu.achievements || []).join("\n")}
+                onChange={(newContent) =>
+                  updateEducation(
+                    index,
+                    "achievements",
+                    newContent.split("\n").filter(Boolean)
+                  )
+                }
+                editorProps={{
+                  attributes: {
+                    placeholder: "• Dean's List\n• Club President",
+                  },
+                }}
+                className="min-h-[80px] border-gray-200 bg-white text-sm focus:border-gray-400 focus:ring-0 hover:border-gray-300"
+              />
             </div>
           </CardContent>
         </Card>

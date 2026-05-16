@@ -16,7 +16,6 @@ import { SavedStylesDialog } from "./saved-styles-dialog";
 import { TemplateSelector } from "./template-selector";
 import { cn } from "@/lib/utils";
 
-// Section key → display label (must match database section_order keys)
 const SECTION_LABELS: Record<string, string> = {
   professional_summary: "Professional Summary",
   work_experience: "Experience",
@@ -84,7 +83,7 @@ function NumberInput({ value, onChange, min, max, step }: NumberInputProps) {
 
   return (
     <div className="flex items-center space-x-1">
-      <span className="text-xs text-muted-foreground/60 w-8">
+      <span className="text-xs text-gray-500 w-8">
         {Number(value.toFixed(2))}
       </span>
       <div className="flex flex-col">
@@ -92,7 +91,7 @@ function NumberInput({ value, onChange, min, max, step }: NumberInputProps) {
           type="button"
           variant="ghost"
           size="icon"
-          className="h-4 w-4 hover:bg-slate-100"
+          className="h-4 w-4 hover:bg-gray-100"
           onClick={increment}
         >
           <ChevronUp className="h-3 w-3" />
@@ -101,7 +100,7 @@ function NumberInput({ value, onChange, min, max, step }: NumberInputProps) {
           type="button"
           variant="ghost"
           size="icon"
-          className="h-4 w-4 hover:bg-slate-100"
+          className="h-4 w-4 hover:bg-gray-100"
           onClick={decrement}
         >
           <ChevronDown className="h-3 w-3" />
@@ -154,7 +153,6 @@ export function DocumentSettingsForm({
   const handleSettingsChange = (newSettings: DocumentSettings) =>
     onChange("document_settings", newSettings);
 
-  // Section management helpers
   const sectionOrder: string[] = resume?.section_order?.length
     ? resume.section_order
     : DEFAULT_SECTION_ORDER;
@@ -192,10 +190,10 @@ export function DocumentSettingsForm({
       | "education"
       | "certifications";
   }) => (
-    <div className="space-y-4 bg-slate-50/50 rounded-lg border border-slate-200/50">
+    <div className="space-y-4">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-sm font-medium text-muted-foreground">
+          <Label className="text-xs font-medium text-gray-500">
             Space Above {title} Section
           </Label>
           <div className="flex items-center">
@@ -211,7 +209,7 @@ export function DocumentSettingsForm({
                 })
               }
             />
-            <span className="text-xs text-muted-foreground/60 ml-1">pt</span>
+            <span className="text-xs text-gray-400 ml-1">pt</span>
           </div>
         </div>
         <Slider
@@ -230,7 +228,7 @@ export function DocumentSettingsForm({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-sm font-medium text-muted-foreground">
+          <Label className="text-xs font-medium text-gray-500">
             Space Below {title} Section
           </Label>
           <div className="flex items-center">
@@ -246,7 +244,7 @@ export function DocumentSettingsForm({
                 })
               }
             />
-            <span className="text-xs text-muted-foreground/60 ml-1">pt</span>
+            <span className="text-xs text-gray-400 ml-1">pt</span>
           </div>
         </div>
         <Slider
@@ -265,7 +263,7 @@ export function DocumentSettingsForm({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-sm font-medium text-muted-foreground">
+          <Label className="text-xs font-medium text-gray-500">
             Horizontal Margins
           </Label>
           <div className="flex items-center">
@@ -281,7 +279,7 @@ export function DocumentSettingsForm({
                 })
               }
             />
-            <span className="text-xs text-muted-foreground/60 ml-1">pt</span>
+            <span className="text-xs text-gray-400 ml-1">pt</span>
           </div>
         </div>
         <Slider
@@ -302,7 +300,7 @@ export function DocumentSettingsForm({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-sm font-medium text-muted-foreground">
+          <Label className="text-xs font-medium text-gray-500">
             Space Between Items
           </Label>
           <div className="flex items-center">
@@ -318,7 +316,7 @@ export function DocumentSettingsForm({
                 })
               }
             />
-            <span className="text-xs text-muted-foreground/60 ml-1">pt</span>
+            <span className="text-xs text-gray-400 ml-1">pt</span>
           </div>
         </div>
         <Slider
@@ -337,11 +335,20 @@ export function DocumentSettingsForm({
     </div>
   );
 
+  const SectionDivider = ({ label }: { label: string }) => (
+    <div className="flex items-center gap-3 py-1">
+      <span className="text-xs font-semibold text-gray-700 whitespace-nowrap">
+        {label}
+      </span>
+      <div className="h-px flex-1 bg-gray-200" />
+    </div>
+  );
+
   return (
     <div>
-      <Card>
+      <Card className="border-gray-200 shadow-sm">
         {/* Top actions + presets */}
-        <CardHeader className="flex flex-col space-y-4">
+        <CardHeader className="flex flex-col space-y-4 pb-4">
           <div className="grid grid-cols-2 gap-2 w-full">
             <SavedStylesDialog
               currentSettings={documentSettings || defaultSettings}
@@ -356,36 +363,34 @@ export function DocumentSettingsForm({
           </div>
 
           {/* Layout presets */}
-          <div className="grid grid-cols-2 gap-4 pt-2">
+          <div className="grid grid-cols-2 gap-3 pt-1">
             {/* Default */}
             <Button
               variant="outline"
               size="sm"
               onClick={() => handleSettingsChange({ ...defaultSettings })}
-              className="relative h-60 group p-0 overflow-hidden border-slate-200 hover:border-teal-600/40 transition-colors"
+              className="relative h-52 group p-0 overflow-hidden border-gray-200 hover:border-gray-400 transition-colors duration-150"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-cyan-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative h-full w-full flex flex-col items-center">
-                <div className="w-full p-2 text-xs font-medium text-teal-600 border-b border-slate-200 bg-slate-50/80">
-                  <LayoutTemplate className="w-3 h-3 inline-block mr-1" />
-                  Default Layout
+                <div className="w-full p-2 text-xs font-medium text-gray-600 border-b border-gray-200 bg-gray-50 flex items-center gap-1">
+                  <LayoutTemplate className="w-3 h-3" />
+                  Default
                 </div>
                 <div className="flex-1 w-full p-2 flex flex-col justify-between">
                   <div>
-                    <div className="w-3/4 h-2 bg-slate-300 rounded mb-6" />
+                    <div className="w-3/4 h-2 bg-gray-300 rounded mb-6" />
                     <div className="flex space-x-2 mb-4">
-                      <div className="w-1/3 h-1 bg-slate-300 rounded" />
-                      <div className="w-1/3 h-1 bg-slate-300 rounded" />
+                      <div className="w-1/3 h-1 bg-gray-300 rounded" />
+                      <div className="w-1/3 h-1 bg-gray-300 rounded" />
                     </div>
                   </div>
                   <div className="space-y-4">
                     {[0, 1, 2].map((i) => (
                       <div key={i} className="space-y-2">
-                        <div className="w-1/3 h-1.5 bg-slate-300 rounded" />
+                        <div className="w-1/3 h-1.5 bg-gray-300 rounded" />
                         <div className="space-y-1.5">
-                          <div className="w-full h-1 bg-slate-300 rounded" />
-                          <div className="w-11/12 h-1 bg-slate-300 rounded" />
-                          <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                          <div className="w-full h-1 bg-gray-200 rounded" />
+                          <div className="w-11/12 h-1 bg-gray-200 rounded" />
                         </div>
                       </div>
                     ))}
@@ -429,31 +434,29 @@ export function DocumentSettingsForm({
                   certifications_margin_horizontal: 0,
                 })
               }
-              className="relative h-60 group p-0 overflow-hidden border-slate-200 hover:border-pink-600/40 transition-colors"
+              className="relative h-52 group p-0 overflow-hidden border-gray-200 hover:border-gray-400 transition-colors duration-150"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-pink-50/50 to-rose-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative h-full w-full flex flex-col items-center">
-                <div className="w-full p-2 text-xs font-medium text-pink-600 border-b border-slate-200 bg-slate-50/80">
-                  <LayoutTemplate className="w-3 h-3 inline-block mr-1" />
-                  Compact Layout
+                <div className="w-full p-2 text-xs font-medium text-gray-600 border-b border-gray-200 bg-gray-50 flex items-center gap-1">
+                  <LayoutTemplate className="w-3 h-3" />
+                  Compact
                 </div>
                 <div className="flex-1 w-full p-2 flex flex-col justify-start space-y-2">
                   <div>
-                    <div className="w-2/3 h-2 bg-slate-300 rounded mb-3" />
+                    <div className="w-2/3 h-2 bg-gray-300 rounded mb-3" />
                     <div className="flex space-x-1.5 mb-2">
-                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
-                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
-                      <div className="w-1/4 h-1 bg-slate-300 rounded" />
+                      <div className="w-1/4 h-1 bg-gray-300 rounded" />
+                      <div className="w-1/4 h-1 bg-gray-300 rounded" />
+                      <div className="w-1/4 h-1 bg-gray-300 rounded" />
                     </div>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {[0, 1, 2, 3].map((i) => (
                       <div key={i} className="space-y-1">
-                        <div className="w-1/4 h-1.5 bg-slate-300 rounded" />
+                        <div className="w-1/4 h-1.5 bg-gray-300 rounded" />
                         <div className="space-y-1">
-                          <div className="w-full h-1 bg-slate-300 rounded" />
-                          <div className="w-11/12 h-1 bg-slate-300 rounded" />
-                          <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                          <div className="w-full h-1 bg-gray-200 rounded" />
+                          <div className="w-11/12 h-1 bg-gray-200 rounded" />
                         </div>
                       </div>
                     ))}
@@ -497,30 +500,28 @@ export function DocumentSettingsForm({
                   certifications_margin_horizontal: 0,
                 })
               }
-              className="relative h-60 group p-0 overflow-hidden border-slate-200 hover:border-blue-600/40 transition-colors"
+              className="relative h-52 group p-0 overflow-hidden border-gray-200 hover:border-gray-400 transition-colors duration-150"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative h-full w-full flex flex-col items-center">
-                <div className="w-full p-2 text-xs font-medium text-blue-600 border-b border-slate-200 bg-slate-50/80">
-                  <LayoutTemplate className="w-3 h-3 inline-block mr-1" />
-                  Spacious Layout
+                <div className="w-full p-2 text-xs font-medium text-gray-600 border-b border-gray-200 bg-gray-50 flex items-center gap-1">
+                  <LayoutTemplate className="w-3 h-3" />
+                  Spacious
                 </div>
                 <div className="flex-1 w-full p-2 flex flex-col justify-start">
                   <div className="mb-4">
-                    <div className="w-4/5 h-2.5 bg-slate-300 rounded mb-8" />
+                    <div className="w-4/5 h-2.5 bg-gray-300 rounded mb-8" />
                     <div className="flex space-x-3 mb-6">
-                      <div className="w-1/3 h-1.5 bg-slate-300 rounded" />
-                      <div className="w-1/3 h-1.5 bg-slate-300 rounded" />
+                      <div className="w-1/3 h-1.5 bg-gray-300 rounded" />
+                      <div className="w-1/3 h-1.5 bg-gray-300 rounded" />
                     </div>
                   </div>
                   <div className="space-y-5">
                     {[0, 1].map((i) => (
                       <div key={i} className="space-y-3">
-                        <div className="w-2/5 h-2 bg-slate-300 rounded" />
+                        <div className="w-2/5 h-2 bg-gray-300 rounded" />
                         <div className="space-y-2 pl-2">
-                          <div className="w-full h-1 bg-slate-300 rounded" />
-                          <div className="w-11/12 h-1 bg-slate-300 rounded" />
-                          <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                          <div className="w-full h-1 bg-gray-200 rounded" />
+                          <div className="w-11/12 h-1 bg-gray-200 rounded" />
                         </div>
                       </div>
                     ))}
@@ -564,30 +565,28 @@ export function DocumentSettingsForm({
                   certifications_margin_horizontal: 4,
                 })
               }
-              className="relative h-60 group p-0 overflow-hidden border-slate-200 hover:border-amber-600/40 transition-colors"
+              className="relative h-52 group p-0 overflow-hidden border-gray-200 hover:border-gray-400 transition-colors duration-150"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative h-full w-full flex flex-col items-center">
-                <div className="w-full p-2 text-xs font-medium text-amber-600 border-b border-slate-200 bg-slate-50/80">
-                  <LayoutTemplate className="w-3 h-3 inline-block mr-1" />
-                  Executive Layout
+                <div className="w-full p-2 text-xs font-medium text-gray-600 border-b border-gray-200 bg-gray-50 flex items-center gap-1">
+                  <LayoutTemplate className="w-3 h-3" />
+                  Executive
                 </div>
                 <div className="flex-1 w-full p-2 flex flex-col justify-start">
                   <div className="mb-4">
-                    <div className="w-4/5 h-2 bg-slate-300 rounded mb-7" />
+                    <div className="w-4/5 h-2 bg-gray-300 rounded mb-7" />
                     <div className="flex space-x-2.5 mb-5">
-                      <div className="w-1/3 h-1 bg-slate-300 rounded" />
-                      <div className="w-1/3 h-1 bg-slate-300 rounded" />
+                      <div className="w-1/3 h-1 bg-gray-300 rounded" />
+                      <div className="w-1/3 h-1 bg-gray-300 rounded" />
                     </div>
                   </div>
                   <div className="space-y-4">
                     {[0, 1, 2].map((i) => (
                       <div key={i} className="space-y-2.5 pl-1">
-                        <div className="w-2/5 h-1.5 bg-slate-300 rounded" />
+                        <div className="w-2/5 h-1.5 bg-gray-300 rounded" />
                         <div className="space-y-1.5">
-                          <div className="w-full h-1 bg-slate-300 rounded" />
-                          <div className="w-11/12 h-1 bg-slate-300 rounded" />
-                          <div className="w-10/12 h-1 bg-slate-300 rounded" />
+                          <div className="w-full h-1 bg-gray-200 rounded" />
+                          <div className="w-11/12 h-1 bg-gray-200 rounded" />
                         </div>
                       </div>
                     ))}
@@ -598,17 +597,11 @@ export function DocumentSettingsForm({
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-8">
+        <CardContent className="space-y-6">
           {/* ── Accent Color ─────────────────────────────────── */}
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <Label className="text-base font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent whitespace-nowrap">
-                Accent Color
-              </Label>
-              <div className="h-[1px] flex-1 mx-4 bg-gradient-to-r from-teal-200/20 via-cyan-200/20 to-transparent" />
-            </div>
+          <div className="space-y-3">
+            <SectionDivider label="Accent Color" />
             <div className="flex flex-wrap gap-2 items-center">
-              {/* Auto — uses template default */}
               <button
                 title="Template default"
                 onClick={() =>
@@ -618,10 +611,10 @@ export function DocumentSettingsForm({
                   })
                 }
                 className={cn(
-                  "h-7 px-2 rounded-full text-xs border-2 transition-all",
+                  "h-7 px-2 rounded-full text-xs border-2 transition-all duration-150",
                   !documentSettings.accent_color
-                    ? "border-teal-500 bg-teal-50 text-teal-700 font-medium"
-                    : "border-slate-200 text-slate-500 hover:border-slate-400"
+                    ? "border-gray-900 bg-gray-900 text-white font-medium"
+                    : "border-gray-200 text-gray-500 hover:border-gray-400"
                 )}
               >
                 Auto
@@ -637,9 +630,9 @@ export function DocumentSettingsForm({
                     })
                   }
                   className={cn(
-                    "w-7 h-7 rounded-full border-2 transition-all hover:scale-110",
+                    "w-7 h-7 rounded-full border-2 transition-all duration-150 hover:scale-110",
                     documentSettings.accent_color === color
-                      ? "border-slate-800 scale-110 shadow-md"
+                      ? "border-gray-800 scale-110 shadow-md"
                       : "border-white shadow-sm"
                   )}
                   style={{ backgroundColor: color }}
@@ -649,13 +642,8 @@ export function DocumentSettingsForm({
           </div>
 
           {/* ── Font Family ──────────────────────────────────── */}
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <Label className="text-base font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent whitespace-nowrap">
-                Font
-              </Label>
-              <div className="h-[1px] flex-1 mx-4 bg-gradient-to-r from-teal-200/20 via-cyan-200/20 to-transparent" />
-            </div>
+          <div className="space-y-3">
+            <SectionDivider label="Font" />
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() =>
@@ -665,15 +653,15 @@ export function DocumentSettingsForm({
                   })
                 }
                 className={cn(
-                  "py-2.5 px-4 rounded-lg border-2 text-sm transition-all",
+                  "py-2.5 px-4 rounded-lg border-2 text-sm transition-all duration-150",
                   !documentSettings.font_family ||
                     documentSettings.font_family === "helvetica"
-                    ? "border-teal-500 bg-teal-50 text-teal-700 font-medium"
-                    : "border-slate-200 text-slate-600 hover:border-slate-300"
+                    ? "border-gray-900 bg-gray-900 text-white font-medium"
+                    : "border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
                 )}
               >
                 <span className="font-sans">Sans-Serif</span>
-                <span className="block text-xs text-muted-foreground mt-0.5">
+                <span className="block text-xs opacity-70 mt-0.5">
                   Helvetica
                 </span>
               </button>
@@ -685,14 +673,14 @@ export function DocumentSettingsForm({
                   })
                 }
                 className={cn(
-                  "py-2.5 px-4 rounded-lg border-2 text-sm transition-all",
+                  "py-2.5 px-4 rounded-lg border-2 text-sm transition-all duration-150",
                   documentSettings.font_family === "times-roman"
-                    ? "border-teal-500 bg-teal-50 text-teal-700 font-medium"
-                    : "border-slate-200 text-slate-600 hover:border-slate-300"
+                    ? "border-gray-900 bg-gray-900 text-white font-medium"
+                    : "border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
                 )}
               >
                 <span style={{ fontFamily: "Georgia, serif" }}>Serif</span>
-                <span className="block text-xs text-muted-foreground mt-0.5">
+                <span className="block text-xs opacity-70 mt-0.5">
                   Times Roman
                 </span>
               </button>
@@ -700,13 +688,8 @@ export function DocumentSettingsForm({
           </div>
 
           {/* ── Section Order & Visibility ───────────────────── */}
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <Label className="text-base font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent whitespace-nowrap">
-                Sections
-              </Label>
-              <div className="h-[1px] flex-1 mx-4 bg-gradient-to-r from-teal-200/20 via-cyan-200/20 to-transparent" />
-            </div>
+          <div className="space-y-3">
+            <SectionDivider label="Sections" />
             <div className="space-y-1.5">
               {sectionOrder.map((key, index) => {
                 const label = SECTION_LABELS[key] ?? key;
@@ -715,15 +698,15 @@ export function DocumentSettingsForm({
                   <div
                     key={key}
                     className={cn(
-                      "flex items-center justify-between px-3 py-2 rounded-lg border transition-colors",
+                      "flex items-center justify-between px-3 py-2 rounded-lg border transition-colors duration-150",
                       visible
-                        ? "bg-white border-slate-200"
-                        : "bg-slate-50 border-slate-200/50 opacity-60"
+                        ? "bg-white border-gray-200"
+                        : "bg-gray-50 border-gray-200 opacity-50"
                     )}
                   >
                     <div className="flex items-center gap-2">
-                      <GripVertical className="w-4 h-4 text-slate-300 shrink-0" />
-                      <span className="text-sm font-medium text-slate-700">
+                      <GripVertical className="w-4 h-4 text-gray-300 shrink-0" />
+                      <span className="text-sm font-medium text-gray-700">
                         {label}
                       </span>
                     </div>
@@ -739,7 +722,7 @@ export function DocumentSettingsForm({
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6"
+                        className="h-6 w-6 hover:bg-gray-100"
                         disabled={index === 0}
                         onClick={() => handleMoveSection(index, -1)}
                       >
@@ -749,7 +732,7 @@ export function DocumentSettingsForm({
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6"
+                        className="h-6 w-6 hover:bg-gray-100"
                         disabled={index === sectionOrder.length - 1}
                         onClick={() => handleMoveSection(index, 1)}
                       >
@@ -763,18 +746,12 @@ export function DocumentSettingsForm({
           </div>
 
           {/* ── Document Spacing ─────────────────────────────── */}
-          <div className="space-y-6">
-            <div className="flex items-center">
-              <Label className="text-base font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-                Document
-              </Label>
-              <div className="h-[1px] flex-1 mx-4 bg-gradient-to-r from-teal-200/20 via-cyan-200/20 to-transparent" />
-            </div>
-
-            <div className="space-y-4 bg-slate-50/50 rounded-lg p-4 border border-slate-200/50">
+          <div className="space-y-3">
+            <SectionDivider label="Document" />
+            <div className="space-y-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-xs font-medium text-gray-500">
                     Font Size
                   </Label>
                   <div className="flex items-center">
@@ -790,9 +767,7 @@ export function DocumentSettingsForm({
                         })
                       }
                     />
-                    <span className="text-xs text-muted-foreground/60 ml-1">
-                      pt
-                    </span>
+                    <span className="text-xs text-gray-400 ml-1">pt</span>
                   </div>
                 </div>
                 <Slider
@@ -811,7 +786,7 @@ export function DocumentSettingsForm({
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-xs font-medium text-gray-500">
                     Line Height
                   </Label>
                   <div className="flex items-center">
@@ -827,9 +802,7 @@ export function DocumentSettingsForm({
                         })
                       }
                     />
-                    <span className="text-xs text-muted-foreground/60 ml-1">
-                      x
-                    </span>
+                    <span className="text-xs text-gray-400 ml-1">x</span>
                   </div>
                 </div>
                 <Slider
@@ -848,7 +821,7 @@ export function DocumentSettingsForm({
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-xs font-medium text-gray-500">
                     Vertical Margins
                   </Label>
                   <div className="flex items-center">
@@ -864,9 +837,7 @@ export function DocumentSettingsForm({
                         })
                       }
                     />
-                    <span className="text-xs text-muted-foreground/60 ml-1">
-                      pt
-                    </span>
+                    <span className="text-xs text-gray-400 ml-1">pt</span>
                   </div>
                 </div>
                 <Slider
@@ -885,7 +856,7 @@ export function DocumentSettingsForm({
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-xs font-medium text-gray-500">
                     Horizontal Margins
                   </Label>
                   <div className="flex items-center">
@@ -901,9 +872,7 @@ export function DocumentSettingsForm({
                         })
                       }
                     />
-                    <span className="text-xs text-muted-foreground/60 ml-1">
-                      pt
-                    </span>
+                    <span className="text-xs text-gray-400 ml-1">pt</span>
                   </div>
                 </div>
                 <Slider
@@ -923,17 +892,12 @@ export function DocumentSettingsForm({
           </div>
 
           {/* ── Header ───────────────────────────────────────── */}
-          <div className="space-y-6">
-            <div className="flex items-center">
-              <Label className="text-base font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-                Header
-              </Label>
-              <div className="h-[1px] flex-1 mx-4 bg-gradient-to-r from-teal-200/20 via-cyan-200/20 to-transparent" />
-            </div>
-            <div className="space-y-4 bg-slate-50/50 rounded-lg p-4 border border-slate-200/50">
+          <div className="space-y-3">
+            <SectionDivider label="Header" />
+            <div className="space-y-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-xs font-medium text-gray-500">
                     Name Size
                   </Label>
                   <div className="flex items-center">
@@ -949,9 +913,7 @@ export function DocumentSettingsForm({
                         })
                       }
                     />
-                    <span className="text-xs text-muted-foreground/60 ml-1">
-                      pt
-                    </span>
+                    <span className="text-xs text-gray-400 ml-1">pt</span>
                   </div>
                 </div>
                 <Slider
@@ -970,7 +932,7 @@ export function DocumentSettingsForm({
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-xs font-medium text-gray-500">
                     Space Below Name
                   </Label>
                   <div className="flex items-center">
@@ -986,9 +948,7 @@ export function DocumentSettingsForm({
                         })
                       }
                     />
-                    <span className="text-xs text-muted-foreground/60 ml-1">
-                      pt
-                    </span>
+                    <span className="text-xs text-gray-400 ml-1">pt</span>
                   </div>
                 </div>
                 <Slider
@@ -1016,29 +976,20 @@ export function DocumentSettingsForm({
               "education",
               "certifications",
             ] as const
-          ).map((section) => (
-            <div
-              key={section}
-              className="space-y-4 bg-slate-50/50 rounded-lg p-4 border border-slate-200/50"
-            >
-              <div className="flex items-center">
-                <Label className="text-base font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent capitalize">
-                  {section === "experience"
-                    ? "Experience"
-                    : section.charAt(0).toUpperCase() + section.slice(1)}
-                </Label>
-                <div className="h-[1px] flex-1 mx-4 bg-gradient-to-r from-teal-200/20 via-cyan-200/20 to-transparent" />
+          ).map((section) => {
+            const title =
+              section === "experience"
+                ? "Experience"
+                : section.charAt(0).toUpperCase() + section.slice(1);
+            return (
+              <div key={section} className="space-y-3">
+                <SectionDivider label={title} />
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <SectionSettings title={title} section={section} />
+                </div>
               </div>
-              <SectionSettings
-                title={
-                  section === "experience"
-                    ? "Experience"
-                    : section.charAt(0).toUpperCase() + section.slice(1)
-                }
-                section={section}
-              />
-            </div>
-          ))}
+            );
+          })}
         </CardContent>
       </Card>
     </div>

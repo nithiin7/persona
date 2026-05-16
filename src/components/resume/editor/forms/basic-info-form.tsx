@@ -1,7 +1,6 @@
 "use client";
 
 import { Profile, Resume } from "@/lib/types";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -14,7 +13,6 @@ import {
   User,
   UserCircle2,
   LucideIcon,
-  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useResumeContext } from "../resume-editor-context";
@@ -31,7 +29,9 @@ function areBasicInfoPropsEqual(
   return prevProps.profile.id === nextProps.profile.id;
 }
 
-// Create memoized field component
+const inputClass =
+  "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
+
 const BasicInfoField = memo(function BasicInfoField({
   field,
   value,
@@ -57,25 +57,18 @@ const BasicInfoField = memo(function BasicInfoField({
   );
 
   return (
-    <div className="relative group">
-      <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
-        <div className="p-1 rounded-full bg-teal-100/80 transition-transform duration-300 group-focus-within:scale-110">
-          <Icon className="h-3.5 w-3.5 text-teal-600" />
-        </div>
-      </div>
+    <div className="space-y-1">
+      <label className="flex items-center gap-1.5 text-xs font-medium text-gray-500">
+        <Icon className="h-3 w-3 text-gray-400" />
+        {label}
+      </label>
       <Input
         type={type}
         value={value || ""}
         onChange={handleChange}
-        className="pr-10 text-sm bg-white/50 border-gray-200 rounded-lg h-9
-          focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
-          hover:border-teal-500/30 hover:bg-white/60 transition-colors
-          placeholder:text-gray-400"
+        className={inputClass}
         placeholder={placeholder}
       />
-      <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[9px] font-medium text-teal-700">
-        {label}
-      </div>
     </div>
   );
 });
@@ -92,9 +85,7 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
 
   const handleFillFromProfile = () => {
     if (!profile) return;
-
-    // List of fields to copy from profile
-    const fieldsToFill: (keyof Profile)[] = [
+    const fields: (keyof Profile)[] = [
       "first_name",
       "last_name",
       "email",
@@ -104,134 +95,110 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
       "linkedin_url",
       "github_url",
     ];
-
-    // Copy each field if it exists in the profile
-    fieldsToFill.forEach((field) => {
-      if (profile[field]) {
-        updateField(field, profile[field] as string);
-      }
+    fields.forEach((field) => {
+      if (profile[field]) updateField(field, profile[field] as string);
     });
   };
 
   return (
-    <div className="space-y-6">
-      <Card className="relative group bg-gradient-to-r from-teal-500/5 via-teal-500/10 to-cyan-500/5 backdrop-blur-md border border-teal-500/30 hover:border-teal-500/40 hover:shadow-lg transition-all duration-300 shadow-sm">
-        <CardContent className="p-3 sm:p-4">
-          {profile && (
-            <div className="mb-3 sm:mb-4">
-              <Button
-                onClick={handleFillFromProfile}
-                className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-sm hover:from-teal-700 hover:to-cyan-700 transition-all duration-500 shadow-md hover:shadow-lg hover:shadow-teal-500/20 hover:-translate-y-0.5"
-              >
-                <UserCircle2 className="mr-2 h-3.5 w-3.5" />
-                Fill from Profile
-              </Button>
-            </div>
-          )}
+    <div className="space-y-4 pt-2">
+      {profile && (
+        <Button
+          onClick={handleFillFromProfile}
+          size="sm"
+          className="w-full h-8 bg-gray-900 text-white hover:bg-gray-700 transition-colors duration-150 text-xs"
+        >
+          <UserCircle2 className="mr-1.5 h-3.5 w-3.5" />
+          Fill from Profile
+        </Button>
+      )}
 
-          <div className="space-y-2 sm:space-y-3">
-            {/* Name Row */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
-              <BasicInfoField
-                field="first_name"
-                value={resume.first_name}
-                label="FIRST NAME"
-                icon={User}
-                placeholder="First Name"
-              />
-              <BasicInfoField
-                field="last_name"
-                value={resume.last_name}
-                label="LAST NAME"
-                icon={User}
-                placeholder="Last Name"
-              />
-            </div>
+      <div className="space-y-3">
+        {/* Name */}
+        <div className="grid grid-cols-2 gap-2">
+          <BasicInfoField
+            field="first_name"
+            value={resume.first_name}
+            label="First Name"
+            icon={User}
+            placeholder="First"
+          />
+          <BasicInfoField
+            field="last_name"
+            value={resume.last_name}
+            label="Last Name"
+            icon={User}
+            placeholder="Last"
+          />
+        </div>
 
-            <BasicInfoField
-              field="email"
-              value={resume.email}
-              label="EMAIL"
-              icon={Mail}
-              placeholder="email@example.com"
-              type="email"
-            />
+        <BasicInfoField
+          field="email"
+          value={resume.email}
+          label="Email"
+          icon={Mail}
+          placeholder="email@example.com"
+          type="email"
+        />
+        <BasicInfoField
+          field="phone_number"
+          value={resume.phone_number || ""}
+          label="Phone"
+          icon={Phone}
+          placeholder="+1 (555) 000-0000"
+          type="tel"
+        />
+        <BasicInfoField
+          field="location"
+          value={resume.location || ""}
+          label="Location"
+          icon={MapPin}
+          placeholder="City, State, Country"
+        />
 
-            <BasicInfoField
-              field="phone_number"
-              value={resume.phone_number || ""}
-              label="PHONE"
-              icon={Phone}
-              placeholder="+1 (555) 000-0000"
-              type="tel"
-            />
+        {/* Summary */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-500">Summary</label>
+          <Textarea
+            value={resume.professional_summary || ""}
+            onChange={(e) =>
+              dispatch({
+                type: "UPDATE_FIELD",
+                field: "professional_summary",
+                value: e.target.value,
+              })
+            }
+            className="text-sm border-gray-200 bg-white placeholder:text-gray-400 min-h-[80px] focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
+            placeholder="Brief professional summary…"
+          />
+        </div>
 
-            <BasicInfoField
-              field="location"
-              value={resume.location || ""}
-              label="LOCATION"
-              icon={MapPin}
-              placeholder="City, State, Country"
-            />
-
-            {/* Professional Summary */}
-            <div className="relative group">
-              <div className="absolute right-2.5 top-3">
-                <div className="p-1 rounded-full bg-teal-100/80 transition-transform duration-300 group-focus-within:scale-110">
-                  <FileText className="h-3.5 w-3.5 text-teal-600" />
-                </div>
-              </div>
-              <Textarea
-                value={resume.professional_summary || ""}
-                onChange={(e) => {
-                  dispatch({
-                    type: "UPDATE_FIELD",
-                    field: "professional_summary",
-                    value: e.target.value,
-                  });
-                }}
-                className="pr-10 text-sm bg-white/50 border-gray-200 rounded-lg min-h-[100px]
-                  focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/20
-                  hover:border-teal-500/30 hover:bg-white/60 transition-colors
-                  placeholder:text-gray-400 resize-y"
-                placeholder="Write a brief professional summary highlighting your key qualifications, experience, and career goals..."
-              />
-              <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[9px] font-medium text-teal-700">
-                PROFESSIONAL SUMMARY
-              </div>
-            </div>
-
-            <div className="space-y-2 sm:space-y-3">
-              <BasicInfoField
-                field="website"
-                value={resume.website || ""}
-                label="WEBSITE"
-                icon={Globe}
-                placeholder="https://your-website.com"
-                type="url"
-              />
-
-              <BasicInfoField
-                field="linkedin_url"
-                value={resume.linkedin_url || ""}
-                label="LINKEDIN"
-                icon={Linkedin}
-                placeholder="https://linkedin.com/in/username"
-                type="url"
-              />
-
-              <BasicInfoField
-                field="github_url"
-                value={resume.github_url || ""}
-                label="GITHUB"
-                icon={Github}
-                placeholder="https://github.com/username"
-                type="url"
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Links */}
+        <BasicInfoField
+          field="website"
+          value={resume.website || ""}
+          label="Website"
+          icon={Globe}
+          placeholder="https://your-website.com"
+          type="url"
+        />
+        <BasicInfoField
+          field="linkedin_url"
+          value={resume.linkedin_url || ""}
+          label="LinkedIn"
+          icon={Linkedin}
+          placeholder="https://linkedin.com/in/username"
+          type="url"
+        />
+        <BasicInfoField
+          field="github_url"
+          value={resume.github_url || ""}
+          label="GitHub"
+          icon={Github}
+          placeholder="https://github.com/username"
+          type="url"
+        />
+      </div>
     </div>
   );
 }, areBasicInfoPropsEqual);

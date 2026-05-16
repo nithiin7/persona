@@ -26,7 +26,6 @@ interface SavedStyle {
   timestamp: number;
 }
 
-// Default styles to initialize if none exist
 const getDefaultStyles = (): SavedStyle[] => {
   const now = Date.now();
   return [
@@ -34,7 +33,6 @@ const getDefaultStyles = (): SavedStyle[] => {
       name: "Basic",
       timestamp: now - 3,
       settings: {
-        // Clean, minimal, standard spacing
         document_font_size: 10,
         document_line_height: 1.5,
         document_margin_vertical: 36,
@@ -63,7 +61,6 @@ const getDefaultStyles = (): SavedStyle[] => {
       name: "Modern Design",
       timestamp: now - 2,
       settings: {
-        // Modern design with more spacing and emphasis
         document_font_size: 10,
         document_line_height: 1.6,
         document_margin_vertical: 32,
@@ -92,7 +89,6 @@ const getDefaultStyles = (): SavedStyle[] => {
       name: "Compact Color",
       timestamp: now - 1,
       settings: {
-        // Compact style optimized for color printing/display
         document_font_size: 9,
         document_line_height: 1.4,
         document_margin_vertical: 28,
@@ -129,17 +125,14 @@ export function SavedStylesDialog({
   const [newStyleName, setNewStyleName] = useState("");
   const [isAddingNew, setIsAddingNew] = useState(false);
 
-  // Load saved styles from localStorage on mount, or initialize with defaults
   useEffect(() => {
     const saved = localStorage.getItem("persona-saved-styles");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Only use saved styles if they exist
         if (Array.isArray(parsed) && parsed.length > 0) {
           setSavedStyles(parsed);
         } else {
-          // Initialize with defaults if empty
           const defaults = getDefaultStyles();
           setSavedStyles(defaults);
           localStorage.setItem(
@@ -148,29 +141,24 @@ export function SavedStylesDialog({
           );
         }
       } catch {
-        // If parsing fails, initialize with defaults
         const defaults = getDefaultStyles();
         setSavedStyles(defaults);
         localStorage.setItem("persona-saved-styles", JSON.stringify(defaults));
       }
     } else {
-      // No saved styles, initialize with defaults
       const defaults = getDefaultStyles();
       setSavedStyles(defaults);
       localStorage.setItem("persona-saved-styles", JSON.stringify(defaults));
     }
   }, []);
 
-  // Save current settings with name
   const handleSaveStyle = () => {
     if (!newStyleName.trim()) return;
-
     const newStyle: SavedStyle = {
       name: newStyleName,
       settings: currentSettings,
       timestamp: Date.now(),
     };
-
     const updatedStyles = [...savedStyles, newStyle];
     setSavedStyles(updatedStyles);
     localStorage.setItem("persona-saved-styles", JSON.stringify(updatedStyles));
@@ -178,16 +166,12 @@ export function SavedStylesDialog({
     setIsAddingNew(false);
   };
 
-  // Delete a saved style
   const handleDeleteStyle = (timestamp: number) => {
-    const updatedStyles = savedStyles.filter(
-      (style) => style.timestamp !== timestamp
-    );
+    const updatedStyles = savedStyles.filter((s) => s.timestamp !== timestamp);
     setSavedStyles(updatedStyles);
     localStorage.setItem("persona-saved-styles", JSON.stringify(updatedStyles));
   };
 
-  // Apply a saved style
   const handleApplyStyle = (settings: DocumentSettings) => {
     onApplyStyle(settings);
     setIsOpen(false);
@@ -199,65 +183,50 @@ export function SavedStylesDialog({
         <Button
           variant="outline"
           size="sm"
-          className="text-xs bg-white/80 hover:bg-gradient-to-r from-teal-500/10 to-cyan-500/10 
-          border-teal-600 hover:border-teal-800 text-teal-700 hover:text-teal-800 
-          backdrop-blur-sm transition-all duration-500 hover:-translate-y-[1px] w-full 
-          shadow-sm hover:shadow-md"
+          className="text-xs w-full border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
         >
           <Save className="w-3 h-3 mr-1" />
           Saved Styles
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[425px] bg-gradient-to-b from-white/95 to-white/90 
-        backdrop-blur-2xl border-white/60 shadow-2xl pt-12"
-      >
+      <DialogContent className="sm:max-w-[425px] bg-white border border-gray-200 shadow-md pt-12">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle
-              className="text-xl bg-gradient-to-r from-teal-700 to-cyan-700 
-              bg-clip-text text-transparent font-semibold"
-            >
+            <DialogTitle className="text-lg font-semibold text-gray-900">
               Saved Document Styles
             </DialogTitle>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setIsAddingNew(true)}
-              className="text-xs bg-gradient-to-r hover:from-teal-500/10 hover:to-cyan-500/10 
-                border-teal-600/40 hover:border-teal-600 text-teal-700 hover:text-teal-800
-                transition-all duration-500 hover:-translate-y-[1px]"
+              className="text-xs border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
             >
               <Plus className="w-3 h-3 mr-1" />
               Save Current
             </Button>
           </div>
-          <DialogDescription className="text-slate-600">
+          <DialogDescription className="text-sm text-gray-500">
             Save current document settings or apply saved styles to your resume.
           </DialogDescription>
         </DialogHeader>
+
         <div className="grid gap-4 py-4">
           {isAddingNew && (
-            <div
-              className="flex items-center gap-2 bg-gradient-to-r from-teal-50/50 to-cyan-50/50 
-              p-4 rounded-xl border border-teal-200/30 shadow-sm"
-            >
+            <div className="flex items-center gap-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
               <Input
                 placeholder="Enter style name..."
                 value={newStyleName}
                 onChange={(e) => setNewStyleName(e.target.value)}
-                className="flex-1 border-teal-200/40 focus:border-teal-400 bg-white/80"
+                className="flex-1 h-8 border-gray-200 bg-white text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
                 autoFocus
               />
               <Button
                 onClick={handleSaveStyle}
                 disabled={!newStyleName.trim()}
                 size="sm"
-                className="whitespace-nowrap bg-gradient-to-r from-teal-600 to-cyan-600 
-                  text-white hover:from-teal-700 hover:to-cyan-700 transition-all 
-                  duration-500 hover:-translate-y-[1px] shadow-sm hover:shadow-md"
+                className="whitespace-nowrap bg-gray-900 text-white hover:bg-gray-700 transition-colors duration-150 h-8 text-xs"
               >
-                Save Style
+                Save
               </Button>
               <Button
                 variant="ghost"
@@ -266,58 +235,51 @@ export function SavedStylesDialog({
                   setIsAddingNew(false);
                   setNewStyleName("");
                 }}
-                className="text-slate-600 hover:text-slate-800"
+                className="text-gray-500 hover:text-gray-700 h-8 text-xs"
               >
                 Cancel
               </Button>
             </div>
           )}
-          <div className={isAddingNew ? "" : "border-t border-teal-100 pt-4"}>
-            <Label className="text-sm font-medium mb-2 block text-slate-700">
+
+          <div className={isAddingNew ? "" : "border-t border-gray-100 pt-4"}>
+            <Label className="text-xs font-medium text-gray-500 mb-2 block">
               Saved Styles
             </Label>
-            <ScrollArea
-              className="h-[300px] rounded-xl border border-teal-200/30 bg-gradient-to-b 
-              from-white/50 to-white/30 backdrop-blur-sm"
-            >
-              <div className="p-4 space-y-3">
+            <ScrollArea className="h-[280px] rounded-lg border border-gray-200 bg-white">
+              <div className="p-3 space-y-2">
                 {savedStyles.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12 text-slate-500">
-                    <Save className="w-8 h-8 mb-2 opacity-50" />
+                  <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                    <Save className="w-6 h-6 mb-2 opacity-40" />
                     <p className="text-sm">No saved styles yet</p>
                   </div>
                 ) : (
                   savedStyles.map((style) => (
                     <div
                       key={style.timestamp}
-                      className="flex items-center justify-between group rounded-xl border 
-                        border-teal-600 p-3 hover:bg-gradient-to-r hover:from-teal-50/50 
-                        hover:to-cyan-50/50 transition-all duration-500 hover:-translate-y-[1px] 
-                        hover:shadow-sm"
+                      className="flex items-center justify-between group rounded-lg border border-gray-200 px-3 py-2.5 bg-white hover:bg-gray-50 hover:border-gray-300 transition-colors duration-150"
                     >
-                      <span className="text-sm font-medium text-slate-700">
+                      <span className="text-sm font-medium text-gray-700">
                         {style.name}
                       </span>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleApplyStyle(style.settings)}
-                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 
-                            text-teal-600 hover:text-teal-700 hover:bg-teal-50"
+                          className="h-7 w-7 p-0 text-gray-400 hover:text-gray-900 hover:bg-gray-100"
                           title="Apply Style"
                         >
-                          <Check className="w-4 h-4" />
+                          <Check className="w-3.5 h-3.5" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleDeleteStyle(style.timestamp)}
-                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 
-                            text-rose-500 hover:text-rose-600 hover:bg-rose-50"
+                          className="h-7 w-7 p-0 text-gray-300 hover:text-red-500 hover:bg-red-50"
                           title="Delete Style"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </Button>
                       </div>
                     </div>
@@ -327,13 +289,12 @@ export function SavedStylesDialog({
             </ScrollArea>
           </div>
         </div>
+
         <DialogFooter>
           <Button
             variant="outline"
             onClick={() => setIsOpen(false)}
-            className="border-teal-200/40 hover:border-teal-400 text-teal-700 
-              hover:text-teal-800 hover:bg-gradient-to-r hover:from-teal-50 hover:to-cyan-50 
-              transition-all duration-500 hover:-translate-y-[1px]"
+            className="border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-150"
           >
             Close
           </Button>

@@ -377,12 +377,9 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
               onClick={addProject}
               className={cn(
                 "flex-1 h-9 min-w-[120px]",
-                "bg-gradient-to-r from-violet-500/5 via-violet-500/10 to-purple-500/5",
-                "hover:from-violet-500/10 hover:via-violet-500/15 hover:to-purple-500/10",
-                "border-2 border-dashed border-violet-500/30 hover:border-violet-500/40",
-                "text-violet-700 hover:text-violet-800",
-                "transition-all duration-300",
-                "rounded-xl",
+                "border-dashed border-gray-200 text-gray-400",
+                "hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50",
+                "transition-colors duration-150",
                 "whitespace-nowrap text-[11px] @[300px]:text-sm"
               )}
             >
@@ -396,12 +393,9 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
               type="projects"
               buttonClassName={cn(
                 "flex-1 mb-0 h-9 min-w-[120px]",
-                "bg-gradient-to-r from-violet-500/5 via-violet-500/10 to-purple-500/5",
-                "hover:from-violet-500/10 hover:via-violet-500/15 hover:to-purple-500/10",
-                "border-2 border-dashed border-violet-500/30 hover:border-violet-500/40",
-                "text-violet-700 hover:text-violet-800",
-                "transition-all duration-300",
-                "rounded-xl",
+                "border-dashed border-gray-200 text-gray-400",
+                "hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50",
+                "transition-colors duration-150",
                 "whitespace-nowrap text-[11px] @[300px]:text-sm"
               )}
             />
@@ -411,16 +405,11 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
         {projects.map((project, index) => (
           <Card
             key={index}
-            className={cn(
-              "relative group transition-all duration-300",
-              "bg-gradient-to-r from-violet-500/5 via-violet-500/10 to-purple-500/5",
-              "backdrop-blur-md border-2 border-violet-500/30",
-              "shadow-sm"
-            )}
+            className="relative group transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm"
           >
             <div className="absolute -left-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="bg-violet-100/80 rounded-lg p-1.5 cursor-move shadow-sm">
-                <GripVertical className="h-4 w-4 text-violet-600" />
+              <div className="bg-gray-100 rounded-md p-1.5 cursor-move">
+                <GripVertical className="h-4 w-4 text-gray-400" />
               </div>
             </div>
 
@@ -429,30 +418,24 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
               <div className="space-y-2 sm:space-y-3">
                 {/* Project Name - Full Width */}
                 <div className="flex items-start gap-2 sm:gap-3">
-                  <div className="relative flex-1">
+                  <div className="flex-1 space-y-1">
+                    <label className="text-xs font-medium text-gray-500 block">
+                      PROJECT NAME
+                    </label>
                     <Input
                       value={project.name}
                       onChange={(e) =>
                         updateProject(index, "name", e.target.value)
                       }
-                      className={cn(
-                        "text-sm font-semibold tracking-tight h-9",
-                        "bg-white/50 border-gray-200 rounded-lg",
-                        "focus:border-violet-500/40 focus:ring-2 focus:ring-violet-500/20",
-                        "hover:border-violet-500/30 hover:bg-white/60 transition-colors",
-                        "placeholder:text-gray-400"
-                      )}
+                      className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
                       placeholder="Project Name"
                     />
-                    <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-violet-700">
-                      PROJECT NAME
-                    </div>
                   </div>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => removeProject(index)}
-                    className="text-gray-400 hover:text-red-500 transition-colors duration-300"
+                    className="text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors duration-150 mt-5"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -460,67 +443,53 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
 
                 {/* URLs Row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                  <div className="relative">
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-gray-500 block">
+                      LIVE URL
+                    </label>
                     <Input
                       value={project.url || ""}
                       onChange={(e) =>
                         updateProject(index, "url", e.target.value)
                       }
-                      className={cn(
-                        "text-sm font-medium bg-white/50 border-gray-200 rounded-lg h-9",
-                        "focus:border-violet-500/40 focus:ring-2 focus:ring-violet-500/20",
-                        "hover:border-violet-500/30 hover:bg-white/60 transition-colors",
-                        "placeholder:text-gray-400"
-                      )}
+                      className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
                       placeholder="Live URL"
                     />
-                    <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-violet-700">
-                      LIVE URL
-                    </div>
                   </div>
-                  <div className="relative">
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-gray-500 block">
+                      GITHUB URL
+                    </label>
                     <Input
                       value={project.github_url || ""}
                       onChange={(e) =>
                         updateProject(index, "github_url", e.target.value)
                       }
-                      className={cn(
-                        "h-9 bg-white/50 border-gray-200 rounded-lg",
-                        "focus:border-violet-500/40 focus:ring-2 focus:ring-violet-500/20",
-                        "hover:border-violet-500/30 hover:bg-white/60 transition-colors",
-                        "placeholder:text-gray-400"
-                      )}
+                      className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
                       placeholder="GitHub URL"
                     />
-                    <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-violet-700">
-                      GITHUB URL
-                    </div>
                   </div>
                 </div>
 
                 {/* Date */}
-                <div className="relative group">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-gray-500 block">
+                    DATE
+                  </label>
                   <Input
                     type="text"
                     value={project.date || ""}
                     onChange={(e) =>
                       updateProject(index, "date", e.target.value)
                     }
-                    className={cn(
-                      "w-full bg-white/50 border-gray-200 rounded-lg h-9",
-                      "focus:border-violet-500/40 focus:ring-2 focus:ring-violet-500/20",
-                      "hover:border-violet-500/30 hover:bg-white/60 transition-colors"
-                    )}
+                    className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
                     placeholder="e.g., 'Jan 2023 - Present' or '2020 - 2022'"
                   />
-                  <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-violet-700">
-                    DATE
-                  </div>
                 </div>
 
                 {/* Description Section */}
                 <div className="space-y-2 sm:space-y-3">
-                  <Label className="text-[10px] sm:text-xs font-medium text-violet-700">
+                  <Label className="text-xs font-medium text-gray-500">
                     Key Features & Technical Achievements
                   </Label>
                   <div className="space-y-2 pl-0">
@@ -555,8 +524,8 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                             }}
                             className={cn(
                               "min-h-[60px] text-xs md:text-sm bg-white/50 border-gray-200 rounded-lg",
-                              "focus:border-violet-500/40 focus:ring-2 focus:ring-violet-500/20",
-                              "hover:border-violet-500/30 hover:bg-white/60 transition-colors",
+                              "focus:border-gray-400 focus:ring-0",
+                              "hover:border-gray-300 transition-colors",
                               "placeholder:text-gray-400",
                               improvedPoints[index]?.[descIndex] && [
                                 "border-purple-400",
@@ -647,7 +616,7 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                                   );
                                   onChange(updated);
                                 }}
-                                className="p-0 group-hover/item:opacity-100 text-gray-400 hover:text-red-500 transition-all duration-300"
+                                className="p-0 group-hover/item:opacity-100 text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -756,10 +725,7 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                         ];
                         onChange(updated);
                       }}
-                      className={cn(
-                        "flex-1 text-violet-600 hover:text-violet-700 transition-colors text-[10px] sm:text-xs",
-                        "border-violet-200 hover:border-violet-300 hover:bg-violet-50/50"
-                      )}
+                      className="flex-1 h-9 border-dashed border-gray-200 text-gray-400 text-[10px] sm:text-xs hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
                     >
                       <Plus className="h-4 w-4 mr-1" />
                       Add Point
@@ -785,15 +751,15 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                         }))
                       }
                       colorClass={{
-                        button: "text-violet-600",
-                        border: "border-violet-200",
-                        hoverBorder: "hover:border-violet-300",
-                        hoverBg: "hover:bg-violet-50/50",
-                        tooltipBg: "bg-violet-50",
-                        tooltipBorder: "border-2 border-violet-300",
-                        tooltipShadow: "shadow-lg shadow-violet-100/50",
-                        text: "text-violet-600",
-                        hoverText: "hover:text-violet-700",
+                        button: "text-gray-900",
+                        border: "border-gray-200",
+                        hoverBorder: "hover:border-gray-300",
+                        hoverBg: "hover:bg-gray-700",
+                        tooltipBg: "bg-purple-50",
+                        tooltipBorder: "border-2 border-purple-300",
+                        tooltipShadow: "shadow-lg shadow-purple-100/50",
+                        text: "text-white",
+                        hoverText: "hover:text-white",
                       }}
                     />
                   </div>
@@ -801,7 +767,7 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
 
                 {/* Technologies Section */}
                 <div className="space-y-2 sm:space-y-3">
-                  <Label className="text-[10px] sm:text-xs font-medium text-violet-700">
+                  <Label className="text-xs font-medium text-gray-500">
                     Technologies & Tools Used
                   </Label>
 
@@ -812,10 +778,7 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                         <Badge
                           key={techIndex}
                           variant="secondary"
-                          className={cn(
-                            "bg-white/60 hover:bg-white/80 text-violet-700 border border-violet-200 py-0.5",
-                            "transition-all duration-300 group/badge cursor-default text-[10px] sm:text-xs"
-                          )}
+                          className="bg-gray-100 text-gray-700 border border-gray-200 text-xs py-0.5 transition-all duration-300 group/badge cursor-default"
                         >
                           {tech}
                           <button
@@ -829,35 +792,31 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                     </div>
 
                     {/* New Technology Input */}
-                    <div className="relative group flex gap-2">
-                      <Input
-                        value={newTechnologies[index] || ""}
-                        onChange={(e) =>
-                          setNewTechnologies({
-                            ...newTechnologies,
-                            [index]: e.target.value,
-                          })
-                        }
-                        onKeyPress={(e) => handleTechKeyPress(e, index)}
-                        className={cn(
-                          "h-9 bg-white/50 border-gray-200 rounded-lg",
-                          "focus:border-violet-500/40 focus:ring-2 focus:ring-violet-500/20",
-                          "hover:border-violet-500/30 hover:bg-white/60 transition-colors",
-                          "placeholder:text-gray-400",
-                          "text-[10px] sm:text-xs"
-                        )}
-                        placeholder="Type a technology and press Enter or click +"
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => addTechnology(index)}
-                        className="h-9 px-2 bg-white/50 hover:bg-white/60"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                      <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-violet-700">
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-gray-500 block">
                         ADD TECHNOLOGY
+                      </label>
+                      <div className="flex gap-2">
+                        <Input
+                          value={newTechnologies[index] || ""}
+                          onChange={(e) =>
+                            setNewTechnologies({
+                              ...newTechnologies,
+                              [index]: e.target.value,
+                            })
+                          }
+                          onKeyPress={(e) => handleTechKeyPress(e, index)}
+                          className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 text-[10px] sm:text-xs"
+                          placeholder="Type a technology and press Enter or click +"
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => addTechnology(index)}
+                          className="h-8 w-9 border border-gray-200 hover:bg-gray-50 transition-colors duration-150"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </div>

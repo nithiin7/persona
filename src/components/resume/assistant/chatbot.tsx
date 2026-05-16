@@ -65,15 +65,15 @@ function ScrollToBottom() {
       <button
         className={cn(
           "absolute z-50 rounded-full p-2",
-          "bg-white/80 hover:bg-white",
-          "border border-purple-200/60 hover:border-purple-300/60",
-          "shadow-lg shadow-purple-500/5 hover:shadow-purple-500/10",
-          "transition-all duration-300",
+          "bg-white hover:bg-violet-50",
+          "border border-violet-200 hover:border-violet-300",
+          "shadow-md",
+          "transition-all duration-150",
           "left-[50%] translate-x-[-50%] bottom-4"
         )}
         onClick={() => scrollToBottom()}
       >
-        <ChevronDown className="h-4 w-4 text-purple-600" />
+        <ChevronDown className="h-4 w-4 text-violet-500" />
       </button>
     )
   );
@@ -308,15 +308,13 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
   return (
     <Card
       className={cn(
-        "flex flex-col w-full l mx-auto",
-        "bg-gradient-to-br from-purple-400/20 via-purple-400/50 to-indigo-400/50",
-        "border-2 border-purple-200/60",
-        "shadow-lg shadow-purple-500/5",
-        "transition-all duration-500",
-        "hover:shadow-xl hover:shadow-purple-500/10",
+        "flex flex-col w-full mx-auto",
+        "bg-white",
+        "border border-violet-200",
+        "shadow-sm",
+        "transition-all duration-300",
         "overflow-hidden",
-        "relative",
-        "data-[state=closed]:shadow-md data-[state=closed]:border data-[state=closed]:border-purple-200/40 "
+        "relative"
       )}
     >
       <Accordion
@@ -334,8 +332,8 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                 "px-2 py-2",
                 "hover:no-underline",
                 "group",
-                "transition-all duration-300",
-                "data-[state=open]:border-b border-purple-200/60",
+                "transition-all duration-150",
+                "data-[state=open]:border-b border-violet-100",
                 "data-[state=closed]:opacity-80 data-[state=closed]:hover:opacity-100",
                 "data-[state=closed]:py-1"
               )}
@@ -343,8 +341,7 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
               <div
                 className={cn(
                   "flex items-center w-full",
-                  "transition-transform duration-300",
-                  "group-hover:scale-[0.99]",
+                  "transition-transform duration-150",
                   "group-data-[state=closed]:scale-95"
                 )}
               >
@@ -352,10 +349,10 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                   <div
                     className={cn(
                       "p-1 rounded-lg",
-                      "bg-purple-100/80 text-purple-600",
-                      "group-hover:bg-purple-200/80",
-                      "transition-colors duration-300",
-                      "group-data-[state=closed]:bg-white/60",
+                      "bg-violet-100 text-violet-600",
+                      "group-hover:bg-violet-200",
+                      "transition-colors duration-150",
+                      "group-data-[state=closed]:bg-violet-50",
                       "group-data-[state=closed]:p-0.5"
                     )}
                   >
@@ -372,10 +369,10 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                   className={cn(
                     "absolute right-8 top-1/2 -translate-y-1/2",
                     "px-3 py-1 rounded-lg",
-                    "bg-purple-100/40 text-purple-500/80 border border-purple-500",
-                    "hover:bg-purple-200/60 hover:text-purple-600",
-                    "transition-all duration-300",
-                    "focus:outline-none focus:ring-2 focus:ring-purple-400/40",
+                    "bg-white text-violet-400 border border-violet-200",
+                    "hover:bg-violet-50 hover:text-violet-600 hover:border-violet-300",
+                    "transition-all duration-150",
+                    "focus:outline-none",
                     "disabled:opacity-50",
                     "flex items-center gap-2",
                     (accordionValue !== "chat" || isAlertOpen) && "hidden"
@@ -391,13 +388,7 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                   </span>
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent
-                className={cn(
-                  "bg-white/95 backdrop-blur-xl",
-                  "border-purple-200/60",
-                  "shadow-lg shadow-purple-500/5"
-                )}
-              >
+              <AlertDialogContent className="bg-white border border-gray-200 shadow-md">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Clear Chat History</AlertDialogTitle>
                   <AlertDialogDescription>
@@ -406,22 +397,12 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel
-                    className={cn(
-                      "border-purple-200/60",
-                      "hover:bg-purple-50/50",
-                      "hover:text-purple-700"
-                    )}
-                  >
+                  <AlertDialogCancel className="border-gray-200 hover:bg-gray-50 hover:text-gray-700">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleClearChat}
-                    className={cn(
-                      "bg-purple-500 text-white",
-                      "hover:bg-purple-600",
-                      "focus:ring-purple-400"
-                    )}
+                    className="bg-gray-900 text-white hover:bg-gray-700"
                   >
                     Clear Chat
                   </AlertDialogAction>
@@ -456,16 +437,15 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                   "rounded-2xl px-4 py-2 max-w-[90%] text-sm relative group items-center",
                                   m.role === "user"
                                     ? [
-                                        "bg-gradient-to-br from-purple-500 to-indigo-500",
+                                        "bg-violet-600",
                                         "text-white",
-                                        "shadow-md shadow-purple-500/10",
-                                        "ml-auto pb-0 text-white",
+                                        "ml-auto pb-0",
                                       ]
                                     : [
-                                        "bg-white/60",
-                                        "border border-purple-200/60",
+                                        "bg-white",
+                                        "border border-gray-200",
                                         "shadow-sm",
-                                        "backdrop-blur-sm pb-0",
+                                        "pb-0",
                                       ]
                                 )}
                               >
@@ -479,21 +459,19 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                       }
                                       className={cn(
                                         "w-full min-h-[100px] p-2 rounded-lg",
-                                        "bg-white/80 backdrop-blur-sm",
-                                        m.role === "user"
-                                          ? "text-purple-900 placeholder-purple-400"
-                                          : "text-gray-900 placeholder-gray-400",
-                                        "border border-purple-200/60 focus:border-purple-400/60",
-                                        "focus:outline-none focus:ring-1 focus:ring-purple-400/60"
+                                        "bg-white",
+                                        "text-gray-900 placeholder-gray-400",
+                                        "border border-gray-200 focus:border-gray-400",
+                                        "focus:outline-none focus:ring-0"
                                       )}
                                     />
                                     <button
                                       onClick={() => handleSaveEdit(m.id)}
                                       className={cn(
                                         "self-end px-3 py-1 rounded-lg text-xs",
-                                        "bg-purple-500 text-white",
-                                        "hover:bg-purple-600",
-                                        "transition-colors duration-200"
+                                        "bg-gray-900 text-white",
+                                        "hover:bg-gray-700",
+                                        "transition-colors duration-150"
                                       )}
                                     >
                                       Save
@@ -510,24 +488,14 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                 <div className="absolute -bottom-4 left-2 flex gap-2">
                                   <button
                                     onClick={() => handleDelete(m.id)}
-                                    className={cn(
-                                      "transition-colors duration-200",
-                                      m.role === "user"
-                                        ? "text-purple-500/60 hover:text-purple-600"
-                                        : "text-purple-400/60 hover:text-purple-500"
-                                    )}
+                                    className="text-gray-300 hover:text-red-400 transition-colors duration-150"
                                     aria-label="Delete message"
                                   >
                                     <Trash2 className="h-3 w-3" />
                                   </button>
                                   <button
                                     onClick={() => handleEdit(m.id, m.content)}
-                                    className={cn(
-                                      "transition-colors duration-200",
-                                      m.role === "user"
-                                        ? "text-purple-500/60 hover:text-purple-600"
-                                        : "text-purple-400/60 hover:text-purple-500"
-                                    )}
+                                    className="text-gray-300 hover:text-gray-500 transition-colors duration-150"
                                     aria-label="Edit message"
                                   >
                                     <Pencil className="h-3 w-3" />
@@ -556,8 +524,8 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                         <div
                                           className={cn(
                                             "rounded-2xl px-4 py-2 max-w-[90%] text-sm",
-                                            "bg-white/60 border border-purple-200/60",
-                                            "shadow-sm backdrop-blur-sm"
+                                            "bg-white border border-gray-200",
+                                            "shadow-sm"
                                           )}
                                         >
                                           Reading Resume...
@@ -566,8 +534,8 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                         <div
                                           className={cn(
                                             "w-full rounded-2xl px-4 py-2",
-                                            "bg-white/60 border border-purple-200/60",
-                                            "shadow-sm backdrop-blur-sm"
+                                            "bg-white border border-gray-200",
+                                            "shadow-sm"
                                           )}
                                         >
                                           Preparing resume modifications...
@@ -629,8 +597,8 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                         <div
                                           className={cn(
                                             "rounded-2xl px-4 py-2 max-w-[90%] text-sm",
-                                            "bg-white/60 border border-purple-200/60",
-                                            "shadow-sm backdrop-blur-sm"
+                                            "bg-white border border-gray-200",
+                                            "shadow-sm"
                                           )}
                                         >
                                           <p>
@@ -731,13 +699,12 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                               <div
                                 className={cn(
                                   "rounded-2xl px-4 py-2.5 min-w-[60px]",
-                                  "bg-white/60",
-                                  "border border-purple-200/60",
-                                  "shadow-sm",
-                                  "backdrop-blur-sm"
+                                  "bg-white",
+                                  "border border-gray-200",
+                                  "shadow-sm"
                                 )}
                               >
-                                <LoadingDots className="text-purple-600" />
+                                <LoadingDots className="text-violet-400" />
                               </div>
                             </div>
                           </div>

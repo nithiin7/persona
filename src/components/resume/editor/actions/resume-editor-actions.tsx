@@ -59,52 +59,9 @@ export function ResumeEditorActions({
     }
   };
 
-  // Dynamic color classes based on resume type
-  const colors = resume.is_base_resume
-    ? {
-        // Import button colors
-        importBg: "bg-indigo-600",
-        importHover: "hover:bg-indigo-700",
-        importShadow: "shadow-indigo-400/20",
-        // Action buttons colors (download & save)
-        actionBg: "bg-purple-600",
-        actionHover: "hover:bg-purple-700",
-        actionShadow: "shadow-purple-400/20",
-      }
-    : {
-        // Import button colors
-        importBg: "bg-rose-600",
-        importHover: "hover:bg-rose-700",
-        importShadow: "shadow-rose-400/20",
-        // Action buttons colors (download & save)
-        actionBg: "bg-pink-600",
-        actionHover: "hover:bg-pink-700",
-        actionShadow: "shadow-pink-400/20",
-      };
-
-  const buttonBaseStyle = cn(
-    "transition-all duration-300",
-    "relative overflow-hidden",
-    "h-8 px-3 text-[11px] font-medium",
-    "rounded-md border-none",
-    "text-white shadow-sm",
-    "hover:shadow-md hover:-translate-y-[1px]",
-    "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0"
-  );
-
-  const importButtonClasses = cn(
-    buttonBaseStyle,
-    colors.importBg,
-    colors.importHover,
-    colors.importShadow
-  );
-
-  const actionButtonClasses = cn(
-    buttonBaseStyle,
-    colors.actionBg,
-    colors.actionHover,
-    colors.actionShadow
-  );
+  const buttonClass =
+    "h-8 px-3 text-[11px] font-medium rounded-md border-none text-white bg-gray-900 hover:bg-gray-700 " +
+    "transition-colors duration-150 disabled:opacity-40 disabled:cursor-not-allowed";
 
   return (
     <div className="px-1 py-2 @container">
@@ -113,7 +70,7 @@ export function ResumeEditorActions({
         <TextImport
           resume={resume}
           onResumeChange={onResumeChange}
-          className={importButtonClasses}
+          className={buttonClass}
         />
 
         {/* Download Button */}
@@ -201,7 +158,7 @@ export function ResumeEditorActions({
                     });
                   }
                 }}
-                className={actionButtonClasses}
+                className={buttonClass}
               >
                 <Download className="mr-1.5 h-3.5 w-3.5" />
                 Download
@@ -211,17 +168,11 @@ export function ResumeEditorActions({
               side="bottom"
               align="start"
               sideOffset={5}
-              className={cn(
-                "w-48 p-3",
-                resume.is_base_resume
-                  ? "bg-indigo-50 border-2 border-indigo-200"
-                  : "bg-rose-50 border-2 border-rose-200",
-                "rounded-lg shadow-lg"
-              )}
+              className="w-44 p-3 bg-white border border-gray-200 rounded-lg shadow-md"
             >
               <div className="space-y-3">
                 <div className="space-y-1.5">
-                  <label className="flex items-center space-x-2">
+                  <label className="flex items-center gap-2">
                     <Checkbox
                       checked={downloadOptions.resume}
                       onCheckedChange={(checked) =>
@@ -230,13 +181,8 @@ export function ResumeEditorActions({
                           resume: checked as boolean,
                         }))
                       }
-                      className={cn(
-                        resume.is_base_resume
-                          ? "border-indigo-400 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
-                          : "border-rose-400 data-[state=checked]:bg-rose-600 data-[state=checked]:border-rose-600"
-                      )}
                     />
-                    <span className="text-sm font-medium text-foreground">
+                    <span className="text-xs font-medium text-gray-700">
                       Resume
                     </span>
                   </label>
@@ -253,12 +199,10 @@ export function ResumeEditorActions({
                             }))
                           }
                           className={cn(
-                            "px-2 py-0.5 text-[10px] font-medium rounded border transition-colors",
+                            "px-2 py-0.5 text-[10px] font-medium rounded border transition-colors duration-150",
                             downloadOptions.resumeFormat === fmt
-                              ? resume.is_base_resume
-                                ? "bg-indigo-600 text-white border-indigo-600"
-                                : "bg-rose-600 text-white border-rose-600"
-                              : "bg-transparent text-muted-foreground border-muted-foreground/40 hover:border-muted-foreground"
+                              ? "bg-gray-900 text-white border-gray-900"
+                              : "text-gray-500 border-gray-200 hover:border-gray-400"
                           )}
                         >
                           {fmt.toUpperCase()}
@@ -267,7 +211,7 @@ export function ResumeEditorActions({
                     </div>
                   )}
                 </div>
-                <label className="flex items-center space-x-2">
+                <label className="flex items-center gap-2">
                   <Checkbox
                     checked={downloadOptions.coverLetter}
                     onCheckedChange={(checked) =>
@@ -276,13 +220,8 @@ export function ResumeEditorActions({
                         coverLetter: checked as boolean,
                       }))
                     }
-                    className={cn(
-                      resume.is_base_resume
-                        ? "border-indigo-400 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
-                        : "border-rose-400 data-[state=checked]:bg-rose-600 data-[state=checked]:border-rose-600"
-                    )}
                   />
-                  <span className="text-sm font-medium text-foreground">
+                  <span className="text-xs font-medium text-gray-700">
                     Cover Letter
                   </span>
                 </label>
@@ -295,7 +234,7 @@ export function ResumeEditorActions({
         <Button
           onClick={handleSave}
           disabled={isSaving}
-          className={actionButtonClasses}
+          className={buttonClass}
         >
           {isSaving ? (
             <>

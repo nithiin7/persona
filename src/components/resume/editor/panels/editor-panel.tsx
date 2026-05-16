@@ -5,7 +5,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Accordion } from "@/components/ui/accordion";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Suspense, useRef } from "react";
-import { cn } from "@/lib/utils";
 import { ResumeEditorActions } from "../actions/resume-editor-actions";
 import { TailoredJobAccordion } from "../../management/cards/tailored-job-card";
 import { BasicInfoForm } from "../forms/basic-info-form";
@@ -43,15 +42,8 @@ export function EditorPanel({
     <div className="flex flex-col sm:mr-4 relative h-full max-h-full  ">
       <div className="flex-1 flex flex-col overflow-scroll">
         <ScrollArea className="flex-1 sm:pr-2" ref={scrollAreaRef}>
-          <div className="relative pb-12">
-            <div
-              className={cn(
-                "sticky top-0 z-20 backdrop-blur-sm",
-                resume.is_base_resume
-                  ? "bg-purple-50/80"
-                  : "bg-pink-100/90 shadow-sm shadow-pink-200/50"
-              )}
-            >
+          <div className="relative pb-36">
+            <div className="sticky top-0 z-20 bg-white border-b border-gray-100">
               <div className="flex flex-col gap-4">
                 <ResumeEditorActions onResumeChange={onResumeChange} />
               </div>
@@ -225,14 +217,7 @@ export function EditorPanel({
         </ScrollArea>
       </div>
 
-      <div
-        className={cn(
-          "absolute w-full bottom-0 rounded-lg border`",
-          resume.is_base_resume
-            ? "bg-purple-50/50 border-purple-200/40"
-            : "bg-pink-50/80 border-pink-300/50 shadow-sm shadow-pink-200/20"
-        )}
-      >
+      <div className="absolute w-full bottom-0">
         <ChatBot resume={resume} onResumeChange={onResumeChange} job={job} />
       </div>
     </div>

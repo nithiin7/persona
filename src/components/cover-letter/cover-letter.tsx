@@ -1,7 +1,7 @@
 import CoverLetterEditor from "./cover-letter-editor";
 import { useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useResumeContext } from "@/components/resume/editor/resume-editor-context";
 
 interface CoverLetterProps {
@@ -28,11 +28,13 @@ export default function CoverLetter({ containerWidth }: CoverLetterProps) {
 
   if (!state.resume.has_cover_letter) {
     return (
-      <div className="space-y-4">
+      <div className="px-4 py-6 flex flex-col items-center gap-3 border-t border-gray-200">
+        <p className="text-xs text-gray-400 text-center">
+          No cover letter yet. Generate one tailored to this job with AI.
+        </p>
         <Button
-          variant="outline"
           size="sm"
-          className="w-full border-emerald-600/50 text-emerald-700 hover:bg-emerald-50"
+          className="bg-violet-600 hover:bg-violet-700 text-white transition-colors duration-150"
           onClick={() =>
             dispatch({
               type: "UPDATE_FIELD",
@@ -41,8 +43,8 @@ export default function CoverLetter({ containerWidth }: CoverLetterProps) {
             })
           }
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Create Cover Letter
+          <Sparkles className="h-3.5 w-3.5 mr-1.5" />
+          Create Cover Letter with AI
         </Button>
       </div>
     );
