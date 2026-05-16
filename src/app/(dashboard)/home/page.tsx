@@ -128,13 +128,9 @@ export default async function Home({
       {/* Welcome Dialog for New Signups */}
       <WelcomeDialog isOpen={!!isNewSignup} />
 
-      {/* Gradient Background */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-50/50 via-sky-50/50 to-violet-50/50" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:14px_24px]" />
-        {/* Animated Gradient Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-teal-200/20 to-cyan-200/20 rounded-full blur-3xl animate-float-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-purple-200/20 to-indigo-200/20 rounded-full blur-3xl animate-float-slower" />
+      {/* Clean Background */}
+      <div className="fixed inset-0 z-0 bg-gray-50">
+        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-70" />
       </div>
 
       {/* Content */}
@@ -142,27 +138,23 @@ export default async function Home({
         {/* Profile Row Component */}
         <ProfileRow profile={profile} />
 
-        <div className="pl-2 sm:pl-0 sm:container sm:max-none  max-w-7xl mx-auto  lg:px-8 md:px-8 sm:px-6 pt-4 ">
-          {/* Profile Overview */}
-          <div className="mb-6 space-y-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+          <div className="mb-8 space-y-6">
             {/* API Key Alert */}
             {!isProPlan && <ApiKeyAlert />}
 
-            {/* Greeting & Edit Button */}
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-                  {getGreeting()}, {profile.first_name}
-                </h1>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  Welcome to your resume dashboard
-                </p>
-              </div>
+            {/* Greeting */}
+            <div className="animate-fade-up">
+              <h1 className="text-2xl font-semibold text-gray-900">
+                {getGreeting()}, {profile.first_name}
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">
+                Welcome to your resume dashboard
+              </p>
             </div>
 
-            {/* Resume Bookshelf */}
-            <div className="">
-              {/* Base Resumes Section */}
+            {/* Base Resumes Section */}
+            <div className="animate-fade-up" style={{ animationDelay: "80ms" }}>
               <ResumesSection
                 type="base"
                 resumes={baseResumes}
@@ -173,13 +165,16 @@ export default async function Home({
                 currentDirection={baseDirection}
                 canCreateMore={canCreateBase}
               />
+            </div>
 
-              {/* Thin Divider */}
-              <div className="relative py-2">
-                <div className="h-px bg-gradient-to-r from-transparent via-purple-300/30 to-transparent" />
-              </div>
+            {/* Divider */}
+            <div className="h-px bg-gray-200" />
 
-              {/* Tailored Resumes Section */}
+            {/* Tailored Resumes Section */}
+            <div
+              className="animate-fade-up"
+              style={{ animationDelay: "160ms" }}
+            >
               <ResumesSection
                 type="tailored"
                 resumes={tailoredResumes}

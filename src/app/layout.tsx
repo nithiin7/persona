@@ -112,8 +112,8 @@ export default async function RootLayout({
         )}
         <div className="relative min-h-screen h-screen flex flex-col">
           {user && <AppHeader isProPlan={isProPlan} />}
-          {/* Padding for header and footer */}
-          <main className="py-14 h-full">
+          {/* Padding for fixed header (h-14) and fixed footer (h-10) */}
+          <main className="pt-14 pb-10 h-full">
             {children}
             <Analytics />
           </main>

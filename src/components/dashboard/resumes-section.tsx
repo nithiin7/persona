@@ -381,72 +381,20 @@ export function ResumesSection({
     >
       <button
         className={cn(
-          "aspect-[8.5/11] rounded-lg",
+          "aspect-[8.5/11] rounded-lg w-full sm:w-auto mr-8 sm:mr-0",
           "relative overflow-hidden",
-          "border-2 border-dashed transition-all duration-500",
-          "group/new-resume flex flex-col items-center justify-center gap-4",
-          type === "base"
-            ? "border-purple-300/70 hover:border-purple-400"
-            : "border-pink-300/70 hover:border-pink-400",
-          type === "base"
-            ? "bg-gradient-to-br from-purple-50/80 via-purple-50/40 to-purple-100/60"
-            : "bg-gradient-to-br from-pink-50/80 via-pink-50/40 to-pink-100/60",
-          "hover:shadow-lg hover:shadow-purple-100/50 hover:-translate-y-1",
-          "after:absolute after:inset-0 after:bg-gradient-to-br",
-          type === "base"
-            ? "after:from-purple-600/[0.03] after:to-indigo-600/[0.03]"
-            : "after:from-pink-600/[0.03] after:to-rose-600/[0.03]",
-          "after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-500 w-full sm:w-auto mr-8 sm:mr-0"
+          "border-2 border-dashed border-gray-200",
+          "group/new-resume flex flex-col items-center justify-center gap-3",
+          "bg-white hover:bg-gray-50",
+          "transition-all duration-200 hover:border-gray-300 hover:shadow-sm hover:-translate-y-0.5"
         )}
       >
-        <div
-          className={cn(
-            "relative z-10 flex flex-col items-center",
-            "transform transition-all duration-500",
-            "group-hover/new-resume:scale-105"
-          )}
-        >
-          <div
-            className={cn(
-              "h-12 w-12 rounded-xl",
-              "flex items-center justify-center",
-              "transform transition-all duration-500",
-              "shadow-sm group-hover/new-resume:shadow-md",
-              type === "base"
-                ? "bg-gradient-to-br from-purple-100 to-purple-50"
-                : "bg-gradient-to-br from-pink-100 to-pink-50",
-              "group-hover/new-resume:scale-110"
-            )}
-          >
-            <config.icon
-              className={cn(
-                "h-5 w-5 transition-all duration-500",
-                type === "base" ? "text-purple-600" : "text-pink-600",
-                "group-hover/new-resume:scale-110"
-              )}
-            />
+        <div className="flex flex-col items-center gap-3 transition-transform duration-200 group-hover/new-resume:-translate-y-0.5">
+          <div className="h-10 w-10 rounded-xl bg-gray-100 flex items-center justify-center transition-colors duration-200 group-hover/new-resume:bg-gray-200">
+            <config.icon className="h-5 w-5 text-gray-400 transition-colors duration-200 group-hover/new-resume:text-gray-600" />
           </div>
-
-          <span
-            className={cn(
-              "mt-4 text-sm font-medium",
-              "transition-all duration-500",
-              type === "base" ? "text-purple-600" : "text-pink-600",
-              "group-hover/new-resume:font-semibold"
-            )}
-          >
-            Create {type === "base" ? "Base" : "Tailored"} Resume
-          </span>
-
-          <span
-            className={cn(
-              "mt-2 text-xs",
-              "transition-all duration-500 opacity-0",
-              type === "base" ? "text-purple-500" : "text-pink-500",
-              "group-hover/new-resume:opacity-70"
-            )}
-          >
-            Click to start
+          <span className="text-sm font-medium text-gray-400 transition-colors duration-200 group-hover/new-resume:text-gray-600">
+            Create {type === "base" ? "Base" : "Tailored"}
           </span>
         </div>
       </button>
@@ -751,9 +699,7 @@ export function ResumesSection({
     <div className="relative ">
       <div className="flex flex-col gap-4 w-full">
         <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <h2
-            className={`text-2xl sm:text-3xl font-semibold tracking-tight bg-gradient-to-r ${config.gradient} bg-clip-text text-transparent`}
-          >
+          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-gray-900">
             {type === "base" ? "Base" : "Tailored"} Resumes
           </h2>
           <div className="flex items-center gap-2 mb-4">

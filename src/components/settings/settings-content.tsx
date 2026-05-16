@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Card,
   CardContent,
@@ -11,27 +12,27 @@ import { ApiKeysForm } from "./api-keys-form";
 import { DangerZone } from "./danger-zone";
 import { User } from "@supabase/supabase-js";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { Shield, KeyRound, AlertTriangle } from "lucide-react";
 
 const sections = [
   {
     id: "security",
     title: "Security",
     description: "Manage your email and password settings",
-    icon: "🔒",
+    icon: Shield,
   },
   {
     id: "api-keys",
     title: "API Keys",
     description: "Manage your API keys for different AI providers",
-    icon: "🔑",
+    icon: KeyRound,
   },
   {
     id: "danger-zone",
     title: "Danger Zone",
     description: "Irreversible and destructive actions",
-    icon: "⚠️",
+    icon: AlertTriangle,
   },
 ];
 
@@ -46,121 +47,102 @@ export function SettingsContent({ user, isProPlan }: SettingsContentProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sectionElements = sections.map((section) => ({
-        id: section.id,
-        element: document.getElementById(section.id),
-      }));
-
-      const currentSection = sectionElements.find(({ element }) => {
-        if (!element) return false;
-        const rect = element.getBoundingClientRect();
+      const current = sections.find(({ id }) => {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
         return rect.top <= 100 && rect.bottom > 100;
       });
-
-      if (currentSection) {
-        setActiveSection(currentSection.id);
-      }
+      if (current) setActiveSection(current.id);
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+    window.scrollTo({ top, behavior: "smooth" });
   };
 
   return (
-    <div className="flex gap-8 relative">
-      {/* Table of Contents */}
-      <div className="w-64 hidden lg:block">
-        <div className="sticky top-20 rounded-lg border border-white/40 bg-white/80 backdrop-blur-xl p-4">
-          <h3 className="font-semibold mb-4 text-muted-foreground">
+    <div className="flex gap-8 relative animate-fade-in">
+      {/* Sidebar TOC */}
+      <div className="w-52 hidden lg:block shrink-0">
+        <div className="sticky top-20 bg-white border border-gray-200 rounded-xl p-3 shadow-sm">
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide px-2 mb-2">
             On this page
-          </h3>
-          <div className="space-y-1">
-            {sections.map((section) => (
-              <Button
-                key={section.id}
-                variant="ghost"
+          </p>
+          <nav className="space-y-0.5">
+            {sections.map(({ id, title, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => scrollToSection(id)}
                 className={cn(
-                  "w-full justify-start text-left font-normal transition-all duration-200 relative pl-8",
-                  activeSection === section.id &&
-                    "bg-gradient-to-r from-purple-600/10 to-indigo-600/10 text-purple-600 font-medium",
-                  activeSection !== section.id &&
-                    "text-muted-foreground hover:text-foreground"
+                  "w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-sm text-left transition-colors duration-150",
+                  activeSection === id
+                    ? "bg-gray-100 text-gray-900 font-medium"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
                 )}
-                onClick={() => scrollToSection(section.id)}
               >
-                <span className="absolute left-2">{section.icon}</span>
-                <span className="truncate">{section.title}</span>
-                {activeSection === section.id && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-gradient-to-b from-purple-600 to-indigo-600 rounded-full" />
-                )}
-              </Button>
+                <Icon className="h-3.5 w-3.5 shrink-0" />
+                {title}
+              </button>
             ))}
-          </div>
+          </nav>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 space-y-8">
-        {/* Security Settings */}
+      <div className="flex-1 space-y-6 min-w-0">
         <Card
           id="security"
-          className="border-white/40 shadow-xl shadow-black/5 bg-white/80 backdrop-blur-xl"
+          className="bg-white border border-gray-200 shadow-sm rounded-xl"
         >
-          <CardHeader>
-            <CardTitle className="text-xl">Security</CardTitle>
-            <CardDescription>
+          <CardHeader className="border-b border-gray-100 pb-4">
+            <CardTitle className="text-base font-semibold text-gray-900">
+              Security
+            </CardTitle>
+            <CardDescription className="text-sm text-gray-500">
               Manage your email and password settings
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-5">
             <SecurityForm user={user} />
           </CardContent>
         </Card>
 
-        {/* API Keys */}
         <Card
           id="api-keys"
-          className="border-white/40 shadow-xl shadow-black/5 bg-white/80 backdrop-blur-xl"
+          className="bg-white border border-gray-200 shadow-sm rounded-xl"
         >
-          <CardHeader>
-            <CardTitle className="text-xl">API Keys</CardTitle>
-            <CardDescription>
+          <CardHeader className="border-b border-gray-100 pb-4">
+            <CardTitle className="text-base font-semibold text-gray-900">
+              API Keys
+            </CardTitle>
+            <CardDescription className="text-sm text-gray-500">
               Manage your API keys for different AI providers
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-5">
             <ApiKeysForm isProPlan={isProPlan} />
           </CardContent>
         </Card>
 
-        {/* Danger Zone */}
         <Card
           id="danger-zone"
-          className="border-destructive/50 shadow-xl shadow-black/5 bg-white/80 backdrop-blur-xl"
+          className="bg-white border border-red-200 shadow-sm rounded-xl"
         >
-          <CardHeader>
-            <CardTitle className="text-xl text-destructive">
+          <CardHeader className="border-b border-red-100 pb-4">
+            <CardTitle className="text-base font-semibold text-red-600">
               Danger Zone
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm text-gray-500">
               Irreversible and destructive actions
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-5">
             <DangerZone />
           </CardContent>
         </Card>

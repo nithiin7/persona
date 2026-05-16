@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Design System
+
+See **[DESIGN.md](./DESIGN.md)** for the complete design system — color palette, component patterns, animation utilities, and a "never use" list. **Always consult DESIGN.md before editing any UI file.**
+
 ## Project Overview
 
 **Persona** is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) — an AI-powered resume builder. Stripe/payments have been completely removed; all users have full feature access. The app is built on Next.js 15 App Router, React 19, TypeScript, Shadcn UI, Tailwind CSS, and Supabase.

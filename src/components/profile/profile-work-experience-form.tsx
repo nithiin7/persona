@@ -2,7 +2,6 @@
 
 import { WorkExperience } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import {
@@ -16,6 +15,29 @@ import React from "react";
 interface ProfileWorkExperienceFormProps {
   experiences: WorkExperience[];
   onChange: (experiences: WorkExperience[]) => void;
+}
+
+const inputClass =
+  "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
+
+function Field({
+  label,
+  children,
+  hint,
+}: {
+  label: string;
+  children: React.ReactNode;
+  hint?: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-baseline justify-between">
+        <label className="text-xs font-medium text-gray-500">{label}</label>
+        {hint && <span className="text-[10px] text-gray-400">{hint}</span>}
+      </div>
+      {children}
+    </div>
+  );
 }
 
 export function ProfileWorkExperienceForm({
@@ -65,174 +87,129 @@ export function ProfileWorkExperienceForm({
   }, [experiences]);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <Accordion
         type="multiple"
-        className="space-y-3"
-        defaultValue={experiences.map((_, index) => `experience-${index}`)}
+        className="space-y-2"
+        defaultValue={experiences.map((_, i) => `experience-${i}`)}
       >
         {experiences.map((exp, index) => (
           <AccordionItem
             key={index}
             value={`experience-${index}`}
-            className="bg-gradient-to-r from-cyan-500/5 via-cyan-500/10 to-blue-500/5 backdrop-blur-md border border-cyan-500/30 hover:border-cyan-500/40 hover:shadow-lg transition-all duration-300 shadow-sm rounded-md overflow-hidden"
+            className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors duration-150"
           >
-            <AccordionTrigger className="px-4 py-2 hover:no-underline">
-              <div className="flex items-center justify-between gap-3 flex-1">
-                <div className="flex-1 text-left text-sm font-medium text-cyan-900">
-                  {exp.company || "Untitled Company"}{" "}
-                  {exp.position && `• ${exp.position}`}
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  {exp.date && <span>{exp.date}</span>}
-                  {exp.technologies && exp.technologies.length > 0 && (
-                    <span className="max-w-[200px] truncate">
-                      {exp.technologies.join(", ")}
+            <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50 transition-colors duration-150">
+              <div className="flex items-center justify-between gap-3 flex-1 min-w-0">
+                <span className="text-sm font-medium text-gray-900 truncate">
+                  {exp.company || "Untitled Company"}
+                  {exp.position && (
+                    <span className="font-normal text-gray-500 ml-1.5">
+                      · {exp.position}
                     </span>
                   )}
-                </div>
+                </span>
+                {exp.date && (
+                  <span className="text-xs text-gray-400 shrink-0 mr-2">
+                    {exp.date}
+                  </span>
+                )}
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              <div className="px-4 pb-4 pt-2 space-y-4">
-                {/* Position and Delete Button Row */}
-                <div className="flex items-center justify-between gap-3">
-                  <div className="relative group flex-1">
+              <div className="px-4 pb-4 pt-3 space-y-4 border-t border-gray-100">
+                {/* Position row with delete */}
+                <div className="flex items-end gap-2">
+                  <Field label="Position">
                     <Input
                       value={exp.position}
                       onChange={(e) =>
                         updateExperience(index, "position", e.target.value)
                       }
-                      className="text-base bg-white/50 border-gray-200 rounded-md h-8
-                        focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20
-                        hover:border-cyan-500/30 hover:bg-white/60 transition-colors
-                        placeholder:text-gray-400"
+                      className={inputClass}
                       placeholder="Position Title"
                     />
-                    <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-cyan-700">
-                      POSITION
-                    </div>
-                  </div>
+                  </Field>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => removeExperience(index)}
-                    className="text-gray-400 hover:text-red-500 transition-colors duration-300 h-8 w-8"
+                    className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </div>
 
-                {/* Company */}
-                <div className="relative group">
+                <Field label="Company">
                   <Input
                     value={exp.company}
                     onChange={(e) =>
                       updateExperience(index, "company", e.target.value)
                     }
-                    className="bg-white/50 border-gray-200 rounded-md h-8
-                      focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20
-                      hover:border-cyan-500/30 hover:bg-white/60 transition-colors
-                      placeholder:text-gray-400 text-sm"
+                    className={inputClass}
                     placeholder="Company Name"
                   />
-                  <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-cyan-700">
-                    COMPANY
-                  </div>
-                </div>
+                </Field>
 
-                {/* Date and Location Row */}
-                <div className="flex flex-col md:flex-row md:items-start gap-3 text-gray-600">
-                  <div className="relative group md:w-1/3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <Field label="Date">
                     <Input
-                      type="text"
                       value={exp.date}
                       onChange={(e) =>
                         updateExperience(index, "date", e.target.value)
                       }
-                      className="bg-white/50 border-gray-200 rounded-md h-8
-                        focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20
-                        hover:border-cyan-500/30 hover:bg-white/60 transition-colors
-                        placeholder:text-gray-400 text-sm"
-                      placeholder="e.g., Jan 2023 - Present"
+                      className={inputClass}
+                      placeholder="Jan 2023 – Present"
                     />
-                    <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-cyan-700">
-                      DATE
-                    </div>
-                  </div>
-                  <div className="relative group flex-1">
-                    <Input
-                      value={exp.location}
-                      onChange={(e) =>
-                        updateExperience(index, "location", e.target.value)
-                      }
-                      className="bg-white/50 border-gray-200 rounded-md h-8
-                        focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20
-                        hover:border-cyan-500/30 hover:bg-white/60 transition-colors
-                        placeholder:text-gray-400 text-sm"
-                      placeholder="e.g., Vancouver, BC"
-                    />
-                    <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-cyan-700">
-                      LOCATION
-                    </div>
+                  </Field>
+                  <div className="md:col-span-2">
+                    <Field label="Location">
+                      <Input
+                        value={exp.location}
+                        onChange={(e) =>
+                          updateExperience(index, "location", e.target.value)
+                        }
+                        className={inputClass}
+                        placeholder="Vancouver, BC"
+                      />
+                    </Field>
                   </div>
                 </div>
 
-                {/* Technologies */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between items-baseline">
-                    <Label className="text-xs font-medium text-cyan-700">
-                      Technologies & Skills Used
-                    </Label>
-                    <span className="text-[9px] text-gray-500">
-                      Separate with commas
-                    </span>
-                  </div>
+                <Field label="Technologies" hint="Separate with commas">
                   <Input
                     value={techInputs[index] || ""}
                     onChange={(e) => {
-                      const newValue = e.target.value;
-                      setTechInputs((prev) => ({ ...prev, [index]: newValue }));
-
-                      if (newValue.endsWith(",")) {
-                        const technologies = newValue
-                          .split(",")
-                          .map((t) => t.trim())
-                          .filter(Boolean);
-                        updateExperience(index, "technologies", technologies);
-                      } else {
-                        const technologies = newValue
-                          .split(",")
-                          .map((t) => t.trim())
-                          .filter(Boolean);
-                        updateExperience(index, "technologies", technologies);
-                      }
-                    }}
-                    onBlur={(e) => {
-                      const technologies = e.target.value
+                      const val = e.target.value;
+                      setTechInputs((prev) => ({ ...prev, [index]: val }));
+                      const techs = val
                         .split(",")
                         .map((t) => t.trim())
                         .filter(Boolean);
-                      updateExperience(index, "technologies", technologies);
+                      updateExperience(index, "technologies", techs);
+                    }}
+                    onBlur={(e) => {
+                      const techs = e.target.value
+                        .split(",")
+                        .map((t) => t.trim())
+                        .filter(Boolean);
+                      updateExperience(index, "technologies", techs);
                       setTechInputs((prev) => ({
                         ...prev,
-                        [index]: technologies.join(", "),
+                        [index]: techs.join(", "),
                       }));
                     }}
-                    placeholder="React, TypeScript, Node.js, etc."
-                    className="bg-white/50 border-gray-200 rounded-md h-8
-                      focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20
-                      hover:border-cyan-500/30 hover:bg-white/60 transition-colors
-                      placeholder:text-gray-400 text-sm"
+                    placeholder="React, TypeScript, Node.js"
+                    className={inputClass}
                   />
-                </div>
+                </Field>
 
-                {/* Description */}
+                {/* Description bullets */}
                 <div className="space-y-1.5">
-                  <div className="flex justify-between items-baseline">
-                    <Label className="text-xs font-medium text-cyan-700">
-                      Key Responsibilities & Achievements
-                    </Label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-medium text-gray-500">
+                      Responsibilities &amp; Achievements
+                    </label>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -244,31 +221,26 @@ export function ProfileWorkExperienceForm({
                         ];
                         onChange(updated);
                       }}
-                      className="text-cyan-600 hover:text-cyan-700 transition-colors h-7 text-xs"
+                      className="h-6 px-2 text-xs text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150"
                     >
-                      <Plus className="h-3.5 w-3.5 mr-1" />
-                      Add Point
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add bullet
                     </Button>
                   </div>
                   <div className="space-y-2">
                     {exp.description.map((desc, descIndex) => (
-                      <div key={descIndex} className="flex gap-2 items-start">
-                        <div className="flex-1">
-                          <Input
-                            value={desc}
-                            onChange={(e) => {
-                              const updated = [...experiences];
-                              updated[index].description[descIndex] =
-                                e.target.value;
-                              onChange(updated);
-                            }}
-                            placeholder="Start with a strong action verb"
-                            className="bg-white/50 border-gray-200 rounded-md h-8
-                              focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20
-                              hover:border-cyan-500/30 hover:bg-white/60 transition-colors
-                              placeholder:text-gray-400 text-sm"
-                          />
-                        </div>
+                      <div key={descIndex} className="flex gap-2 items-center">
+                        <Input
+                          value={desc}
+                          onChange={(e) => {
+                            const updated = [...experiences];
+                            updated[index].description[descIndex] =
+                              e.target.value;
+                            onChange(updated);
+                          }}
+                          placeholder="Start with a strong action verb…"
+                          className={inputClass + " flex-1"}
+                        />
                         <Button
                           variant="ghost"
                           size="sm"
@@ -279,17 +251,16 @@ export function ProfileWorkExperienceForm({
                             ].description.filter((_, i) => i !== descIndex);
                             onChange(updated);
                           }}
-                          className="text-gray-400 hover:text-red-500 transition-colors duration-300 h-8 w-8"
+                          className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     ))}
                     {exp.description.length === 0 && (
-                      <div className="text-xs text-gray-500 italic">
-                        Add points to describe your responsibilities and
-                        achievements
-                      </div>
+                      <p className="text-xs text-gray-400 italic">
+                        No bullets yet. Click &quot;Add bullet&quot; to start.
+                      </p>
                     )}
                   </div>
                 </div>
@@ -302,7 +273,7 @@ export function ProfileWorkExperienceForm({
       <Button
         variant="outline"
         onClick={addExperience}
-        className="w-full bg-gradient-to-r from-cyan-500/5 via-cyan-500/10 to-blue-500/5 hover:from-cyan-500/10 hover:via-cyan-500/15 hover:to-blue-500/10 border-dashed border-cyan-500/30 hover:border-cyan-500/40 text-cyan-700 hover:text-cyan-800 transition-all duration-300 h-8 text-sm"
+        className="w-full h-9 border-dashed border-gray-200 text-gray-400 text-sm hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
       >
         <Plus className="h-3.5 w-3.5 mr-1.5" />
         Add Work Experience

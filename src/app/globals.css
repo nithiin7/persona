@@ -67,18 +67,6 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    background-image:
-      radial-gradient(
-        circle at top right,
-        hsl(327 60% 92% / 0.2),
-        transparent 40%
-      ),
-      radial-gradient(
-        circle at bottom left,
-        hsl(270 60% 92% / 0.2),
-        transparent 40%
-      );
-    background-attachment: fixed;
   }
 }
 
@@ -88,39 +76,35 @@ body {
   }
 
   .hover-card {
-    @apply transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 hover:bg-white/50;
+    @apply transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
   }
 
-  @keyframes float {
-    0% {
-      transform: translate(0, 0) rotate(0deg);
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
     }
-    50% {
-      transform: translate(-10px, -10px) rotate(1deg);
-    }
-    100% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-  }
-
-  @keyframes float-delayed {
-    0% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-    50% {
-      transform: translate(10px, -5px) rotate(-1deg);
-    }
-    100% {
-      transform: translate(0, 0) rotate(0deg);
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
-  .animate-float {
-    animation: float 8s ease-in-out infinite;
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
-  .animate-float-delayed {
-    animation: float-delayed 9s ease-in-out infinite;
+  .animate-fade-up {
+    animation: fade-up 0.45s ease-out both;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out both;
   }
 
   .bg-radial-glow-purple {

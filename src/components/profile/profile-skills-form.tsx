@@ -2,7 +2,6 @@
 
 import { Skill } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import {
@@ -18,18 +17,15 @@ interface ProfileSkillsFormProps {
   onChange: (skills: Skill[]) => void;
 }
 
+const inputClass =
+  "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
+
 export function ProfileSkillsForm({
   skills,
   onChange,
 }: ProfileSkillsFormProps) {
   const addSkill = () => {
-    onChange([
-      ...skills,
-      {
-        category: "",
-        items: [],
-      },
-    ]);
+    onChange([...skills, { category: "", items: [] }]);
   };
 
   const updateSkill = (
@@ -57,94 +53,76 @@ export function ProfileSkillsForm({
   }, [skills]);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <Accordion
         type="multiple"
-        className="space-y-3"
-        defaultValue={skills.map((_, index) => `skill-${index}`)}
+        className="space-y-2"
+        defaultValue={skills.map((_, i) => `skill-${i}`)}
       >
         {skills.map((skill, index) => (
           <AccordionItem
             key={index}
             value={`skill-${index}`}
-            className="bg-gradient-to-r from-rose-500/5 via-rose-500/10 to-pink-500/5 backdrop-blur-md border border-rose-500/30 hover:border-rose-500/40 hover:shadow-lg transition-all duration-300 shadow-sm rounded-md overflow-hidden"
+            className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors duration-150"
           >
-            <AccordionTrigger className="px-4 py-2 hover:no-underline">
-              <div className="flex items-center justify-between gap-3 flex-1">
-                <div className="flex-1 text-left text-sm font-medium text-rose-900">
+            <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50 transition-colors duration-150">
+              <div className="flex items-center justify-between gap-3 flex-1 min-w-0">
+                <span className="text-sm font-medium text-gray-900 truncate">
                   {skill.category || "New Skill Category"}
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  {skill.items && skill.items.length > 0 && (
-                    <span className="max-w-[300px] truncate">
-                      {skill.items.join(", ")}
-                    </span>
-                  )}
-                </div>
+                </span>
+                {skill.items && skill.items.length > 0 && (
+                  <span className="text-xs text-gray-400 truncate max-w-[220px] mr-2">
+                    {skill.items.join(", ")}
+                  </span>
+                )}
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              <div className="px-4 pb-4 pt-2 space-y-4">
-                {/* Category and Delete Button Row */}
-                <div className="flex items-center justify-between gap-3">
-                  <div className="relative group flex-1">
+              <div className="px-4 pb-4 pt-3 space-y-4 border-t border-gray-100">
+                {/* Category + delete */}
+                <div className="flex items-end gap-2">
+                  <div className="space-y-1.5 flex-1">
+                    <label className="text-xs font-medium text-gray-500">
+                      Category
+                    </label>
                     <Input
                       value={skill.category}
                       onChange={(e) =>
                         updateSkill(index, "category", e.target.value)
                       }
-                      className="text-base bg-white/50 border-gray-200 rounded-md h-8
-                        focus:border-rose-500/40 focus:ring-1 focus:ring-rose-500/20
-                        hover:border-rose-500/30 hover:bg-white/60 transition-colors
-                        placeholder:text-gray-400"
+                      className={inputClass}
                       placeholder="e.g., Programming Languages, Frameworks, Tools"
                     />
-                    <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-rose-700">
-                      CATEGORY
-                    </div>
                   </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => removeSkill(index)}
-                    className="text-gray-400 hover:text-red-500 transition-colors duration-300 h-8 w-8"
+                    className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </div>
 
-                {/* Skills */}
                 <div className="space-y-1.5">
-                  <div className="flex justify-between items-baseline">
-                    <Label className="text-xs font-medium text-rose-700">
+                  <div className="flex items-baseline justify-between">
+                    <label className="text-xs font-medium text-gray-500">
                       Skills
-                    </Label>
-                    <span className="text-[9px] text-gray-500">
+                    </label>
+                    <span className="text-[10px] text-gray-400">
                       Separate with commas
                     </span>
                   </div>
                   <Input
                     value={skillInputs[index] || ""}
                     onChange={(e) => {
-                      const newValue = e.target.value;
-                      setSkillInputs((prev) => ({
-                        ...prev,
-                        [index]: newValue,
-                      }));
-
-                      if (newValue.endsWith(",")) {
-                        const items = newValue
-                          .split(",")
-                          .map((t) => t.trim())
-                          .filter(Boolean);
-                        updateSkill(index, "items", items);
-                      } else {
-                        const items = newValue
-                          .split(",")
-                          .map((t) => t.trim())
-                          .filter(Boolean);
-                        updateSkill(index, "items", items);
-                      }
+                      const val = e.target.value;
+                      setSkillInputs((prev) => ({ ...prev, [index]: val }));
+                      const items = val
+                        .split(",")
+                        .map((t) => t.trim())
+                        .filter(Boolean);
+                      updateSkill(index, "items", items);
                     }}
                     onBlur={(e) => {
                       const items = e.target.value
@@ -157,11 +135,8 @@ export function ProfileSkillsForm({
                         [index]: items.join(", "),
                       }));
                     }}
-                    placeholder="e.g., TypeScript, React, Node.js, AWS"
-                    className="bg-white/50 border-gray-200 rounded-md h-8
-                      focus:border-rose-500/40 focus:ring-1 focus:ring-rose-500/20
-                      hover:border-rose-500/30 hover:bg-white/60 transition-colors
-                      placeholder:text-gray-400 text-sm"
+                    placeholder="TypeScript, React, Node.js, AWS"
+                    className={inputClass}
                   />
                 </div>
               </div>
@@ -173,7 +148,7 @@ export function ProfileSkillsForm({
       <Button
         variant="outline"
         onClick={addSkill}
-        className="w-full bg-gradient-to-r from-rose-500/5 via-rose-500/10 to-pink-500/5 hover:from-rose-500/10 hover:via-rose-500/15 hover:to-pink-500/10 border-dashed border-rose-500/30 hover:border-rose-500/40 text-rose-700 hover:text-rose-800 transition-all duration-300 h-8 text-sm"
+        className="w-full h-9 border-dashed border-gray-200 text-gray-400 text-sm hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
       >
         <Plus className="h-3.5 w-3.5 mr-1.5" />
         Add Skill Category

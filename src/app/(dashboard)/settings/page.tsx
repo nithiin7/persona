@@ -19,8 +19,12 @@ export default async function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <main className="pt-4 pb-16 px-4 md:px-8 max-w-7xl mx-auto">
+    <div className="relative">
+      {/* Clean Background */}
+      <div className="fixed inset-0 z-0 bg-gray-50">
+        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-70" />
+      </div>
+      <main className="relative z-10 pt-6 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <SettingsContent
           user={user}
           isProPlan={isProPlan}
