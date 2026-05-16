@@ -262,7 +262,8 @@ export function CreateTailoredResumeDialog({
           {
             model: selectedModel || "",
             apiKeys,
-          }
+          },
+          profile
         );
       } catch (error: Error | unknown) {
         if (

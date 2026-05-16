@@ -11,7 +11,7 @@ import {
   projectSchema,
   certificationSchema,
 } from "@/lib/zod-schemas";
-import { Job, Resume } from "@/lib/types";
+import { Job, Profile, Resume } from "@/lib/types";
 import { AIConfig } from "@/utils/ai-tools";
 import { initializeAIClient } from "@/utils/ai-tools";
 
@@ -118,52 +118,123 @@ const resumeAISchema = z.object({
 export async function tailorResumeToJob(
   resume: Resume,
   jobListing: z.infer<typeof simplifiedJobSchema>,
-  config?: AIConfig
+  config?: AIConfig,
+  profile?: Profile
 ) {
   const isPro = true;
   const aiClient = initializeAIClient(config, isPro, true);
 
+  const profileSection = profile
+    ? `
+This is the candidate's FULL CAREER PROFILE — every job, project, skill, and certification they have ever worked with. Use this as your primary source of raw material when selecting content.
+
+Full Career Profile:
+${JSON.stringify(
+  {
+    work_experience: profile.work_experience,
+    education: profile.education,
+    skills: profile.skills,
+    projects: profile.projects,
+    certifications: profile.certifications,
+  },
+  null,
+  2
+)}
+`
+    : "";
+
   try {
     const { object } = await generateObject({
       model: aiClient as LanguageModelV1,
-      temperature: 0.5,
+      temperature: 0.2,
       schema: resumeAISchema,
       maxRetries: 2,
       system: `
-You are Persona, an advanced AI resume transformer that specializes in optimizing technical resumes for software engineering roles using machine-learning-driven ATS strategies. Your mission is to transform the provided resume into a highly targeted, ATS-friendly document that precisely aligns with the job description.
+You are an expert ATS optimization specialist and technical resume writer. Your task is to build the strongest possible resume for a specific job posting by selecting the best content from the candidate's career history and optimizing it for ATS scoring.
 
-**Core Objectives:**
+ATS systems score resumes by: (1) exact keyword matching using the same spelling and capitalization as the JD, (2) keyword frequency across the document, (3) skills section match rate, (4) job title alignment, and (5) relevant experience density. Every decision you make must optimize for these five factors.
 
-1. **Integrate Job-Specific Terminology & Reorder Content:**
-   - Replace generic descriptions with precise, job-specific technical terms drawn from the job description.
-   - Reorder or emphasize sections and bullet points to prioritize experiences that most closely match the role's requirements.
-   - Use strong, active language that mirrors the job description's vocabulary and focus.
-   - Ensure all modifications are strictly based on the resume's original data—never invent new tools, versions, or experiences.
+---
 
-2. **STAR Framework for Technical Storytelling:**
-   For every work experience bullet point:
-   - Situation: briefly set the technical or business context.
-   - Task: define the specific responsibility or challenge.
-   - Action: describe the technical actions taken with specific technology stack details.
-   - Result: quantify the impact with clear, job-relevant metrics.
+**STEP 1 — EXTRACT JD KEYWORDS (do this mentally before writing anything)**
 
-3. **Enhanced Technical Detailing:**
-   - Convert simple technology lists into detailed representations including versions and frameworks.
-   - Enrich work experience with architectural context and measurable performance metrics.
+From the job description, identify:
+- Top 15–20 technical skills, tools, frameworks, and languages — note their EXACT spelling and capitalization as written in the JD (e.g., "Node.js" not "NodeJS", "CI/CD" not "ci-cd", "TypeScript" not "Typescript")
+- Key methodologies, architectures, and domain terms (e.g., "microservices", "REST APIs", "agile")
+- The exact job position title
+- Required soft-skill keywords (e.g., "cross-functional", "stakeholder", "ownership")
 
-4. **Strict Output Schema:**
-   Return ONLY these fields with EXACTLY these names:
-   - work_experience: array of { company, position, location, date, description (array of strings), technologies (array of strings) }
-   - education: array of { school, degree, field, location, date, gpa, achievements (array of strings) }
-   - skills: array of { category (string), items (array of strings) }
-   - projects: array of { name, description (array of strings), date, technologies (array of strings), url, github_url }
-   - certifications: array of { name, provider, date, credential_id, credential_url }
-   - target_role: string (the job position title)
+---
 
-   Do NOT use field names like "role", "dates", "responsibilities", "institution", "title" — use the exact names above.
+**STEP 2 — SELECT THE BEST CONTENT FROM THE FULL CAREER PROFILE**
+
+${
+  profile
+    ? `A full career profile has been provided alongside the base resume. The profile is your PRIMARY source of material — it contains everything the candidate has ever done.
+
+Selection rules:
+- Work experience: include ALL jobs (never fabricate or drop companies/dates), but for each job select only the bullet points most relevant to this role; drop bullets with zero relevance as long as at least 2 remain per entry
+- Projects: select up to 5 projects from the full profile list that best match the JD's tech stack and domain; if the base resume already has relevant projects, prefer those but supplement from the profile if better ones exist
+- Skills: pull ALL skill items from the profile that are relevant to this role — the profile is the complete inventory; do not limit yourself to what is in the base resume
+- Certifications: include any from the profile that are relevant to this role`
+    : `No separate profile was provided. Use the base resume as both the source of content and formatting reference.
+
+For each work experience entry, keep only bullet points relevant to this role (minimum 2 per entry). Use keyword gap analysis to identify what's missing.`
+}
+
+---
+
+**STEP 3 — KEYWORD GAP ANALYSIS**
+
+Compare extracted JD keywords against the selected content. For each JD keyword that is absent but plausibly within the candidate's actual experience (implied by their existing bullets or technologies), plan to inject it naturally. Never fabricate experience — only inject terms consistent with what the candidate demonstrably did.
+
+---
+
+**STEP 4 — SKILLS SECTION REORDERING & ENRICHMENT**
+
+- Reorganize skill categories so the category with the most JD-matching skills appears first.
+- Within each category, move JD-matching skills to the front of the items list.
+- Add any JD-required skills evidenced in the candidate's work experience or projects but not yet listed in skills.
+- Use the EXACT capitalization and spelling the JD uses for all skill items.
+- Remove or demote skills with zero relevance to this role to improve keyword density ratio.
+
+---
+
+**STEP 5 — BULLET POINT REWRITING WITH KEYWORD INJECTION**
+
+For EVERY selected work experience and project bullet point:
+- Rewrite using the STAR pattern in a single concise sentence: [Action verb] + [what was built/done with specific technology] + [business or technical context] + [quantified or concrete result]
+- Inject JD keywords naturally — if the JD says "distributed systems" and the candidate built services across nodes, use "distributed systems"
+- Use the EXACT spelling and capitalization of tools as they appear in the JD
+- Reorder each job's bullets so the most JD-relevant ones lead
+- NEVER copy original bullet points verbatim — every bullet must be meaningfully rewritten
+- NEVER fabricate metrics, companies, dates, project names, or technologies not present in the source material
+
+---
+
+**STEP 6 — TECHNOLOGIES ARRAYS**
+
+For each work_experience and project entry, update the technologies array to:
+- Include all JD keywords consistent with what was done in that role or project (using exact JD spelling)
+- Remove technologies completely irrelevant to the target role to improve signal-to-noise ratio
+
+---
+
+**HARD CONSTRAINTS:**
+- NEVER return an empty array for a section that has data in the input
+- NEVER change company names, job titles held, school names, degree names, project names, or dates
+- Always include all education entries
+- Set target_role to the EXACT job position title from the job description
+- Return ONLY these field names: work_experience, education, skills, projects, certifications, target_role
+- work_experience items: { company, position, location, date, description (string[]), technologies (string[]) }
+- education items: { school, degree, field, location, date, gpa, achievements (string[]) }
+- skills items: { category (string), items (string[]) }
+- projects items: { name, description (string[]), date, technologies (string[]), url, github_url }
+- certifications items: { name, provider, date, credential_id, credential_url }
       `,
       prompt: `
-    This is the Resume:
+    ${profileSection}
+    This is the Base Resume (use for formatting reference and as a fallback source):
     ${JSON.stringify(resume, null, 2)}
 
     This is the Job Description:
