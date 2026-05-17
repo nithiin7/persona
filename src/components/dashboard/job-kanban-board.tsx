@@ -63,9 +63,29 @@ const WORK_LOCATION_LABEL: Record<string, string> = {
   hybrid: "Hybrid",
 };
 
+function MatchScoreBadge({ score }: { score: number }) {
+  const colorClass =
+    score >= 80
+      ? "bg-emerald-50 text-emerald-700"
+      : score >= 50
+        ? "bg-amber-50 text-amber-700"
+        : "bg-red-50 text-red-600";
+  return (
+    <span
+      className={cn(
+        "text-[10px] font-semibold px-1.5 py-0.5 rounded-full",
+        colorClass
+      )}
+    >
+      {score}% match
+    </span>
+  );
+}
+
 function KanbanCard({
   job,
   resumeId,
+  matchScore,
   isDragging,
   onDragStart,
   onDragEnd,
@@ -73,6 +93,7 @@ function KanbanCard({
 }: {
   job: Job;
   resumeId?: string;
+  matchScore?: number;
   isDragging: boolean;
   onDragStart: () => void;
   onDragEnd: () => void;
@@ -141,6 +162,12 @@ function KanbanCard({
         )}
       </div>
 
+      {matchScore !== undefined && (
+        <div className="mt-2">
+          <MatchScoreBadge score={matchScore} />
+        </div>
+      )}
+
       <div className="mt-2 flex items-center gap-3">
         {job.job_url && (
           <a
@@ -185,6 +212,7 @@ function KanbanColumn({
   onCardDragEnd,
   onCardDelete,
   jobResumeMap,
+  matchScoreMap,
 }: {
   label: string;
   dotClass: string;
@@ -199,6 +227,7 @@ function KanbanColumn({
   onCardDragEnd: () => void;
   onCardDelete: (id: string) => void;
   jobResumeMap: Record<string, string>;
+  matchScoreMap: Record<string, number>;
 }) {
   return (
     <div
@@ -238,6 +267,7 @@ function KanbanColumn({
               key={job.id}
               job={job}
               resumeId={jobResumeMap[job.id]}
+              matchScore={matchScoreMap[job.id]}
               isDragging={draggingId === job.id}
               onDragStart={() => onCardDragStart(job.id)}
               onDragEnd={onCardDragEnd}
@@ -253,9 +283,11 @@ function KanbanColumn({
 export function JobKanbanBoard({
   initialJobs,
   jobResumeMap,
+  matchScoreMap,
 }: {
   initialJobs: Job[];
   jobResumeMap: Record<string, string>;
+  matchScoreMap: Record<string, number>;
 }) {
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
   const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -382,6 +414,7 @@ export function JobKanbanBoard({
             onCardDragEnd={handleCardDragEnd}
             onCardDelete={handleCardDelete}
             jobResumeMap={jobResumeMap}
+            matchScoreMap={matchScoreMap}
           />
         ))}
       </div>

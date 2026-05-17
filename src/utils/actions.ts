@@ -1,7 +1,24 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { type ApplicationStatus, Profile, ResumeSummary } from "@/lib/types";
+import {
+  type ApplicationStatus,
+  type Skill,
+  Profile,
+  ResumeSummary,
+} from "@/lib/types";
+
+function computeMatchScore(skills: Skill[], jobKeywords: string[]): number {
+  if (!jobKeywords.length) return 0;
+  const resumeText = skills
+    .flatMap((s) => [s.category, ...s.items])
+    .join(" ")
+    .toLowerCase();
+  const matched = jobKeywords.filter((kw) =>
+    resumeText.includes(kw.toLowerCase())
+  );
+  return Math.round((matched.length / jobKeywords.length) * 100);
+}
 
 interface DashboardData {
   profile: Profile | null;
@@ -70,7 +87,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     const { data: resumes, error: resumesError } = await supabase
       .from("resumes")
       .select(
-        "id, user_id, name, target_role, is_base_resume, job_id, created_at, updated_at"
+        "id, user_id, name, target_role, is_base_resume, job_id, created_at, updated_at, skills"
       )
       .eq("user_id", user.id);
 
@@ -98,22 +115,35 @@ export async function getDashboardData(): Promise<DashboardData> {
       .filter((id): id is string => !!id);
 
     let jobStatusMap: Record<string, string | null> = {};
+    let jobKeywordsMap: Record<string, string[]> = {};
     if (jobIds.length > 0) {
       const { data: jobs } = await supabase
         .from("jobs")
-        .select("id, application_status")
+        .select("id, application_status, keywords")
         .in("id", jobIds);
       jobStatusMap = Object.fromEntries(
         (jobs ?? []).map((j) => [j.id, j.application_status])
       );
+      jobKeywordsMap = Object.fromEntries(
+        (jobs ?? []).map((j) => [j.id, j.keywords ?? []])
+      );
     }
 
-    const tailoredResumes = rawTailored.map((resume) => ({
-      ...resume,
-      application_status: (resume.job_id
-        ? (jobStatusMap[resume.job_id] ?? null)
-        : null) as ApplicationStatus | null,
-    }));
+    const tailoredResumes = rawTailored.map((resume) => {
+      const { skills, ...rest } = resume as typeof resume & {
+        skills?: Skill[];
+      };
+      const kwds = resume.job_id ? (jobKeywordsMap[resume.job_id] ?? []) : [];
+      const matchScore =
+        kwds.length > 0 ? computeMatchScore(skills ?? [], kwds) : undefined;
+      return {
+        ...rest,
+        application_status: (resume.job_id
+          ? (jobStatusMap[resume.job_id] ?? null)
+          : null) as ApplicationStatus | null,
+        matchScore,
+      };
+    });
 
     return {
       profile,

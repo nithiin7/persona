@@ -109,6 +109,25 @@ const STATUS_CONFIG: Record<
   },
 };
 
+function MatchScoreBadge({ score }: { score: number }) {
+  const colorClass =
+    score >= 80
+      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+      : score >= 50
+        ? "bg-amber-50 text-amber-700 border-amber-200"
+        : "bg-red-50 text-red-600 border-red-200";
+  return (
+    <span
+      className={cn(
+        "flex items-center px-1.5 py-0.5 rounded-full border text-[9px] font-semibold",
+        colorClass
+      )}
+    >
+      {score}% match
+    </span>
+  );
+}
+
 function StatusBadge({ resume }: { resume: OptimisticResume }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -541,8 +560,11 @@ export function ResumesSection({
 
             {/* Application Status Badge (tailored only) */}
             {!resume.isOptimistic && type === "tailored" && resume.job_id && (
-              <div className="absolute top-1.5 right-1.5 z-10">
+              <div className="absolute top-1.5 right-1.5 z-10 flex flex-col items-end gap-1">
                 <StatusBadge resume={resume} />
+                {resume.matchScore !== undefined && (
+                  <MatchScoreBadge score={resume.matchScore} />
+                )}
               </div>
             )}
 

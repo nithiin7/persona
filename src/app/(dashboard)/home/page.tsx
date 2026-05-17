@@ -175,6 +175,11 @@ export default async function Home({
                     .filter((r) => r.job_id)
                     .map((r) => [r.job_id!, r.id])
                 )}
+                matchScoreMap={Object.fromEntries(
+                  tailoredResumes
+                    .filter((r) => r.job_id && r.matchScore !== undefined)
+                    .map((r) => [r.job_id!, r.matchScore!])
+                )}
               />
             </div>
 

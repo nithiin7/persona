@@ -171,6 +171,7 @@ export interface ResumeSummary {
   target_role: string;
   is_base_resume: boolean;
   application_status?: ApplicationStatus | null;
+  matchScore?: number;
   created_at: string;
   updated_at: string;
 }
