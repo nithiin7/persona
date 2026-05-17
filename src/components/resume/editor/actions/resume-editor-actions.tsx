@@ -1,6 +1,6 @@
 "use client";
 
-import { Resume } from "@/lib/types";
+import { Resume, Job } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
   AlertCircle,
@@ -15,7 +15,7 @@ import { toast } from "@/hooks/use-toast";
 import { pdf } from "@react-pdf/renderer";
 import { TextImport } from "../../text-import";
 import { ResumePDFDocument } from "../preview/resume-pdf-document";
-import { cn } from "@/lib/utils";
+import { cn, getResumeFileName } from "@/lib/utils";
 import { useResumeContext } from "../resume-editor-context";
 
 import { updateResume } from "@/utils/actions/resumes/actions";
@@ -31,10 +31,12 @@ import { generateResumeDocx } from "@/lib/docx-export";
 
 interface ResumeEditorActionsProps {
   onResumeChange: (field: keyof Resume, value: Resume[keyof Resume]) => void;
+  job?: Job | null;
 }
 
 export function ResumeEditorActions({
   onResumeChange,
+  job,
 }: ResumeEditorActionsProps) {
   const { state, dispatch } = useResumeContext();
   const { resume, isSaving, hasUnsavedChanges } = state;
@@ -98,12 +100,12 @@ export function ResumeEditorActions({
                       let filename: string;
                       if (downloadOptions.resumeFormat === "docx") {
                         blob = await generateResumeDocx(resume);
-                        filename = `${resume.first_name}_${resume.last_name}_Resume.docx`;
+                        filename = getResumeFileName(resume, job, "docx");
                       } else {
                         blob = await pdf(
                           <ResumePDFDocument resume={resume} />
                         ).toBlob();
-                        filename = `${resume.first_name}_${resume.last_name}_Resume.pdf`;
+                        filename = getResumeFileName(resume, job, "pdf");
                       }
                       const url = URL.createObjectURL(blob);
                       const link = document.createElement("a");

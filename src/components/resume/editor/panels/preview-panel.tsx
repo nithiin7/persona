@@ -1,6 +1,6 @@
 "use client";
 
-import { Resume } from "@/lib/types";
+import { Resume, Job } from "@/lib/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ResumePreview } from "../preview/resume-preview";
 import CoverLetter from "@/components/cover-letter/cover-letter";
@@ -10,13 +10,14 @@ interface PreviewPanelProps {
   resume: Resume;
   onResumeChange: (field: keyof Resume, value: Resume[keyof Resume]) => void;
   width: number;
+  job?: Job | null;
 }
 
-export function PreviewPanel({ resume, width }: PreviewPanelProps) {
+export function PreviewPanel({ resume, width, job }: PreviewPanelProps) {
   return (
     <ScrollArea className="h-full bg-gray-50">
       <div className="">
-        <ResumeContextMenu resume={resume}>
+        <ResumeContextMenu resume={resume} job={job}>
           <ResumePreview resume={resume} containerWidth={width} />
         </ResumeContextMenu>
       </div>

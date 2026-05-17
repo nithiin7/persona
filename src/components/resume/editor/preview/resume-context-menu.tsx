@@ -8,19 +8,22 @@ import {
 } from "@/components/ui/context-menu";
 import { Download, Copy } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { Resume, WorkExperience, Education, Project } from "@/lib/types";
+import { Resume, Job, WorkExperience, Education, Project } from "@/lib/types";
 import { pdf } from "@react-pdf/renderer";
 import { ResumePDFDocument } from "../preview/resume-pdf-document";
 import { generateResumeDocx } from "@/lib/docx-export";
+import { getResumeFileName } from "@/lib/utils";
 
 interface ResumeContextMenuProps {
   children: React.ReactNode;
   resume: Resume;
+  job?: Job | null;
 }
 
 export function ResumeContextMenu({
   children,
   resume,
+  job,
 }: ResumeContextMenuProps) {
   const handleDownloadDocx = async () => {
     try {
@@ -28,7 +31,7 @@ export function ResumeContextMenu({
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${resume.first_name}_${resume.last_name}_Resume.docx`;
+      link.download = getResumeFileName(resume, job, "docx");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -53,7 +56,7 @@ export function ResumeContextMenu({
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${resume.first_name}_${resume.last_name}_Resume.pdf`;
+      link.download = getResumeFileName(resume, job, "pdf");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

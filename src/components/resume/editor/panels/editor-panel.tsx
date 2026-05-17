@@ -88,7 +88,10 @@ export function EditorPanel({
           <div className="relative pb-36">
             <div className="sticky top-0 z-20 bg-white border-b border-gray-100">
               <div className="flex flex-col gap-4">
-                <ResumeEditorActions onResumeChange={onResumeChange} />
+                <ResumeEditorActions
+                  onResumeChange={onResumeChange}
+                  job={job}
+                />
               </div>
             </div>
 

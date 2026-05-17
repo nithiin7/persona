@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { Profile } from "./types";
+import type { Profile, Resume, Job } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -51,6 +51,26 @@ export function calculateProfileCompleteness(
   const missing = checks.filter((c) => !c.met).map((c) => c.label);
 
   return { score, missing };
+}
+
+export function getResumeFileName(
+  resume: Resume,
+  job: Job | null | undefined,
+  ext: "pdf" | "docx"
+): string {
+  const first = resume.first_name || "";
+  const lastInitial = resume.last_name ? resume.last_name[0] : "";
+  const namePart = lastInitial ? `${first}_${lastInitial}` : first || "Resume";
+
+  if (!resume.is_base_resume && job?.company_name) {
+    const company = job.company_name
+      .replace(/[^a-zA-Z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "");
+    return `${namePart}_Resume_${company}.${ext}`;
+  }
+
+  const lastName = resume.last_name || "";
+  return `${first}${lastName ? `_${lastName}` : ""}_Resume.${ext}`;
 }
 
 export function sanitizeUnknownStrings<T>(data: T): T {

@@ -28,7 +28,7 @@ export async function createJob(
     description: jobListing.description,
     location: jobListing.location,
     salary_range: jobListing.salary_range,
-    keywords: jobListing.keywords,
+    keywords: jobListing.keywords ?? [],
     work_location: jobListing.work_location || "in_person",
     employment_type: jobListing.employment_type || "full_time",
     is_active: true,

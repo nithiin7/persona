@@ -149,6 +149,7 @@ export function ResumeEditorClient({
       resume={debouncedResume}
       onResumeChange={updateField}
       width={width}
+      job={job}
     />
   );
 
