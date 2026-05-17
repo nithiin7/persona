@@ -2,7 +2,14 @@
 
 import { Resume } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Download, Loader2, Save } from "lucide-react";
+import {
+  AlertCircle,
+  Check,
+  Circle,
+  Download,
+  Loader2,
+  Save,
+} from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { pdf } from "@react-pdf/renderer";
 import { TextImport } from "../../text-import";
@@ -29,7 +36,10 @@ export function ResumeEditorActions({
   onResumeChange,
 }: ResumeEditorActionsProps) {
   const { state, dispatch } = useResumeContext();
-  const { resume, isSaving } = state;
+  const { resume, isSaving, hasUnsavedChanges } = state;
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
   const [downloadOptions, setDownloadOptions] = useState({
     resume: true,
     coverLetter: true,
@@ -38,14 +48,15 @@ export function ResumeEditorActions({
 
   // Save Resume
   const handleSave = async () => {
+    setSaveStatus("saving");
+    dispatch({ type: "SET_SAVING", value: true });
     try {
-      dispatch({ type: "SET_SAVING", value: true });
       await updateResume(state.resume.id, state.resume);
-      toast({
-        title: "Changes saved",
-        description: "Your resume has been updated successfully.",
-      });
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (error) {
+      setSaveStatus("error");
+      setTimeout(() => setSaveStatus("idle"), 3000);
       toast({
         title: "Save failed",
         description:
@@ -248,6 +259,34 @@ export function ResumeEditorActions({
             </>
           )}
         </Button>
+      </div>
+
+      {/* Save status indicator */}
+      <div className="h-4 flex items-center justify-end mt-1 pr-0.5">
+        {saveStatus === "saving" && (
+          <span className="flex items-center gap-1 text-[10px] text-gray-400">
+            <Loader2 className="h-2.5 w-2.5 animate-spin" />
+            Saving...
+          </span>
+        )}
+        {saveStatus === "saved" && (
+          <span className="flex items-center gap-1 text-[10px] text-emerald-600 animate-in fade-in duration-200">
+            <Check className="h-2.5 w-2.5" />
+            Saved
+          </span>
+        )}
+        {saveStatus === "error" && (
+          <span className="flex items-center gap-1 text-[10px] text-red-600 animate-in fade-in duration-200">
+            <AlertCircle className="h-2.5 w-2.5" />
+            Save failed
+          </span>
+        )}
+        {saveStatus === "idle" && hasUnsavedChanges && (
+          <span className="flex items-center gap-1 text-[10px] text-gray-400">
+            <Circle className="h-2 w-2 fill-amber-400 text-amber-400" />
+            Unsaved changes
+          </span>
+        )}
       </div>
     </div>
   );
