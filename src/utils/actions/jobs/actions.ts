@@ -174,6 +174,25 @@ export async function updateJobStatus(
   revalidatePath("/", "layout");
 }
 
+export async function getAllJobsForKanban(): Promise<Job[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) throw new Error("User not authenticated");
+
+  const { data, error } = await supabase
+    .from("jobs")
+    .select("*")
+    .eq("is_active", true)
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error("Failed to fetch jobs");
+  return data ?? [];
+}
+
 export async function createEmptyJob(): Promise<Job> {
   const supabase = await createClient();
   const {

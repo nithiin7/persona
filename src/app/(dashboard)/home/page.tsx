@@ -23,9 +23,11 @@ import {
   type SortOption,
   type SortDirection,
 } from "@/components/resume/management/resume-sort-controls";
-import type { ResumeSummary } from "@/lib/types";
+import type { ResumeSummary, Job } from "@/lib/types";
 import { ResumesSection } from "@/components/dashboard/resumes-section";
+import { JobKanbanBoard } from "@/components/dashboard/job-kanban-board";
 import { getDashboardData } from "@/utils/actions";
+import { getAllJobsForKanban } from "@/utils/actions/jobs/actions";
 
 export default async function Home({
   searchParams,
@@ -36,15 +38,16 @@ export default async function Home({
   const params = await searchParams;
   const isNewSignup = params?.type === "signup" && params?.token_hash;
 
-  // Fetch dashboard data and handle authentication
-  let data;
+  // Fetch dashboard data and jobs in parallel
+  let data: Awaited<ReturnType<typeof getDashboardData>>;
+  let jobs: Job[] = [];
   try {
-    data = await getDashboardData();
-    if (!data.profile) {
-      redirect("/");
-    }
+    [data, jobs] = await Promise.all([
+      getDashboardData(),
+      getAllJobsForKanban(),
+    ]);
+    if (!data.profile) redirect("/");
   } catch {
-    // Redirect to login if error occurs
     redirect("/");
   }
 
@@ -52,7 +55,7 @@ export default async function Home({
     profile,
     baseResumes: unsortedBaseResumes,
     tailoredResumes: unsortedTailoredResumes,
-  } = data;
+  } = data!;
 
   // Get sort parameters for both sections
   const baseSort = (params.baseSort as SortOption) || "createdAt";
@@ -153,8 +156,29 @@ export default async function Home({
               </p>
             </div>
 
-            {/* Base Resumes Section */}
+            {/* Application Pipeline */}
             <div className="animate-fade-up" style={{ animationDelay: "80ms" }}>
+              <div className="flex items-baseline justify-between mb-3">
+                <div>
+                  <h2 className="text-xl font-semibold tracking-tight text-gray-900">
+                    Application Pipeline
+                  </h2>
+                  <p className="text-sm text-gray-500 mt-0.5">
+                    {jobs.length} {jobs.length === 1 ? "job" : "jobs"} tracked
+                  </p>
+                </div>
+              </div>
+              <JobKanbanBoard initialJobs={jobs} />
+            </div>
+
+            {/* Divider */}
+            <div className="h-px bg-gray-200" />
+
+            {/* Base Resumes Section */}
+            <div
+              className="animate-fade-up"
+              style={{ animationDelay: "160ms" }}
+            >
               <ResumesSection
                 type="base"
                 resumes={baseResumes}
