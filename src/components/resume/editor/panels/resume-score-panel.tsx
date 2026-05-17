@@ -161,10 +161,8 @@ export default function ResumeScorePanel({
     setIsCalculating(true);
     try {
       const MODEL_STORAGE_KEY = "persona-default-model";
-      // const LOCAL_STORAGE_KEY = 'persona-api-keys';
 
       const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
-      // const storedKeys = localStorage.getItem(LOCAL_STORAGE_KEY);
       const apiKeys: string[] = [];
 
       // Convert job type to match the expected schema

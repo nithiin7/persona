@@ -571,7 +571,6 @@ export async function generateResumeScore(
       prompt,
     });
 
-    // console.log("THE OUTPUTTED object", object);
     return object;
   } catch (error) {
     console.error("Error SCORING resume:", error);

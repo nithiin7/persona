@@ -440,7 +440,6 @@ export async function getTotalUserCount(): Promise<number> {
     console.error("Error in getTotalUserCount pagination loop:", error);
     // Depending on requirements, you might return partial count or 0, or re-throw
     return 0; // Return 0 on error for now
-    // throw error;
   }
 
   return totalCount;
@@ -455,7 +454,6 @@ export async function getTotalResumeCount(): Promise<number> {
     console.error("Error fetching total resume count:", error);
     // Decide how to handle error, returning 0 for now or throwing
     return 0;
-    // throw new Error('Failed to fetch total resume count');
   }
 
   // Assuming the RPC returns the count directly

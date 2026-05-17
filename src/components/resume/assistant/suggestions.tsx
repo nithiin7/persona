@@ -496,15 +496,6 @@ function isNewItem<T>(
   return !current.includes(item);
 }
 
-// const renderBoldText = (text: string) => {
-//   return text.split(/(\*\*.*?\*\*)/).map((part, index) => {
-//     if (part.startsWith('**') && part.endsWith('**')) {
-//       return <strong key={index}>{part.slice(2, -2)}</strong>;
-//     }
-//     return part;
-//   });
-// };
-
 export function Suggestion({
   type,
   content,

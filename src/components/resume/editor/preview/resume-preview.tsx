@@ -133,8 +133,6 @@ export const ResumePreview = memo(
     // Convert percentage to pixels based on parent container
     const getPixelWidth = useCallback(() => {
       if (typeof window === "undefined") return 0;
-      // console.log('debouncedWidth (INSIDE)'+containerWidth);
-      // console.log('debouncedWidth * 10 (INSIDE)'+debouncedWidth * 10);
       return debouncedWidth;
     }, [debouncedWidth]);
 

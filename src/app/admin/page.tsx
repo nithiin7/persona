@@ -1,4 +1,3 @@
-// Removed getUserId import
 import UsersTable from "./components/users-table";
 import {
   getTotalUserCount,
@@ -40,8 +39,6 @@ export default async function AdminPage() {
       getTailoredResumeCount(),
       getProUserCount(), // Call the new action
     ]);
-
-    // Removed averageResumesPerUser calculation
 
     return (
       <div className="container mx-auto py-10 px-4 md:px-6 lg:px-8">

@@ -1,6 +1,4 @@
-// Removed unused redirect import
 import Link from "next/link";
-// Removed getUserId import
 import {
   getUserDetailsById,
   getResumeCountForUser,
