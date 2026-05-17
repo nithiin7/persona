@@ -223,17 +223,28 @@ function KanbanColumn({
       </div>
 
       <div className="flex-1 p-2 space-y-2 min-h-[100px]">
-        {jobs.map((job) => (
-          <KanbanCard
-            key={job.id}
-            job={job}
-            resumeId={jobResumeMap[job.id]}
-            isDragging={draggingId === job.id}
-            onDragStart={() => onCardDragStart(job.id)}
-            onDragEnd={onCardDragEnd}
-            onDelete={() => onCardDelete(job.id)}
-          />
-        ))}
+        {jobs.length === 0 ? (
+          <div
+            className={cn(
+              "h-full min-h-[80px] rounded-lg border border-dashed flex items-center justify-center",
+              isOver ? "border-gray-400 bg-gray-100" : "border-gray-200"
+            )}
+          >
+            <p className="text-[11px] text-gray-300 select-none">Drop here</p>
+          </div>
+        ) : (
+          jobs.map((job) => (
+            <KanbanCard
+              key={job.id}
+              job={job}
+              resumeId={jobResumeMap[job.id]}
+              isDragging={draggingId === job.id}
+              onDragStart={() => onCardDragStart(job.id)}
+              onDragEnd={onCardDragEnd}
+              onDelete={() => onCardDelete(job.id)}
+            />
+          ))
+        )}
       </div>
     </div>
   );
