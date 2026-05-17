@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Lock, Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Logo } from "@/components/ui/logo";
 
 export default function UpdatePasswordPage() {
   const [password, setPassword] = useState("");
@@ -19,16 +20,12 @@ export default function UpdatePasswordPage() {
   const supabase = createClient();
 
   useEffect(() => {
-    // Check if user is in password reset flow
     const checkSession = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/");
-      }
+      if (!user) router.push("/");
     };
-
     checkSession();
   }, [router, supabase.auth]);
 
@@ -50,19 +47,13 @@ export default function UpdatePasswordPage() {
     }
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: password,
-      });
-
+      const { error } = await supabase.auth.updateUser({ password });
       if (error) {
         setError(error.message);
         return;
       }
-
       setSuccess(true);
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
+      setTimeout(() => router.push("/"), 2000);
     } catch (error) {
       setError("An unexpected error occurred");
       console.error("Password update error:", error);
@@ -71,83 +62,112 @@ export default function UpdatePasswordPage() {
     }
   };
 
+  const inputClass =
+    "h-9 border-gray-200 bg-white text-sm placeholder:text-gray-400 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
+  const labelClass = "text-xs font-medium text-gray-500";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50/50 via-sky-50/50 to-violet-50/50">
-      <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-          <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Update your password
+    <div className="h-screen bg-white flex items-center justify-center overflow-y-auto px-4">
+      {/* Dot grid */}
+      <div
+        className="fixed inset-0 opacity-[0.4] pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, #d1d5db 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
+      />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_50%,transparent_40%,white_100%)] pointer-events-none" />
+
+      <div className="relative z-10 w-full max-w-[380px]">
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
+          {/* Header */}
+          <div className="px-7 pt-7 pb-5 border-b border-gray-100">
+            <Logo asLink={false} className="mb-4" />
+            <h1 className="text-base font-semibold text-gray-900">
+              Set a new password
             </h1>
-            <p className="text-sm text-muted-foreground">
-              Enter your new password below.
+            <p className="text-xs text-gray-400 mt-1">
+              Choose a strong password for your account.
             </p>
           </div>
 
-          <div className="grid gap-6">
-            {error && (
-              <Alert
-                variant="destructive"
-                className="bg-red-50/50 text-red-900 border-red-200/50"
-              >
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
+          {/* Form */}
+          <div className="px-7 py-6">
             {success ? (
-              <Alert className="bg-emerald-50/50 text-emerald-900 border-emerald-200/50">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <AlertDescription>
-                  Password updated successfully! Redirecting to login...
-                </AlertDescription>
-              </Alert>
+              <div className="flex flex-col items-center gap-3 py-2 text-center">
+                <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">
+                    Password updated
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Redirecting you to sign in…
+                  </p>
+                </div>
+              </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="password">New Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50" />
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      required
-                      minLength={6}
-                      className="pl-10 bg-white/50 border-white/40 focus:border-violet-500/50 focus:ring-violet-500/30 transition-all duration-300"
-                    />
-                  </div>
+                {error && (
+                  <Alert
+                    variant="destructive"
+                    className="bg-red-50 text-red-800 border-red-200 py-2"
+                  >
+                    <AlertDescription className="text-xs">
+                      {error}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="password" className={labelClass}>
+                    New Password
+                  </Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    minLength={6}
+                    autoFocus
+                    className={inputClass}
+                  />
+                  <p className="text-[11px] text-gray-400">
+                    Minimum 6 characters
+                  </p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50" />
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="••••••••"
-                      required
-                      minLength={6}
-                      className="pl-10 bg-white/50 border-white/40 focus:border-violet-500/50 focus:ring-violet-500/30 transition-all duration-300"
-                    />
-                  </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="confirmPassword" className={labelClass}>
+                    Confirm New Password
+                  </Label>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    minLength={6}
+                    className={inputClass}
+                  />
                 </div>
 
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-violet-600 via-blue-600 to-violet-600 hover:from-violet-500 hover:via-blue-500 hover:to-violet-500 shadow-lg shadow-violet-500/25 transition-all duration-500 animate-gradient-x"
+                  className="w-full h-9 bg-gray-900 hover:bg-gray-700 text-white text-sm transition-colors duration-150"
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating password...
+                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                      Updating…
                     </>
                   ) : (
                     "Update Password"

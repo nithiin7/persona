@@ -7,115 +7,87 @@ import {
 
 export default function ResumeEditorLoading() {
   return (
-    <div className="h-[calc(100vh-4rem)] overflow-hidden relative">
-      <div className="max-w-[2000px] mx-auto h-[calc(100vh-120px)] pt-4 px-6 md:px-8 lg:px-12">
-        <ResizablePanelGroup
-          direction="horizontal"
-          className="h-full rounded-lg border-purple-200/40"
-        >
+    <div className="h-[calc(100vh-56px)] bg-gray-50 overflow-hidden">
+      <div className="h-full max-w-[2000px] mx-auto px-4 py-4">
+        <ResizablePanelGroup direction="horizontal" className="h-full gap-2">
           {/* Editor Panel */}
-          <ResizablePanel defaultSize={40}>
-            <div className="flex flex-col h-full mr-4">
-              {/* Editor Header Skeleton */}
-              <div className="sticky top-0 z-20 space-y-4 backdrop-blur-sm bg-purple-50/80 p-4 rounded-t-lg">
+          <ResizablePanel defaultSize={38}>
+            <div className="flex flex-col h-full bg-white border border-gray-200 rounded-xl overflow-hidden">
+              {/* Header + tabs */}
+              <div className="px-4 pt-4 pb-3 border-b border-gray-100 space-y-3">
                 <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-48" />
+                  <Skeleton className="h-5 w-40" />
                   <div className="flex gap-2">
-                    <Skeleton className="h-9 w-24" />
-                    <Skeleton className="h-9 w-24" />
+                    <Skeleton className="h-7 w-20 rounded-lg" />
+                    <Skeleton className="h-7 w-20 rounded-lg" />
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Skeleton key={i} className="h-9 w-20" />
+                {/* Content tabs — 3×2 grid */}
+                <div className="grid grid-cols-3 gap-1">
+                  {[...Array(6)].map((_, i) => (
+                    <Skeleton key={i} className="h-8 rounded-md" />
+                  ))}
+                </div>
+                {/* Tool tabs — 1×3 grid */}
+                <div className="grid grid-cols-3 gap-1">
+                  {[...Array(3)].map((_, i) => (
+                    <Skeleton key={i} className="h-8 rounded-md" />
                   ))}
                 </div>
               </div>
 
-              {/* Form Fields Skeleton */}
-              <div className="flex-1 overflow-hidden mt-4 space-y-8">
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="space-y-4 bg-purple-50/30 p-4 rounded-lg"
-                  >
-                    <Skeleton className="h-6 w-32" />
-                    <div className="space-y-2">
-                      <Skeleton className="h-10 w-full" />
-                      <Skeleton className="h-24 w-full" />
-                    </div>
+              {/* Form fields */}
+              <div className="flex-1 p-4 space-y-4 overflow-hidden">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="space-y-1.5">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-9 w-full rounded-lg" />
                   </div>
                 ))}
               </div>
 
-              {/* Chatbot Skeleton */}
-              <div className="mt-auto mb-4 bg-purple-50/50 border border-purple-200/40 rounded-lg p-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Skeleton className="h-8 w-8 rounded-full" />
-                    <Skeleton className="h-4 w-32" />
-                  </div>
-                  <Skeleton className="h-20 w-full" />
-                </div>
+              {/* Chat input bar */}
+              <div className="p-3 border-t border-violet-100 bg-white">
+                <Skeleton className="h-10 w-full rounded-xl" />
               </div>
             </div>
           </ResizablePanel>
 
-          {/* Resize Handle */}
-          <ResizableHandle
-            withHandle
-            className="bg-purple-100/50 hover:bg-purple-200/50"
-          />
+          <ResizableHandle className="w-px bg-gray-200 mx-1" />
 
           {/* Preview Panel */}
-          <ResizablePanel defaultSize={60}>
-            <div className="h-full pr-4">
-              <div className="relative pb-[129.4%] w-full">
-                <div className="absolute inset-0 bg-purple-50/30 rounded-lg">
-                  {/* Resume Preview Skeleton */}
-                  <div className="h-full p-8 space-y-6">
-                    {/* Header */}
-                    <div className="space-y-2">
-                      <Skeleton className="h-8 w-64 mx-auto" />
-                      <div className="flex justify-center gap-4">
-                        <Skeleton className="h-4 w-32" />
-                        <Skeleton className="h-4 w-32" />
-                      </div>
-                    </div>
-
-                    {/* Sections */}
-                    <div className="space-y-8">
-                      {/* Experience */}
-                      <div className="space-y-4">
-                        <Skeleton className="h-6 w-32" />
-                        {[...Array(3)].map((_, i) => (
-                          <div key={i} className="space-y-2">
-                            <div className="flex justify-between">
-                              <Skeleton className="h-4 w-48" />
-                              <Skeleton className="h-4 w-24" />
-                            </div>
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-5/6" />
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Education */}
-                      <div className="space-y-4">
-                        <Skeleton className="h-6 w-32" />
-                        {[...Array(2)].map((_, i) => (
-                          <div key={i} className="space-y-2">
-                            <div className="flex justify-between">
-                              <Skeleton className="h-4 w-40" />
-                              <Skeleton className="h-4 w-24" />
-                            </div>
-                            <Skeleton className="h-4 w-3/4" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+          <ResizablePanel defaultSize={62}>
+            <div className="h-full bg-white border border-gray-200 rounded-xl overflow-hidden flex items-center justify-center p-6">
+              {/* A4 paper skeleton */}
+              <div className="w-full max-w-[580px] aspect-[8.5/11] bg-gray-50 border border-gray-200 rounded-lg p-8 space-y-5">
+                {/* Name / contact */}
+                <div className="text-center space-y-2">
+                  <Skeleton className="h-7 w-44 mx-auto" />
+                  <Skeleton className="h-3.5 w-60 mx-auto" />
+                  <div className="flex justify-center gap-3 pt-1">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-3 w-28" />
                   </div>
                 </div>
+                <div className="h-px bg-gray-200" />
+                {/* Resume sections */}
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <Skeleton className="h-4 w-28" />
+                    <div className="h-px bg-gray-200" />
+                    {[...Array(2)].map((_, j) => (
+                      <div key={j} className="space-y-1.5 pl-1">
+                        <div className="flex justify-between">
+                          <Skeleton className="h-3.5 w-40" />
+                          <Skeleton className="h-3.5 w-20" />
+                        </div>
+                        <Skeleton className="h-3 w-full" />
+                        <Skeleton className="h-3 w-4/5" />
+                      </div>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           </ResizablePanel>

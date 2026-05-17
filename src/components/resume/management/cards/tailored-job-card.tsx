@@ -288,35 +288,34 @@ export function TailoredJobCard({
     }
   };
 
-  // Enhanced loading skeleton with proper ARIA and animations
   const LoadingSkeleton = () => (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-6"
+      className="space-y-4"
       role="status"
       aria-label="Loading job details"
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className="space-y-3 w-3/4">
-          <div className="h-6 bg-gradient-to-r from-pink-200/50 via-rose-200/50 to-pink-200/50 rounded-xl animate-pulse" />
-          <div className="h-4 bg-gradient-to-r from-pink-100/50 via-rose-100/50 to-pink-100/50 rounded-lg w-2/3 animate-pulse" />
+      <div className="flex items-start justify-between">
+        <div className="space-y-2 w-3/4">
+          <div className="h-5 bg-gray-100 rounded-lg animate-pulse" />
+          <div className="h-3.5 bg-gray-100 rounded w-2/3 animate-pulse" />
         </div>
-        <div className="h-8 w-8 bg-gradient-to-r from-pink-200/50 via-rose-200/50 to-pink-200/50 rounded-xl animate-pulse" />
+        <div className="h-7 w-7 bg-gray-100 rounded-lg animate-pulse" />
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded-full bg-gradient-to-r from-pink-200/50 via-rose-200/50 to-pink-200/50 animate-pulse" />
-            <div className="h-4 flex-1 bg-gradient-to-r from-pink-100/50 via-rose-100/50 to-pink-100/50 rounded-lg animate-pulse" />
+            <div className="h-3.5 w-3.5 rounded-full bg-gray-100 animate-pulse shrink-0" />
+            <div className="h-3.5 flex-1 bg-gray-100 rounded animate-pulse" />
           </div>
         ))}
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-1.5">
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-6 w-20 bg-gradient-to-r from-pink-100/50 via-rose-100/50 to-pink-100/50 rounded-full animate-pulse"
+            className="h-5 w-16 bg-gray-100 rounded-full animate-pulse"
           />
         ))}
       </div>

@@ -76,9 +76,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  // verification: {
-  //   google: "google-site-verification-code", // Replace with actual verification code
-  // },
 };
 
 export default async function RootLayout({
@@ -112,23 +109,22 @@ export default async function RootLayout({
         )}
         <div className="relative min-h-screen h-screen flex flex-col">
           {user && <AppHeader isProPlan={isProPlan} />}
-          {/* Padding for fixed header (h-14) and fixed footer (h-10) */}
-          <main className="pt-14 pb-10 h-full">
+          <main className="pb-10 h-full">
             {children}
             <Analytics />
           </main>
           {user && <Footer />}
         </div>
         <Toaster
-          richColors
-          position="top-right"
+          position="bottom-right"
+          theme="light"
           closeButton
           toastOptions={{
-            style: {
-              fontSize: "1rem",
-              padding: "16px",
-              minWidth: "400px",
-              maxWidth: "500px",
+            classNames: {
+              toast: "!font-sans !rounded-xl !border-gray-200 !shadow-md",
+              title: "!text-gray-900 !font-medium !text-[13px]",
+              description: "!text-gray-500 !text-xs",
+              closeButton: "!bg-white !border-gray-200 !text-gray-400",
             },
           }}
         />

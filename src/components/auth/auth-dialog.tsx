@@ -12,44 +12,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoginForm } from "@/components/auth/login-form";
 import { SignupForm } from "@/components/auth/signup-form";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Github, Loader2 } from "lucide-react";
+import { Github, Loader2, Sparkles } from "lucide-react";
 import { AuthProvider } from "./auth-context";
 import { signInWithGithub } from "@/app/auth/login/actions";
-import { Separator } from "@/components/ui/separator";
-
-const gradientClasses = {
-  base: "bg-gradient-to-r from-violet-600 via-blue-600 to-violet-600",
-  hover: "hover:from-violet-500 hover:via-blue-500 hover:to-violet-500",
-  shadow: "shadow-lg shadow-violet-500/25",
-  animation: "transition-all duration-500 animate-gradient-x",
-};
-
-interface TabButtonProps {
-  value: "login" | "signup";
-  children: React.ReactNode;
-}
 
 interface AuthDialogProps {
   children?: React.ReactNode;
-}
-
-function TabButton({ value, children }: TabButtonProps) {
-  return (
-    <TabsTrigger
-      value={value}
-      className="
-        relative flex-1 h-8 px-3 text-sm font-medium rounded-md
-        transition-all duration-200 ease-out
-        data-[state=inactive]:text-slate-600 data-[state=inactive]:bg-transparent
-        data-[state=active]:text-violet-700 data-[state=active]:bg-violet-50 data-[state=active]:shadow-sm
-        data-[state=inactive]:hover:text-violet-600 data-[state=inactive]:hover:bg-violet-50/50
-        border-0 shadow-none
-        focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-violet-400 focus-visible:ring-offset-0
-      "
-    >
-      {children}
-    </TabsTrigger>
-  );
 }
 
 function SocialAuth() {
@@ -59,48 +27,39 @@ function SocialAuth() {
     try {
       setIsLoading(true);
       const result = await signInWithGithub();
-
       if (!result.success) {
-        console.error("❌ GitHub sign in error:", result.error);
+        console.error("GitHub sign in error:", result.error);
       } else if (result.url) {
         window.location.href = result.url;
       }
     } catch (error) {
-      console.error("💥 Failed to sign in with GitHub:", error);
+      console.error("Failed to sign in with GitHub:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="space-y-3 mt-4">
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <Separator className="bg-slate-200" />
-        </div>
-        <div className="relative flex justify-center text-xs">
-          <span className="bg-white px-3 text-slate-500">or</span>
-        </div>
+    <div className="space-y-3 mt-5">
+      <div className="flex items-center gap-3">
+        <div className="h-px flex-1 bg-gray-100" />
+        <span className="text-xs text-gray-400">or</span>
+        <div className="h-px flex-1 bg-gray-100" />
       </div>
       <Button
         variant="outline"
-        className="
-          w-full h-10 bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300
-          text-slate-700 font-medium transition-all duration-200
-          focus:ring-2 focus:ring-slate-500 focus:ring-offset-1
-          rounded-lg
-        "
+        className="w-full h-9 border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 text-gray-600 text-sm font-medium transition-colors duration-150"
         onClick={handleGithubSignIn}
         disabled={isLoading}
       >
         {isLoading ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Connecting...
+            <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+            Connecting…
           </>
         ) : (
           <>
-            <Github className="mr-2 h-4 w-4" />
+            <Github className="mr-2 h-3.5 w-3.5" />
             Continue with GitHub
           </>
         )}
@@ -115,85 +74,72 @@ export function AuthDialog({ children }: AuthDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* AUTH DIALOG TRIGGER BUTTON */}
       <DialogTrigger asChild>
         {children || (
-          <Button
-            size="lg"
-            className={`${gradientClasses.base} ${gradientClasses.hover} text-white font-semibold 
-            text-lg py-6 px-10 ${gradientClasses.animation} group
-            shadow-xl shadow-violet-500/30 hover:shadow-violet-500/40
-            ring-2 ring-white/20 hover:ring-white/30
-            scale-105 hover:scale-110 transition-all duration-300
-            rounded-xl relative overflow-hidden`}
-            aria-label="Open authentication dialog"
-          >
-            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <span className="relative z-10 flex items-center justify-center">
-              Start Now
-              <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
+          <Button className="bg-gray-900 hover:bg-gray-700 text-white transition-colors duration-150">
+            Get Started
           </Button>
         )}
       </DialogTrigger>
 
-      <DialogContent
-        className="
-          sm:max-w-[420px] w-full max-h-[85vh] p-0 bg-white border border-slate-200 shadow-xl 
-          animate-in fade-in-0 zoom-in-95 duration-200
-          rounded-xl overflow-hidden overflow-y-auto
-        "
-      >
+      <DialogContent className="sm:max-w-[400px] p-0 bg-white border border-gray-200 shadow-lg rounded-2xl overflow-hidden">
         <AuthProvider>
-          {/* Hidden accessibility elements */}
-          <DialogTitle className="sr-only">Authentication</DialogTitle>
+          <DialogTitle className="sr-only">Sign in to Persona</DialogTitle>
           <DialogDescription className="sr-only">
-            Sign in or create an account
+            Sign in or create a Persona account
           </DialogDescription>
 
-          {/* Content starts immediately with tabs */}
-          <div className="px-6 pt-6">
+          {/* Brand header */}
+          <div className="px-7 pt-7 pb-5 border-b border-gray-100">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="h-7 w-7 rounded-lg bg-gray-900 flex items-center justify-center">
+                <Sparkles className="h-3.5 w-3.5 text-violet-400" />
+              </div>
+              <span className="text-sm font-semibold text-gray-900">
+                Persona
+              </span>
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              {activeTab === "login"
+                ? "Welcome back. Sign in to continue."
+                : "Create your free account to get started."}
+            </p>
+          </div>
+
+          {/* Tabs + forms */}
+          <div className="px-7 pt-5 pb-7">
             <Tabs
               value={activeTab}
-              onValueChange={(value) =>
-                setActiveTab(value as "login" | "signup")
-              }
+              onValueChange={(v) => setActiveTab(v as "login" | "signup")}
               className="w-full"
             >
-              <TabsList
-                className="
-                w-full h-10 bg-violet-50/30 border border-violet-100/50 p-1
-                flex gap-0.5 rounded-lg
-              "
-              >
-                <TabButton value="login">Sign In</TabButton>
-                <TabButton value="signup">Create Account</TabButton>
+              <TabsList className="w-full h-9 bg-gray-100 border-0 p-1 rounded-lg gap-0.5">
+                <TabsTrigger
+                  value="login"
+                  className="flex-1 h-7 rounded-md text-xs font-medium text-gray-500
+                    data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm
+                    data-[state=inactive]:hover:text-gray-700
+                    border-0 shadow-none transition-all duration-150 focus-visible:outline-none"
+                >
+                  Sign In
+                </TabsTrigger>
+                <TabsTrigger
+                  value="signup"
+                  className="flex-1 h-7 rounded-md text-xs font-medium text-gray-500
+                    data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm
+                    data-[state=inactive]:hover:text-gray-700
+                    border-0 shadow-none transition-all duration-150 focus-visible:outline-none"
+                >
+                  Create Account
+                </TabsTrigger>
               </TabsList>
 
-              {/* Forms Content */}
-              <div className="mt-5 pb-6">
-                <TabsContent value="login" className="mt-0 space-y-4">
-                  <div className="text-center mb-4">
-                    <h3 className="text-lg font-semibold text-slate-900">
-                      Welcome back
-                    </h3>
-                    <p className="text-sm text-slate-600 mt-1">
-                      Sign in to continue
-                    </p>
-                  </div>
+              <div className="mt-5">
+                <TabsContent value="login" className="mt-0">
                   <LoginForm />
                   <SocialAuth />
                 </TabsContent>
-
-                <TabsContent value="signup" className="mt-0 space-y-4">
-                  <div className="text-center mb-4">
-                    <h3 className="text-lg font-semibold text-slate-900">
-                      Get started
-                    </h3>
-                    <p className="text-sm text-slate-600 mt-1">
-                      Create your free account
-                    </p>
-                  </div>
+                <TabsContent value="signup" className="mt-0">
                   <SignupForm />
                   <SocialAuth />
                 </TabsContent>

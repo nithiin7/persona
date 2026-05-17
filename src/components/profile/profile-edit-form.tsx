@@ -26,6 +26,7 @@ import {
   Save,
   Trash2,
   Award,
+  Sparkles,
 } from "lucide-react";
 
 import {
@@ -44,7 +45,6 @@ import { ProfileProjectsForm } from "@/components/profile/profile-projects-form"
 import { ProfileEducationForm } from "@/components/profile/profile-education-form";
 import { ProfileSkillsForm } from "@/components/profile/profile-skills-form";
 import { ProfileCertificationsForm } from "@/components/profile/profile-certifications-form";
-// import { ProfileEditorHeader } from "./profile-editor-header";
 import { formatProfileWithAI } from "../../utils/actions/profiles/ai";
 import {
   AlertDialog,
@@ -117,18 +117,12 @@ export function ProfileEditForm({
     try {
       setIsSubmitting(true);
       await updateProfile(profile);
-      toast.success("Changes saved successfully", {
-        position: "bottom-right",
-        className:
-          "bg-gradient-to-r from-emerald-500 to-green-500 text-white border-none",
-      });
+      toast.success("Changes saved successfully");
       // Force a server revalidation
       router.refresh();
     } catch (error) {
       void error;
-      toast.error("Unable to save your changes. Please try again.", {
-        position: "bottom-right",
-      });
+      toast.error("Unable to save your changes. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -164,18 +158,12 @@ export function ProfileEditForm({
       // Save to database
       await updateProfile(resetProfile);
 
-      toast.success("Profile reset successfully", {
-        position: "bottom-right",
-        className:
-          "bg-gradient-to-r from-blue-500 to-indigo-500 text-white border-none",
-      });
+      toast.success("Profile reset successfully");
 
       // Force a server revalidation
       router.refresh();
     } catch (error: unknown) {
-      toast.error("Failed to reset profile. Please try again.", {
-        position: "bottom-right",
-      });
+      toast.error("Failed to reset profile. Please try again.");
       console.error(error);
     } finally {
       setIsResetting(false);
@@ -183,11 +171,7 @@ export function ProfileEditForm({
   };
 
   const handleLinkedInImport = () => {
-    toast.info("LinkedIn import feature coming soon!", {
-      position: "bottom-right",
-      className:
-        "bg-gradient-to-r from-blue-500 to-indigo-500 text-white border-none",
-    });
+    toast.info("LinkedIn import feature coming soon!");
   };
 
   const handleResumeUpload = async (content: string) => {
@@ -299,14 +283,7 @@ export function ProfileEditForm({
           ...prev,
           ...cleanedProfile,
         }));
-        toast.success(
-          "Content imported successfully - Don't forget to save your changes",
-          {
-            position: "bottom-right",
-            className:
-              "bg-gradient-to-r from-emerald-500 to-green-500 text-white border-none",
-          }
-        );
+        toast.success("Content imported — don't forget to save your changes");
         setIsResumeDialogOpen(false);
         setIsTextImportDialogOpen(false);
         setResumeContent("");
@@ -320,9 +297,7 @@ export function ProfileEditForm({
             "API key required. Please add your OpenAI API key in settings or upgrade to our Pro Plan."
           );
         } else {
-          toast.error("Failed to process content: " + error.message, {
-            position: "bottom-right",
-          });
+          toast.error("Failed to process content: " + error.message);
         }
       }
     } finally {
@@ -363,16 +338,11 @@ export function ProfileEditForm({
       } catch (error) {
         console.error("PDF processing error:", error);
         toast.error(
-          "Failed to extract text from the PDF. Please try again or paste the content manually.",
-          {
-            position: "bottom-right",
-          }
+          "Failed to extract text from the PDF. Please try again or paste the content manually."
         );
       }
     } else {
-      toast.error("Please drop a PDF file.", {
-        position: "bottom-right",
-      });
+      toast.error("Please drop a PDF file.");
     }
   };
 
@@ -388,10 +358,7 @@ export function ProfileEditForm({
       } catch (error) {
         console.error("PDF processing error:", error);
         toast.error(
-          "Failed to extract text from the PDF. Please try again or paste the content manually.",
-          {
-            position: "bottom-right",
-          }
+          "Failed to extract text from the PDF. Please try again or paste the content manually."
         );
       }
     }
@@ -552,111 +519,103 @@ export function ProfileEditForm({
                   </div>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px]">
-                <DialogHeader>
-                  <DialogTitle>Upload Resume Content</DialogTitle>
-                  <DialogDescription asChild>
-                    <div className="space-y-2 text-base text-muted-foreground/80">
-                      <span className="block">
-                        Let our AI analyze your resume and enhance your profile
-                        by adding new information.
-                      </span>
-                      <span className="block text-sm">
-                        Your existing profile information will be preserved. New
-                        entries will be added alongside your current data. Want
-                        to start fresh instead? Use the &quot;Reset
-                        Profile&quot; option before uploading.
-                      </span>
-                    </div>
+              <DialogContent className="sm:max-w-[560px] p-0 bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden">
+                <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
+                  <DialogTitle className="text-base font-semibold text-gray-900">
+                    Upload Resume
+                  </DialogTitle>
+                  <DialogDescription className="text-xs text-gray-500 mt-0.5">
+                    AI will analyze your resume and add new information to your
+                    profile. Existing data is preserved.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="space-y-4">
-                    <label
-                      onDragEnter={(e) => handleDrag(e, setIsResumeDragging)}
-                      onDragLeave={(e) => handleDrag(e, setIsResumeDragging)}
-                      onDragOver={(e) => handleDrag(e, setIsResumeDragging)}
-                      onDrop={(e) => handleDrop(e, setResumeContent)}
-                      className={cn(
-                        "border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center gap-3 transition-colors duration-200 cursor-pointer group",
-                        isResumeDragging
-                          ? "border-violet-500 bg-violet-50/50"
-                          : "border-gray-200 hover:border-violet-500/50 hover:bg-violet-50/10"
-                      )}
-                    >
-                      <input
-                        type="file"
-                        className="hidden"
-                        accept="application/pdf"
-                        onChange={(e) => handleFileInput(e, setResumeContent)}
-                      />
-                      <Upload className="w-10 h-10 text-violet-500 group-hover:scale-110 transition-transform duration-200" />
-                      <div className="text-center">
-                        <p className="text-sm font-medium text-foreground">
-                          Drop your PDF resume here
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          or click to browse files
-                        </p>
-                      </div>
-                    </label>
-                    <div className="relative">
-                      <div className="absolute -top-3 left-3 bg-white px-2 text-sm text-muted-foreground">
-                        Or paste your resume text here
-                      </div>
-                      <Textarea
-                        value={resumeContent}
-                        onChange={(e) => setResumeContent(e.target.value)}
-                        placeholder="Paste your resume content here..."
-                        className="min-h-[100px] bg-white/50 border-white/40 focus:border-violet-500/40 focus:ring-violet-500/20 transition-all duration-300 pt-4"
-                      />
+                <div className="px-6 py-5 space-y-4">
+                  <label
+                    onDragEnter={(e) => handleDrag(e, setIsResumeDragging)}
+                    onDragLeave={(e) => handleDrag(e, setIsResumeDragging)}
+                    onDragOver={(e) => handleDrag(e, setIsResumeDragging)}
+                    onDrop={(e) => handleDrop(e, setResumeContent)}
+                    className={cn(
+                      "border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center gap-2.5 transition-colors duration-150 cursor-pointer",
+                      isResumeDragging
+                        ? "border-violet-400 bg-violet-50"
+                        : "border-gray-200 hover:border-violet-200 hover:bg-violet-50/40"
+                    )}
+                  >
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="application/pdf"
+                      onChange={(e) => handleFileInput(e, setResumeContent)}
+                    />
+                    <div className="h-10 w-10 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center">
+                      <Upload className="h-5 w-5 text-violet-500" />
                     </div>
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-gray-700">
+                        Drop your PDF resume here
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        or click to browse files
+                      </p>
+                    </div>
+                  </label>
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-gray-500">
+                      Or paste your resume text
+                    </p>
+                    <Textarea
+                      value={resumeContent}
+                      onChange={(e) => setResumeContent(e.target.value)}
+                      placeholder="Paste your resume content here..."
+                      className="min-h-[100px] bg-white border-gray-200 text-sm placeholder:text-gray-400 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
+                    />
                   </div>
                 </div>
                 {apiKeyError && (
-                  <div className="px-4 py-3 bg-red-50/50 border border-red-200/50 rounded-lg flex items-start gap-3 text-red-600 text-sm">
-                    <div className="p-1.5 rounded-full bg-red-100">
-                      <AlertTriangle className="w-4 h-4 text-red-500" />
-                    </div>
+                  <div className="mx-6 mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                    <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                     <div className="flex-1">
-                      <p className="font-medium">API Key Required</p>
-                      <p className="text-red-500/90">{apiKeyError}</p>
-                      <div className="mt-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 border-red-200 hover:bg-red-50/50 w-auto mx-auto"
-                          onClick={() => (window.location.href = "/settings")}
-                        >
-                          Set API Keys in Settings
-                        </Button>
-                      </div>
+                      <p className="text-sm font-medium text-red-700">
+                        API Key Required
+                      </p>
+                      <p className="text-xs text-red-500 mt-0.5">
+                        {apiKeyError}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2 h-7 text-xs text-red-600 border-red-200 hover:bg-red-50"
+                        onClick={() => (window.location.href = "/settings")}
+                      >
+                        Go to Settings
+                      </Button>
                     </div>
                   </div>
                 )}
-                <DialogFooter className="gap-3">
+                <DialogFooter className="px-6 py-4 border-t border-gray-100 bg-gray-50/60">
                   <Button
                     variant="outline"
                     onClick={() => setIsResumeDialogOpen(false)}
-                    className="bg-white/50 hover:bg-white/60 transition-all duration-300"
+                    className="border-gray-200 text-gray-600 hover:bg-white transition-colors duration-150"
                   >
                     Cancel
                   </Button>
                   <Button
                     onClick={() => handleResumeUpload(resumeContent)}
                     disabled={isProcessingResume || !resumeContent.trim()}
-                    className="bg-gray-900 text-white hover:bg-gray-700 transition-colors duration-200"
+                    className="bg-gray-900 hover:bg-gray-700 text-white transition-colors duration-150"
                   >
                     {isProcessingResume ? (
-                      <div className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Processing...</span>
-                      </div>
+                      <>
+                        <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                        Processing…
+                      </>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        <Upload className="h-4 w-4" />
-                        <span>Process with AI</span>
-                      </div>
+                      <>
+                        <Sparkles className="mr-2 h-3.5 w-3.5 text-violet-400" />
+                        Process with AI
+                      </>
                     )}
                   </Button>
                 </DialogFooter>
@@ -686,116 +645,103 @@ export function ProfileEditForm({
                   </div>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px]">
-                <DialogHeader>
-                  <DialogTitle>Import From Text</DialogTitle>
-                  <DialogDescription asChild>
-                    <div className="space-y-2 text-base text-muted-foreground/80">
-                      <span className="block">
-                        Paste any text content below (resume, job description,
-                        achievements, etc.). Our AI will analyze it and enhance
-                        your profile by adding relevant information.
-                      </span>
-                      <span className="block text-sm">
-                        Your existing profile information will be preserved. New
-                        entries will be added alongside your current data.
-                      </span>
-                    </div>
+              <DialogContent className="sm:max-w-[560px] p-0 bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden">
+                <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
+                  <DialogTitle className="text-base font-semibold text-gray-900">
+                    Import from Text
+                  </DialogTitle>
+                  <DialogDescription className="text-xs text-gray-500 mt-0.5">
+                    Paste any text (resume, achievements, job history). AI will
+                    extract and add relevant info to your profile.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="space-y-4">
-                    <label
-                      onDragEnter={(e) =>
-                        handleDrag(e, setIsTextImportDragging)
-                      }
-                      onDragLeave={(e) =>
-                        handleDrag(e, setIsTextImportDragging)
-                      }
-                      onDragOver={(e) => handleDrag(e, setIsTextImportDragging)}
-                      onDrop={(e) => handleDrop(e, setTextImportContent)}
-                      className={cn(
-                        "border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center gap-3 transition-colors duration-200 cursor-pointer group",
-                        isTextImportDragging
-                          ? "border-violet-500 bg-violet-50/50"
-                          : "border-gray-200 hover:border-violet-500/50 hover:bg-violet-50/10"
-                      )}
-                    >
-                      <input
-                        type="file"
-                        className="hidden"
-                        accept="application/pdf"
-                        onChange={(e) =>
-                          handleFileInput(e, setTextImportContent)
-                        }
-                      />
-                      <Upload className="w-10 h-10 text-violet-500 group-hover:scale-110 transition-transform duration-200" />
-                      <div className="text-center">
-                        <p className="text-sm font-medium text-foreground">
-                          Drop your PDF file here
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          or click to browse files
-                        </p>
-                      </div>
-                    </label>
-                    <div className="relative">
-                      <div className="absolute -top-3 left-3 bg-white px-2 text-sm text-muted-foreground">
-                        Or paste your text content here
-                      </div>
-                      <Textarea
-                        value={textImportContent}
-                        onChange={(e) => setTextImportContent(e.target.value)}
-                        placeholder="Paste your text content here..."
-                        className="min-h-[100px] bg-white/50 border-white/40 focus:border-violet-500/40 focus:ring-violet-500/20 transition-all duration-300 pt-4"
-                      />
+                <div className="px-6 py-5 space-y-4">
+                  <label
+                    onDragEnter={(e) => handleDrag(e, setIsTextImportDragging)}
+                    onDragLeave={(e) => handleDrag(e, setIsTextImportDragging)}
+                    onDragOver={(e) => handleDrag(e, setIsTextImportDragging)}
+                    onDrop={(e) => handleDrop(e, setTextImportContent)}
+                    className={cn(
+                      "border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center gap-2.5 transition-colors duration-150 cursor-pointer",
+                      isTextImportDragging
+                        ? "border-violet-400 bg-violet-50"
+                        : "border-gray-200 hover:border-violet-200 hover:bg-violet-50/40"
+                    )}
+                  >
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="application/pdf"
+                      onChange={(e) => handleFileInput(e, setTextImportContent)}
+                    />
+                    <div className="h-10 w-10 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center">
+                      <Upload className="h-5 w-5 text-violet-500" />
                     </div>
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-gray-700">
+                        Drop a PDF file here
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        or click to browse files
+                      </p>
+                    </div>
+                  </label>
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-gray-500">
+                      Or paste your text content
+                    </p>
+                    <Textarea
+                      value={textImportContent}
+                      onChange={(e) => setTextImportContent(e.target.value)}
+                      placeholder="Paste your resume, bio, or any relevant text here..."
+                      className="min-h-[100px] bg-white border-gray-200 text-sm placeholder:text-gray-400 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
+                    />
                   </div>
                 </div>
                 {apiKeyError && (
-                  <div className="px-4 py-3 bg-red-50/50 border border-red-200/50 rounded-lg flex items-start gap-3 text-red-600 text-sm">
-                    <div className="p-1.5 rounded-full bg-red-100">
-                      <AlertTriangle className="w-4 h-4 text-red-500" />
-                    </div>
+                  <div className="mx-6 mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                    <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                     <div className="flex-1">
-                      <p className="font-medium">API Key Required</p>
-                      <p className="text-red-500/90">{apiKeyError}</p>
-                      <div className="mt-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 border-red-200 hover:bg-red-50/50 w-auto mx-auto"
-                          onClick={() => (window.location.href = "/settings")}
-                        >
-                          Set API Keys in Settings
-                        </Button>
-                      </div>
+                      <p className="text-sm font-medium text-red-700">
+                        API Key Required
+                      </p>
+                      <p className="text-xs text-red-500 mt-0.5">
+                        {apiKeyError}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2 h-7 text-xs text-red-600 border-red-200 hover:bg-red-50"
+                        onClick={() => (window.location.href = "/settings")}
+                      >
+                        Go to Settings
+                      </Button>
                     </div>
                   </div>
                 )}
-                <DialogFooter className="gap-3">
+                <DialogFooter className="px-6 py-4 border-t border-gray-100 bg-gray-50/60">
                   <Button
                     variant="outline"
                     onClick={() => setIsTextImportDialogOpen(false)}
-                    className="bg-white/50 hover:bg-white/60 transition-all duration-300"
+                    className="border-gray-200 text-gray-600 hover:bg-white transition-colors duration-150"
                   >
                     Cancel
                   </Button>
                   <Button
                     onClick={() => handleResumeUpload(textImportContent)}
                     disabled={isProcessingResume || !textImportContent.trim()}
-                    className="bg-gray-900 text-white hover:bg-gray-700 transition-colors duration-200"
+                    className="bg-gray-900 hover:bg-gray-700 text-white transition-colors duration-150"
                   >
                     {isProcessingResume ? (
-                      <div className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Processing...</span>
-                      </div>
+                      <>
+                        <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                        Processing…
+                      </>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        <Upload className="h-4 w-4" />
-                        <span>Process with AI</span>
-                      </div>
+                      <>
+                        <Sparkles className="mr-2 h-3.5 w-3.5 text-violet-400" />
+                        Process with AI
+                      </>
                     )}
                   </Button>
                 </DialogFooter>

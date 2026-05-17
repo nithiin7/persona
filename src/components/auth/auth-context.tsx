@@ -123,16 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const setFormData = (data: Partial<FormData>) => {
-    setFormDataState((prev) => {
-      const newData = { ...prev, ...data };
-      // Validate the changed fields
-      Object.entries(data).forEach(([field, value]) => {
-        validateField(field as keyof FormData, value);
-        // Mark field as touched when value changes
-        setFieldTouched(field);
-      });
-      return newData;
-    });
+    setFormDataState((prev) => ({ ...prev, ...data }));
   };
 
   const setFieldLoading = (field: string, loading: boolean) => {

@@ -2,9 +2,8 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { Download, Code } from "lucide-react";
+import { Download, Code, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { GradientHover } from "./gradient-hover";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -98,13 +97,13 @@ export function Logo({ className, asLink = true }: LogoProps) {
   const logoContent = (
     <ContextMenu>
       <ContextMenuTrigger>
-        <div
-          ref={logoRef}
-          className="transition-transform duration-500 hover:scale-105"
-        >
-          <GradientHover className={cn("text-2xl font-bold", className)}>
+        <div ref={logoRef} className={cn("flex items-center gap-2", className)}>
+          <div className="h-6 w-6 rounded-md bg-gray-900 flex items-center justify-center shrink-0">
+            <Sparkles className="h-3 w-3 text-violet-400" />
+          </div>
+          <span className="text-sm font-semibold text-gray-900 leading-none">
             Persona
-          </GradientHover>
+          </span>
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-48">

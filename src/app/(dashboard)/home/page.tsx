@@ -124,7 +124,7 @@ export default async function Home({
   }
 
   return (
-    <main className="min-h-screen relative sm:pb-12 pb-40">
+    <main className="min-h-screen relative sm:pb-12 pb-40 pt-14">
       {/* Welcome Dialog for New Signups */}
       <WelcomeDialog isOpen={!!isNewSignup} />
 

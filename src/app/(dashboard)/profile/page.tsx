@@ -26,7 +26,7 @@ export default async function EditProfilePage() {
   }
 
   return (
-    <main className="relative">
+    <main className="relative pt-14">
       {/* Clean Background */}
       <div className="fixed inset-0 z-0 bg-gray-50">
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-70" />
