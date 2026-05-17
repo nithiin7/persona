@@ -151,6 +151,29 @@ export async function deleteTailoredJob(jobId: string): Promise<void> {
   revalidatePath("/", "layout");
 }
 
+export async function updateJob(
+  jobId: string,
+  fields: Partial<Pick<Job, "position_title" | "company_name">>
+): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) throw new Error("User not authenticated");
+
+  const { error } = await supabase
+    .from("jobs")
+    .update(fields)
+    .eq("id", jobId)
+    .eq("user_id", user.id);
+
+  if (error) throw new Error("Failed to update job");
+
+  revalidatePath("/", "layout");
+}
+
 export async function updateJobStatus(
   jobId: string,
   status: ApplicationStatus

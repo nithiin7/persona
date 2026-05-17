@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   MapPin,
   Clock,
@@ -11,6 +11,7 @@ import {
   Plus,
   Sparkles,
   AlertCircle,
+  Pencil,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Job, Resume } from "@/lib/types";
@@ -39,7 +40,7 @@ import {
 } from "@/components/ui/accordion";
 import { BriefcaseIcon } from "lucide-react";
 import { formatJobListing } from "@/utils/actions/jobs/ai";
-import { updateJobStatus } from "@/utils/actions/jobs/actions";
+import { updateJobStatus, updateJob } from "@/utils/actions/jobs/actions";
 import type { ApplicationStatus } from "@/lib/types";
 import {
   Select,
@@ -510,16 +511,33 @@ export function TailoredJobAccordion({
   isLoading,
 }: TailoredJobAccordionProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editingField, setEditingField] = useState<"title" | "company" | null>(
+    null
+  );
+  const [titleValue, setTitleValue] = useState(job?.position_title ?? "");
+  const [companyValue, setCompanyValue] = useState(job?.company_name ?? "");
+  const [isSavingField, setIsSavingField] = useState(false);
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  const companyInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    setTitleValue(job?.position_title ?? "");
+    setCompanyValue(job?.company_name ?? "");
+  }, [job?.position_title, job?.company_name]);
+
+  useEffect(() => {
+    if (editingField === "title") titleInputRef.current?.focus();
+    if (editingField === "company") companyInputRef.current?.focus();
+  }, [editingField]);
 
   if (resume.is_base_resume) return null;
 
-  const title = job?.position_title || "Target Job";
-  const company = job?.company_name;
+  const displayTitle = titleValue || "Target Job";
+  const displayCompany = companyValue || null;
 
   const handleDelete = async () => {
     if (!resume.job_id) return;
-
     try {
       setIsDeleting(true);
       await deleteJob(resume.job_id);
@@ -536,6 +554,45 @@ export function TailoredJobAccordion({
     }
   };
 
+  const handleSaveField = async (field: "title" | "company") => {
+    if (!job?.id) return;
+    const fields =
+      field === "title"
+        ? { position_title: titleValue.trim() || job.position_title }
+        : { company_name: companyValue.trim() || job.company_name };
+    try {
+      setIsSavingField(true);
+      await updateJob(job.id, fields);
+      router.refresh();
+    } catch {
+      toast({
+        title: "Error",
+        description: "Failed to save changes",
+        variant: "destructive",
+      });
+      if (field === "title") setTitleValue(job.position_title);
+      else setCompanyValue(job.company_name);
+    } finally {
+      setIsSavingField(false);
+      setEditingField(null);
+    }
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent,
+    field: "title" | "company"
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSaveField(field);
+    }
+    if (e.key === "Escape") {
+      setEditingField(null);
+      if (field === "title") setTitleValue(job?.position_title ?? "");
+      else setCompanyValue(job?.company_name ?? "");
+    }
+  };
+
   return (
     <AccordionItem
       value="job"
@@ -543,14 +600,83 @@ export function TailoredJobAccordion({
     >
       <div className="px-4">
         <AccordionTrigger className="hover:no-underline">
-          <div className="flex items-center gap-2">
-            <div className="p-1 rounded-md bg-gray-100">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <div className="p-1 rounded-md bg-gray-100 shrink-0">
               <BriefcaseIcon className="h-3.5 w-3.5 text-gray-500" />
             </div>
-            <div className="flex flex-col items-start">
-              <span className="text-sm font-medium text-gray-900">{title}</span>
-              {company && (
-                <span className="text-xs text-gray-500">{company}</span>
+            <div className="flex flex-col items-start min-w-0 flex-1">
+              {/* Position title */}
+              {editingField === "title" ? (
+                <input
+                  ref={titleInputRef}
+                  value={titleValue}
+                  onChange={(e) => setTitleValue(e.target.value)}
+                  onBlur={() => handleSaveField("title")}
+                  onKeyDown={(e) => handleKeyDown(e, "title")}
+                  onClick={(e) => e.stopPropagation()}
+                  disabled={isSavingField}
+                  className="text-sm font-medium text-gray-900 bg-transparent border-b border-gray-300 focus:border-gray-500 outline-none w-full"
+                />
+              ) : (
+                <span
+                  role="button"
+                  tabIndex={job ? 0 : -1}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (job) setEditingField("title");
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.stopPropagation();
+                      if (job) setEditingField("title");
+                    }
+                  }}
+                  className="group flex items-center gap-1 cursor-pointer"
+                >
+                  <span className="text-sm font-medium text-gray-900">
+                    {displayTitle}
+                  </span>
+                  {job && (
+                    <Pencil className="h-3 w-3 text-gray-300 group-hover:text-gray-500 transition-colors shrink-0" />
+                  )}
+                </span>
+              )}
+              {/* Company name */}
+              {editingField === "company" ? (
+                <input
+                  ref={companyInputRef}
+                  value={companyValue}
+                  onChange={(e) => setCompanyValue(e.target.value)}
+                  onBlur={() => handleSaveField("company")}
+                  onKeyDown={(e) => handleKeyDown(e, "company")}
+                  onClick={(e) => e.stopPropagation()}
+                  disabled={isSavingField}
+                  placeholder="Company name"
+                  className="text-xs text-gray-500 bg-transparent border-b border-gray-300 focus:border-gray-500 outline-none w-full"
+                />
+              ) : (
+                <span
+                  role="button"
+                  tabIndex={job ? 0 : -1}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (job) setEditingField("company");
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.stopPropagation();
+                      if (job) setEditingField("company");
+                    }
+                  }}
+                  className="group flex items-center gap-1 cursor-pointer"
+                >
+                  <span className="text-xs text-gray-500">
+                    {displayCompany ?? (job ? "Add company" : "")}
+                  </span>
+                  {job && (
+                    <Pencil className="h-2.5 w-2.5 text-gray-300 group-hover:text-gray-500 transition-colors shrink-0" />
+                  )}
+                </span>
               )}
             </div>
           </div>
