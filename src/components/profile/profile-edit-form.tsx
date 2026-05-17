@@ -17,7 +17,6 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import {
   User,
-  Linkedin,
   Briefcase,
   GraduationCap,
   Wrench,
@@ -27,7 +26,19 @@ import {
   Trash2,
   Award,
   Sparkles,
+  ExternalLink,
+  FileJson,
 } from "lucide-react";
+
+function LinkedInIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect width="4" height="12" x="2" y="9" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
 
 import {
   Dialog,
@@ -45,7 +56,10 @@ import { ProfileProjectsForm } from "@/components/profile/profile-projects-form"
 import { ProfileEducationForm } from "@/components/profile/profile-education-form";
 import { ProfileSkillsForm } from "@/components/profile/profile-skills-form";
 import { ProfileCertificationsForm } from "@/components/profile/profile-certifications-form";
-import { formatProfileWithAI } from "../../utils/actions/profiles/ai";
+import {
+  formatProfileWithAI,
+  fetchLinkedInProfileText,
+} from "../../utils/actions/profiles/ai";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -73,6 +87,10 @@ export function ProfileEditForm({
   const [profile, setProfile] = useState(initialProfile);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [isLinkedInDialogOpen, setIsLinkedInDialogOpen] = useState(false);
+  const [linkedInUrl, setLinkedInUrl] = useState("");
+  const [linkedInContent, setLinkedInContent] = useState("");
+  const [linkedInMode, setLinkedInMode] = useState<"text" | "json">("text");
   const [isResumeDialogOpen, setIsResumeDialogOpen] = useState(false);
   const [isTextImportDialogOpen, setIsTextImportDialogOpen] = useState(false);
   const [resumeContent, setResumeContent] = useState("");
@@ -170,8 +188,55 @@ export function ProfileEditForm({
     }
   };
 
-  const handleLinkedInImport = () => {
-    toast.info("LinkedIn import feature coming soon!");
+  const isLinkedInUrl = (s: string) =>
+    /^https?:\/\/(www\.)?linkedin\.com\//i.test(s.trim());
+
+  const handleLinkedInFetchAndImport = async (url: string) => {
+    try {
+      setIsProcessingResume(true);
+      setApiKeyError("");
+      const text = await fetchLinkedInProfileText(url);
+      // Save the URL to profile regardless of parse outcome
+      setProfile((prev) => ({ ...prev, linkedin_url: url.trim() }));
+      await handleResumeUpload(text);
+      setIsLinkedInDialogOpen(false);
+      setLinkedInContent("");
+      setLinkedInUrl("");
+      setLinkedInMode("text");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    } finally {
+      setIsProcessingResume(false);
+    }
+  };
+
+  const handleLinkedInImport = async (content: string) => {
+    // If the pasted content is itself a LinkedIn URL, fetch it server-side
+    if (isLinkedInUrl(content)) {
+      await handleLinkedInFetchAndImport(content.trim());
+      return;
+    }
+    if (linkedInUrl.trim()) {
+      setProfile((prev) => ({ ...prev, linkedin_url: linkedInUrl.trim() }));
+    }
+    await handleResumeUpload(content);
+    setIsLinkedInDialogOpen(false);
+    setLinkedInContent("");
+    setLinkedInUrl("");
+    setLinkedInMode("text");
+  };
+
+  const handleLinkedInJsonFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result;
+      if (typeof text === "string") setLinkedInContent(text);
+    };
+    reader.readAsText(file);
   };
 
   const handleResumeUpload = async (content: string) => {
@@ -482,21 +547,298 @@ export function ProfileEditForm({
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {/* LinkedIn Import Button */}
-            <Button
-              variant="outline"
-              onClick={handleLinkedInImport}
-              className="justify-start gap-3 h-auto py-3 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-200"
+            <Dialog
+              open={isLinkedInDialogOpen}
+              onOpenChange={(open) => {
+                setIsLinkedInDialogOpen(open);
+                if (!open) {
+                  setLinkedInContent("");
+                  setLinkedInUrl("");
+                  setLinkedInMode("text");
+                }
+              }}
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#0077b5]/10 shrink-0">
-                <Linkedin className="h-4 w-4 text-[#0077b5]" />
-              </div>
-              <div className="text-left">
-                <div className="text-sm font-medium text-gray-800">
-                  LinkedIn
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="justify-start gap-3 h-auto py-3 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-200"
+                >
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#0077b5]/10 shrink-0">
+                    <LinkedInIcon className="h-4 w-4 text-[#0077b5]" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-medium text-gray-800">
+                      LinkedIn
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      Import from profile
+                    </div>
+                  </div>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[580px] p-0 bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden">
+                <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
+                  <DialogTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                    <LinkedInIcon className="h-4 w-4 text-[#0077b5]" />
+                    Import from LinkedIn
+                  </DialogTitle>
+                  <DialogDescription className="text-xs text-gray-500 mt-0.5">
+                    AI will extract and merge your LinkedIn data into your
+                    profile. Existing data is preserved.
+                  </DialogDescription>
+                </DialogHeader>
+
+                {/* Mode tabs */}
+                <div className="flex border-b border-gray-100">
+                  <button
+                    onClick={() => setLinkedInMode("text")}
+                    className={cn(
+                      "flex-1 py-2.5 text-xs font-medium transition-colors duration-150",
+                      linkedInMode === "text"
+                        ? "text-gray-900 border-b-2 border-gray-900"
+                        : "text-gray-400 hover:text-gray-600"
+                    )}
+                  >
+                    Copy Profile Text
+                  </button>
+                  <button
+                    onClick={() => setLinkedInMode("json")}
+                    className={cn(
+                      "flex-1 py-2.5 text-xs font-medium transition-colors duration-150",
+                      linkedInMode === "json"
+                        ? "text-gray-900 border-b-2 border-gray-900"
+                        : "text-gray-400 hover:text-gray-600"
+                    )}
+                  >
+                    Data Export JSON
+                  </button>
                 </div>
-                <div className="text-xs text-gray-400">Import from profile</div>
-              </div>
-            </Button>
+
+                <div className="px-6 py-5 space-y-4">
+                  {linkedInMode === "text" ? (
+                    <>
+                      {/* Step-by-step instructions */}
+                      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-2.5">
+                        <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                          How to copy your LinkedIn profile
+                        </p>
+                        {[
+                          {
+                            step: "1",
+                            text: "Open your LinkedIn profile in a browser",
+                            action: linkedInUrl ? (
+                              <a
+                                href={linkedInUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-[#0077b5] hover:underline text-xs"
+                              >
+                                Open <ExternalLink className="h-3 w-3" />
+                              </a>
+                            ) : null,
+                          },
+                          {
+                            step: "2",
+                            text: "Press Ctrl+A (⌘A on Mac) to select all",
+                          },
+                          {
+                            step: "3",
+                            text: "Press Ctrl+C (⌘C on Mac) to copy",
+                          },
+                          { step: "4", text: "Paste below with Ctrl+V (⌘V)" },
+                        ].map(({ step, text, action }) => (
+                          <div
+                            key={step}
+                            className="flex items-center gap-3 text-xs text-gray-600"
+                          >
+                            <span className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-gray-700 font-semibold shrink-0 text-[10px]">
+                              {step}
+                            </span>
+                            <span className="flex-1">{text}</span>
+                            {action}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* URL field with fetch button */}
+                      <div className="space-y-1.5">
+                        <p className="text-xs font-medium text-gray-500">
+                          LinkedIn profile URL
+                        </p>
+                        <div className="flex gap-2">
+                          <input
+                            type="url"
+                            value={linkedInUrl}
+                            onChange={(e) => setLinkedInUrl(e.target.value)}
+                            placeholder="https://www.linkedin.com/in/your-handle/"
+                            className="flex-1 h-9 px-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-gray-400 transition-colors"
+                          />
+                          <Button
+                            size="sm"
+                            disabled={
+                              isProcessingResume || !isLinkedInUrl(linkedInUrl)
+                            }
+                            onClick={() =>
+                              handleLinkedInFetchAndImport(linkedInUrl)
+                            }
+                            className="h-9 px-3 bg-[#0077b5] hover:bg-[#005885] text-white text-xs shrink-0 transition-colors"
+                          >
+                            {isProcessingResume ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            ) : (
+                              "Fetch & Import"
+                            )}
+                          </Button>
+                        </div>
+                        <p className="text-xs text-gray-400">
+                          Paste your LinkedIn profile URL and click &quot;Fetch
+                          &amp; Import&quot; — or copy your profile text
+                          manually below.
+                        </p>
+                      </div>
+
+                      {/* Paste area */}
+                      <div className="space-y-1.5">
+                        <p className="text-xs font-medium text-gray-500">
+                          Or paste your profile text manually
+                        </p>
+                        <Textarea
+                          value={linkedInContent}
+                          onChange={(e) => setLinkedInContent(e.target.value)}
+                          placeholder="Open your LinkedIn profile → Ctrl+A → Ctrl+C → paste here"
+                          className="min-h-[100px] bg-white border-gray-200 text-sm placeholder:text-gray-400 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
+                        />
+                        {isLinkedInUrl(linkedInContent) && (
+                          <p className="text-xs text-amber-600">
+                            That looks like a URL — use the &quot;Fetch &amp;
+                            Import&quot; button above instead.
+                          </p>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* JSON export instructions */}
+                      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-2.5">
+                        <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                          How to export your LinkedIn data
+                        </p>
+                        {[
+                          {
+                            step: "1",
+                            text: 'Go to LinkedIn → Settings → Data Privacy → "Get a copy of your data"',
+                          },
+                          {
+                            step: "2",
+                            text: 'Select "Want something in particular?" and check Profile',
+                          },
+                          {
+                            step: "3",
+                            text: "Request the archive and download it when ready",
+                          },
+                          {
+                            step: "4",
+                            text: "Open the ZIP and paste the contents of Profile.json below, or upload the file",
+                          },
+                        ].map(({ step, text }) => (
+                          <div
+                            key={step}
+                            className="flex items-start gap-3 text-xs text-gray-600"
+                          >
+                            <span className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-gray-700 font-semibold shrink-0 text-[10px] mt-0.5">
+                              {step}
+                            </span>
+                            <span>{text}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* JSON file upload */}
+                      <label className="flex items-center gap-3 px-4 py-3 border border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150">
+                        <FileJson className="h-5 w-5 text-gray-400 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-700">
+                            Upload JSON file
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            Profile.json from your LinkedIn archive
+                          </p>
+                        </div>
+                        <input
+                          type="file"
+                          accept="application/json,.json"
+                          className="hidden"
+                          onChange={handleLinkedInJsonFile}
+                        />
+                        <Upload className="h-4 w-4 text-gray-300 shrink-0" />
+                      </label>
+
+                      {/* Paste area */}
+                      <div className="space-y-1.5">
+                        <p className="text-xs font-medium text-gray-500">
+                          Or paste the JSON content directly
+                        </p>
+                        <Textarea
+                          value={linkedInContent}
+                          onChange={(e) => setLinkedInContent(e.target.value)}
+                          placeholder='{ "firstName": "Jane", "positions": [ … ] }'
+                          className="min-h-[120px] bg-white border-gray-200 text-sm font-mono placeholder:text-gray-400 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {apiKeyError && (
+                  <div className="mx-6 mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                    <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-red-700">
+                        API Key Required
+                      </p>
+                      <p className="text-xs text-red-500 mt-0.5">
+                        {apiKeyError}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2 h-7 text-xs text-red-600 border-red-200 hover:bg-red-50"
+                        onClick={() => (window.location.href = "/settings")}
+                      >
+                        Go to Settings
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                <DialogFooter className="px-6 py-4 border-t border-gray-100 bg-gray-50/60">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsLinkedInDialogOpen(false)}
+                    className="border-gray-200 text-gray-600 hover:bg-white transition-colors duration-150"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => handleLinkedInImport(linkedInContent)}
+                    disabled={isProcessingResume || !linkedInContent.trim()}
+                    className="bg-gray-900 hover:bg-gray-700 text-white transition-colors duration-150"
+                  >
+                    {isProcessingResume ? (
+                      <>
+                        <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                        Processing…
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="mr-2 h-3.5 w-3.5 text-violet-400" />
+                        Import with AI
+                      </>
+                    )}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
 
             {/* Resume Upload Button */}
             <Dialog

@@ -17,8 +17,19 @@ import { Resume } from "@/lib/types";
 
 import { toast } from "@/hooks/use-toast";
 import { addTextToResume } from "@/utils/actions/resumes/ai";
+import { fetchLinkedInProfileText } from "@/utils/actions/profiles/ai";
 import pdfToText from "react-pdftotext";
 import { cn } from "@/lib/utils";
+
+function LinkedInIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect width="4" height="12" x="2" y="9" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
 
 interface TextImportDialogProps {
   resume: Resume;
@@ -36,12 +47,39 @@ export function TextImportDialog({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [apiKeyError, setApiKeyError] = useState("");
+  const [linkedInUrl, setLinkedInUrl] = useState("");
+  const [isFetchingLinkedIn, setIsFetchingLinkedIn] = useState(false);
 
   useEffect(() => {
     if (!open) {
       setApiKeyError("");
+      setLinkedInUrl("");
     }
   }, [open]);
+
+  const isLinkedInUrl = (s: string) =>
+    /^https?:\/\/(www\.)?linkedin\.com\//i.test(s.trim());
+
+  const handleLinkedInFetch = async (url: string = linkedInUrl) => {
+    setIsFetchingLinkedIn(true);
+    try {
+      const text = await fetchLinkedInProfileText(url.trim());
+      setContent((prev) => (prev ? prev + "\n\n" : "") + text);
+      toast({
+        title: "LinkedIn profile fetched",
+        description: "Review the content below then click Import.",
+      });
+    } catch (error) {
+      toast({
+        title: "LinkedIn fetch failed",
+        description:
+          error instanceof Error ? error.message : "Could not fetch profile.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsFetchingLinkedIn(false);
+    }
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -103,12 +141,19 @@ export function TextImportDialog({
 
   const handleImport = async () => {
     setApiKeyError("");
-    if (!content.trim()) {
+    const trimmed = content.trim();
+    if (!trimmed) {
       toast({
         title: "No content",
         description: "Please enter some text to import.",
         variant: "destructive",
       });
+      return;
+    }
+    if (isLinkedInUrl(trimmed)) {
+      setLinkedInUrl(trimmed);
+      setContent("");
+      await handleLinkedInFetch(trimmed);
       return;
     }
 
@@ -171,6 +216,46 @@ export function TextImportDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
+          {/* LinkedIn URL import */}
+          <div className="space-y-1.5">
+            <p className="text-xs font-medium text-gray-500 flex items-center gap-1.5">
+              <LinkedInIcon className="h-3.5 w-3.5 text-[#0077b5]" />
+              Import from LinkedIn
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={linkedInUrl}
+                onChange={(e) => setLinkedInUrl(e.target.value)}
+                placeholder="https://www.linkedin.com/in/your-handle/"
+                className="flex-1 h-9 px-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-gray-400 transition-colors"
+              />
+              <Button
+                size="sm"
+                disabled={isFetchingLinkedIn || !isLinkedInUrl(linkedInUrl)}
+                onClick={() => handleLinkedInFetch()}
+                className="h-9 px-3 bg-[#0077b5] hover:bg-[#005885] text-white text-xs shrink-0 transition-colors"
+              >
+                {isFetchingLinkedIn ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  "Fetch & Import"
+                )}
+              </Button>
+            </div>
+            <p className="text-xs text-gray-400">
+              Paste your LinkedIn URL — we&apos;ll fetch the profile and
+              pre-fill the text area below.
+            </p>
+            {isLinkedInUrl(content) && (
+              <p className="text-xs text-amber-600">
+                That looks like a URL — use the field above to fetch it.
+              </p>
+            )}
+          </div>
+
+          <div className="border-t border-gray-100" />
+
           <label
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
