@@ -168,6 +168,6 @@ All model configuration lives in [`src/lib/ai-models.ts`](src/lib/ai-models.ts).
 
 ## Credits
 
-This is a fork of [ResumeLM](https://github.com/olyaiy/resume-lm) by [@olyaiy](https://github.com/olyaiy). The original architecture, design, and core feature set are his work. This fork removes the payment layer and adds Ollama support.
+This is a fork of [ResumeLM](https://github.com/olyaiy/resume-lm) by [@olyaiy](https://github.com/olyaiy). The original architecture, design, and core feature set are his work. This fork removes the payment layer, adds Ollama support, and ships a completely redesigned UI — simple, clean, and minimal throughout.
 
 **License:** AGPL-3.0 (same as upstream)
