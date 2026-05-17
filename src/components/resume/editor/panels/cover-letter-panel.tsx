@@ -48,6 +48,7 @@ export function CoverLetterPanel({
   const [customPrompt, setCustomPrompt] = useState("");
   const [selectedStyle, setSelectedStyle] =
     useState<CoverLetterStyle>("professional");
+  const [wordCountTarget, setWordCountTarget] = useState<number>(450);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
     title: "",
@@ -85,7 +86,8 @@ export function CoverLetterPanel({
       const { output } = await generate(
         prompt,
         { ...aiConfig, model: selectedModel || "", apiKeys },
-        selectedStyle
+        selectedStyle,
+        wordCountTarget
       );
 
       let generatedContent = "";
@@ -157,9 +159,9 @@ export function CoverLetterPanel({
 
       {resume.has_cover_letter ? (
         <div className="space-y-4">
-          {/* Style selector */}
+          {/* Tone selector */}
           <div className="space-y-1.5">
-            <p className="text-xs font-medium text-gray-500">Style</p>
+            <p className="text-xs font-medium text-gray-500">Tone</p>
             <div className="grid grid-cols-3 gap-1.5">
               {STYLES.map((s) => (
                 <button
@@ -184,6 +186,45 @@ export function CoverLetterPanel({
                     )}
                   >
                     {s.description}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Word count selector */}
+          <div className="space-y-1.5">
+            <p className="text-xs font-medium text-gray-500">Length</p>
+            <div className="grid grid-cols-3 gap-1.5">
+              {(
+                [
+                  { label: "Short", words: 300, sub: "~300 words" },
+                  { label: "Standard", words: 450, sub: "~450 words" },
+                  { label: "Detailed", words: 650, sub: "~650 words" },
+                ] as const
+              ).map((opt) => (
+                <button
+                  key={opt.words}
+                  onClick={() => setWordCountTarget(opt.words)}
+                  className={cn(
+                    "flex flex-col items-start gap-0.5 rounded-md border px-2 py-2 text-left transition-colors duration-150",
+                    wordCountTarget === opt.words
+                      ? "border-gray-900 bg-gray-900 text-white"
+                      : "border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:bg-gray-50"
+                  )}
+                >
+                  <span className="text-[10px] font-semibold leading-tight">
+                    {opt.label}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-[9px] leading-tight",
+                      wordCountTarget === opt.words
+                        ? "text-gray-300"
+                        : "text-gray-400"
+                    )}
+                  >
+                    {opt.sub}
                   </span>
                 </button>
               ))}

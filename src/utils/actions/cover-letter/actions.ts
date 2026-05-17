@@ -88,13 +88,17 @@ No corporate language. No filler. Cut anything that doesn't add signal. Startup 
 export async function generate(
   input: string,
   config?: AIConfig,
-  style: CoverLetterStyle = "professional"
+  style: CoverLetterStyle = "professional",
+  wordCountTarget?: number
 ) {
   try {
     const stream = createStreamableValue("");
     const isPro = true;
     const aiClient = initializeAIClient(config, isPro);
-    const system = SYSTEMS[style];
+    const baseSystem = SYSTEMS[style];
+    const system = wordCountTarget
+      ? `${baseSystem}\n\nLENGTH OVERRIDE: Write approximately ${wordCountTarget} words total. This takes priority over any length specified above.`
+      : baseSystem;
 
     (async () => {
       const { textStream } = streamText({
