@@ -509,6 +509,7 @@ export function ResumesSection({
                   type={type}
                   target_role={resume.target_role}
                   createdAt={resume.created_at}
+                  updatedAt={resume.updated_at}
                   className={cn(
                     "transition-all duration-300 opacity-60",
                     "pointer-events-none"
@@ -532,6 +533,7 @@ export function ResumesSection({
                   type={type}
                   target_role={resume.target_role}
                   createdAt={resume.created_at}
+                  updatedAt={resume.updated_at}
                   className="hover:-translate-y-1 transition-transform duration-300"
                 />
               </Link>

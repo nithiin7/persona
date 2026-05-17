@@ -13,6 +13,7 @@ export function MiniResumePreview({
   name,
   type,
   createdAt,
+  updatedAt,
   target_role,
   className,
 }: MiniResumePreviewProps) {
@@ -24,6 +25,10 @@ export function MiniResumePreview({
       year: "numeric",
     });
   }
+
+  const wasEdited = updatedAt && createdAt && updatedAt !== createdAt;
+  const displayDate = wasEdited ? updatedAt : createdAt;
+  const dateLabel = wasEdited ? "Edited" : "Created";
 
   return (
     <div
@@ -126,9 +131,9 @@ export function MiniResumePreview({
         </div>
 
         {/* Date */}
-        {createdAt && (
+        {displayDate && (
           <div className="absolute bottom-2 right-2 text-[9px] text-gray-300 group-hover:text-gray-400 transition-colors duration-200">
-            {formatDate(createdAt)}
+            {dateLabel} {formatDate(displayDate)}
           </div>
         )}
       </div>
