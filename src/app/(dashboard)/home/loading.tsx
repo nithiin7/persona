@@ -1,5 +1,58 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
+function KanbanCardSkeleton() {
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white p-3 space-y-2">
+      <Skeleton className="h-3.5 w-3/4" />
+      <Skeleton className="h-3 w-1/2" />
+      <div className="flex gap-1.5 pt-0.5">
+        <Skeleton className="h-3 w-14 rounded-full" />
+        <Skeleton className="h-3 w-10 rounded-full" />
+      </div>
+    </div>
+  );
+}
+
+function KanbanColumnSkeleton({ cards = 2 }: { cards?: number }) {
+  return (
+    <div className="flex-1 min-w-[180px] space-y-2">
+      {/* Column header */}
+      <div className="flex items-center gap-1.5 pb-1">
+        <Skeleton className="h-2 w-2 rounded-full" />
+        <Skeleton className="h-3.5 w-20" />
+        <Skeleton className="h-4 w-5 rounded-full ml-auto" />
+      </div>
+      {/* Cards */}
+      <div className="space-y-2">
+        {[...Array(cards)].map((_, i) => (
+          <KanbanCardSkeleton key={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function KanbanSkeleton() {
+  const cardCounts = [2, 1, 1, 0, 0, 1];
+  return (
+    <div className="space-y-3">
+      {/* Section header */}
+      <div className="flex items-baseline justify-between">
+        <div className="space-y-1">
+          <Skeleton className="h-5 w-44" />
+          <Skeleton className="h-3.5 w-24" />
+        </div>
+      </div>
+      {/* Columns */}
+      <div className="flex gap-3 overflow-hidden">
+        {cardCounts.map((count, i) => (
+          <KanbanColumnSkeleton key={i} cards={count} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ResumeCardSkeleton() {
   return (
     <div className="shrink-0 w-36 space-y-2">
@@ -59,6 +112,11 @@ export default function HomeLoading() {
             <Skeleton className="h-7 w-52" />
             <Skeleton className="h-4 w-48" />
           </div>
+
+          {/* Application Pipeline (Kanban) */}
+          <KanbanSkeleton />
+
+          <div className="h-px bg-gray-200" />
 
           {/* Base resumes */}
           <ResumeSectionSkeleton />
