@@ -168,7 +168,14 @@ export default async function Home({
                   </p>
                 </div>
               </div>
-              <JobKanbanBoard initialJobs={jobs} />
+              <JobKanbanBoard
+                initialJobs={jobs}
+                jobResumeMap={Object.fromEntries(
+                  tailoredResumes
+                    .filter((r) => r.job_id)
+                    .map((r) => [r.job_id!, r.id])
+                )}
+              />
             </div>
 
             {/* Divider */}

@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { MapPin, DollarSign, ExternalLink, Trash2 } from "lucide-react";
+import Link from "next/link";
+import {
+  MapPin,
+  DollarSign,
+  ExternalLink,
+  Trash2,
+  FileText,
+} from "lucide-react";
 import type { Job, ApplicationStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { updateJobStatus, deleteJob } from "@/utils/actions/jobs/actions";
@@ -58,12 +65,14 @@ const WORK_LOCATION_LABEL: Record<string, string> = {
 
 function KanbanCard({
   job,
+  resumeId,
   isDragging,
   onDragStart,
   onDragEnd,
   onDelete,
 }: {
   job: Job;
+  resumeId?: string;
   isDragging: boolean;
   onDragStart: () => void;
   onDragEnd: () => void;
@@ -132,18 +141,32 @@ function KanbanCard({
         )}
       </div>
 
-      {job.job_url && (
-        <a
-          href={job.job_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="mt-2 inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-600 transition-colors duration-150"
-        >
-          <ExternalLink className="h-2.5 w-2.5" />
-          View posting
-        </a>
-      )}
+      <div className="mt-2 flex items-center gap-3">
+        {job.job_url && (
+          <a
+            href={job.job_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-600 transition-colors duration-150"
+          >
+            <ExternalLink className="h-2.5 w-2.5" />
+            View posting
+          </a>
+        )}
+        {resumeId && (
+          <Link
+            href={`/resumes/${resumeId}`}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 text-[11px] text-teal-600 hover:text-teal-700 transition-colors duration-150"
+          >
+            <FileText className="h-2.5 w-2.5" />
+            View resume
+          </Link>
+        )}
+      </div>
     </div>
   );
 }
@@ -161,6 +184,7 @@ function KanbanColumn({
   onCardDragStart,
   onCardDragEnd,
   onCardDelete,
+  jobResumeMap,
 }: {
   label: string;
   dotClass: string;
@@ -174,6 +198,7 @@ function KanbanColumn({
   onCardDragStart: (id: string) => void;
   onCardDragEnd: () => void;
   onCardDelete: (id: string) => void;
+  jobResumeMap: Record<string, string>;
 }) {
   return (
     <div
@@ -202,6 +227,7 @@ function KanbanColumn({
           <KanbanCard
             key={job.id}
             job={job}
+            resumeId={jobResumeMap[job.id]}
             isDragging={draggingId === job.id}
             onDragStart={() => onCardDragStart(job.id)}
             onDragEnd={onCardDragEnd}
@@ -213,7 +239,13 @@ function KanbanColumn({
   );
 }
 
-export function JobKanbanBoard({ initialJobs }: { initialJobs: Job[] }) {
+export function JobKanbanBoard({
+  initialJobs,
+  jobResumeMap,
+}: {
+  initialJobs: Job[];
+  jobResumeMap: Record<string, string>;
+}) {
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverStatus, setDragOverStatus] =
@@ -338,6 +370,7 @@ export function JobKanbanBoard({ initialJobs }: { initialJobs: Job[] }) {
             onCardDragStart={handleCardDragStart}
             onCardDragEnd={handleCardDragEnd}
             onCardDelete={handleCardDelete}
+            jobResumeMap={jobResumeMap}
           />
         ))}
       </div>
