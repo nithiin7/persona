@@ -15,6 +15,7 @@ import type {
   DocumentSettings,
   Resume,
   ResumeTemplate,
+  Job,
 } from "@/lib/types";
 
 interface WorkExperienceFormProps {
@@ -22,12 +23,15 @@ interface WorkExperienceFormProps {
   onChange: (experiences: WorkExperience[]) => void;
   profile: { work_experience: WorkExperience[] };
   targetRole?: string;
+  job?: Job | null;
 }
 
 interface ProjectsFormProps {
   projects: Project[];
   onChange: (projects: Project[]) => void;
   profile: { projects: Project[] };
+  targetRole?: string;
+  job?: Job | null;
 }
 
 interface EducationFormProps {

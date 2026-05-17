@@ -77,8 +77,26 @@ export async function POST(req: Request) {
          - Use 'modifyWholeResume' when changing multiple sections at once
 
       Aim to use a maximum of 5 tools in one go, then confirm with the user if they would like you to continue.
-      The target role is ${target_role}. The job is ${job ? JSON.stringify(job) : "No job specified"}.
+      The target role is ${target_role}.
       Current resume summary: ${resume ? `${resume.first_name} ${resume.last_name} - ${resume.target_role}` : "No resume data"}.
+
+      ${
+        job
+          ? `JOB CONTEXT — This resume is being tailored to a specific role. Every suggestion you make MUST be optimized for this job.
+
+      Target company: ${job.company_name || "N/A"}
+      Target position: ${job.position_title || target_role}
+      ${job.keywords && job.keywords.length > 0 ? `Known JD keywords (inject naturally where truthful): ${job.keywords.join(", ")}` : ""}
+      ${job.description ? `Full job description:\n${job.description}` : ""}
+
+      JOB-AWARE RULES:
+      - When rewriting bullets, inject exact JD keywords (same spelling/capitalization) where they truthfully apply
+      - When suggesting skills, prioritize skills mentioned in the job description
+      - When reordering sections, put the most JD-relevant content first
+      - Bold JD keywords in bullet points using **keyword** syntax
+      - Never fabricate experience — only inject keywords consistent with what the candidate demonstrably did`
+          : "No specific job targeted — provide general resume best-practice advice."
+      }
       `,
       messages,
       maxSteps: isOllamaModel ? 1 : 5,

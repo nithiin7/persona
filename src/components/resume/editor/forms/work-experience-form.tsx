@@ -1,6 +1,6 @@
 "use client";
 
-import { WorkExperience, Profile } from "@/lib/types";
+import { WorkExperience, Profile, Job } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,6 +44,7 @@ interface WorkExperienceFormProps {
   onChange: (experiences: WorkExperience[]) => void;
   profile: Profile;
   targetRole?: string;
+  job?: Job | null;
 }
 
 interface ImprovedPoint {
@@ -62,6 +63,7 @@ function areWorkExperiencePropsEqual(
 ) {
   return (
     prevProps.targetRole === nextProps.targetRole &&
+    prevProps.job?.id === nextProps.job?.id &&
     JSON.stringify(prevProps.experiences) ===
       JSON.stringify(nextProps.experiences) &&
     prevProps.profile.id === nextProps.profile.id
@@ -74,6 +76,7 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
   onChange,
   profile,
   targetRole = "Software Engineer",
+  job,
 }: WorkExperienceFormProps) {
   const [aiSuggestions, setAiSuggestions] = useState<{
     [key: number]: AISuggestion[];
@@ -176,7 +179,8 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
         {
           model: selectedModel || "",
           apiKeys,
-        }
+        },
+        job?.description || undefined
       );
 
       const suggestions = result.points.map((point: string) => ({

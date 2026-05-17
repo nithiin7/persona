@@ -112,7 +112,8 @@ export async function generateWorkExperiencePoints(
   targetRole: string,
   numPoints: number = 3,
   customPrompt: string = "",
-  config?: AIConfig
+  config?: AIConfig,
+  jobDescription?: string
 ) {
   const isPro = true;
   const aiClient = initializeAIClient(config, isPro);
@@ -126,7 +127,7 @@ export async function generateWorkExperiencePoints(
       Company: ${company}
       Technologies: ${technologies.join(", ")}
       Target Role: ${targetRole}
-      Number of Points: ${numPoints}${customPrompt ? `\nCustom Focus: ${customPrompt}` : ""}`,
+      Number of Points: ${numPoints}${customPrompt ? `\nCustom Focus: ${customPrompt}` : ""}${jobDescription ? `\n\nTarget Job Description (inject these exact keywords naturally where truthful):\n${jobDescription}` : ""}`,
     system: WORK_EXPERIENCE_GENERATOR_MESSAGE.content as string,
   });
 
@@ -183,7 +184,8 @@ export async function generateProjectPoints(
   targetRole: string,
   numPoints: number = 3,
   customPrompt: string = "",
-  config?: AIConfig
+  config?: AIConfig,
+  jobDescription?: string
 ) {
   const isPro = true;
   const aiClient = initializeAIClient(config, isPro);
@@ -196,7 +198,7 @@ export async function generateProjectPoints(
     prompt: `Project Name: ${projectName}
       Technologies: ${technologies.join(", ")}
       Target Role: ${targetRole}
-      Number of Points: ${numPoints}${customPrompt ? `\nCustom Focus: ${customPrompt}` : ""}`,
+      Number of Points: ${numPoints}${customPrompt ? `\nCustom Focus: ${customPrompt}` : ""}${jobDescription ? `\n\nTarget Job Description (inject these exact keywords naturally where truthful):\n${jobDescription}` : ""}`,
     system: PROJECT_GENERATOR_MESSAGE.content as string,
   });
 

@@ -284,17 +284,19 @@ export async function formatJobListing(jobListing: string, config?: AIConfig) {
               Extract the basic details (company, position, URL, location, salary).
               For the description, include 3-5 key responsibilities as bullet points followed by a summary paragraph — all as a single string.
 
-              TASK 2 - KEYWORD ANALYSIS:
-              1. Technical Skills: Identify all technical skills, programming languages, frameworks, and tools
-              2. Soft Skills: Extract interpersonal and professional competencies
-              3. Industry Knowledge: Capture domain-specific knowledge requirements
-              4. Required Qualifications: List education, and experience levels
-              5. Responsibilities: Key job functions and deliverables
+              TASK 2 - KEYWORD EXTRACTION (CRITICAL — the 'keywords' array must be populated):
+              Extract ALL of the following as individual strings in the keywords array, preserving exact spelling and capitalization from the job listing:
+              1. Every programming language mentioned (e.g., "Python", "TypeScript", "Go")
+              2. Every framework, library, or tool mentioned (e.g., "React", "Node.js", "PostgreSQL", "Docker")
+              3. Every platform or cloud service mentioned (e.g., "AWS", "GCP", "Kubernetes")
+              4. Key methodologies or architectures (e.g., "microservices", "REST API", "CI/CD", "agile")
+              5. Domain-specific terms that appear in requirements (e.g., "distributed systems", "machine learning")
+              6. Required soft-skill phrases used verbatim (e.g., "cross-functional", "stakeholder management")
+              The keywords array MUST contain at least 10 items if the job listing has technical requirements. Never return an empty keywords array for a technical role.
 
               Format the output according to the schema, ensuring:
-              - Keywords as they are (e.g., "React.js" → "React.js")
-              - Skills are deduplicated and categorized
-              - Seniority level is inferred from context
+              - Keywords preserve exact casing from the listing (e.g., "React.js" not "react.js", "TypeScript" not "typescript")
+              - Keywords are deduplicated (no duplicates)
               - description is a plain string (NOT a JSON object)
 
               Usage Notes:

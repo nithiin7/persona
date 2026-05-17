@@ -1,6 +1,6 @@
 "use client";
 
-import { Project, Profile } from "@/lib/types";
+import { Project, Profile, Job } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,6 +53,8 @@ interface ProjectsFormProps {
   projects: Project[];
   onChange: (projects: Project[]) => void;
   profile: Profile;
+  targetRole?: string;
+  job?: Job | null;
 }
 
 function areProjectsPropsEqual(
@@ -61,7 +63,9 @@ function areProjectsPropsEqual(
 ) {
   return (
     JSON.stringify(prevProps.projects) === JSON.stringify(nextProps.projects) &&
-    prevProps.profile.id === nextProps.profile.id
+    prevProps.profile.id === nextProps.profile.id &&
+    prevProps.targetRole === nextProps.targetRole &&
+    prevProps.job?.id === nextProps.job?.id
   );
 }
 
@@ -69,6 +73,8 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
   projects,
   onChange,
   profile,
+  targetRole = "Software Engineer",
+  job,
 }: ProjectsFormProps) {
   const [aiSuggestions, setAiSuggestions] = useState<{
     [key: number]: AISuggestion[];
@@ -167,13 +173,14 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
       const result = await generateProjectPoints(
         project.name,
         project.technologies || [],
-        "Software Engineer",
+        targetRole,
         config.numPoints,
         config.customPrompt,
         {
           model: selectedModel || "",
           apiKeys,
-        }
+        },
+        job?.description || undefined
       );
 
       const suggestions = result.points.map((point: string) => ({

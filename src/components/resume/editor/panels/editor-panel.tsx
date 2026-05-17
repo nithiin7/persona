@@ -143,6 +143,7 @@ export function EditorPanel({
                     }
                     profile={profile}
                     targetRole={resume.target_role}
+                    job={job}
                   />
                 </Suspense>
               </TabsContent>
@@ -163,6 +164,8 @@ export function EditorPanel({
                       onResumeChange("projects", projects)
                     }
                     profile={profile}
+                    targetRole={resume.target_role}
+                    job={job}
                   />
                 </Suspense>
               </TabsContent>
