@@ -517,9 +517,9 @@ export function ResumesSection({
                 {/* Loading Overlay */}
                 <div className="absolute inset-0 bg-white/90 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
                   <div className="flex flex-col items-center gap-2">
-                    <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-                    <span className="text-xs font-medium text-blue-600">
-                      Copying...
+                    <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                    <span className="text-xs font-medium text-gray-400">
+                      Copying…
                     </span>
                   </div>
                 </div>
@@ -553,18 +553,15 @@ export function ResumesSection({
                     variant="ghost"
                     disabled={isDeleting}
                     className={cn(
-                      "h-8 w-8 rounded-lg",
-                      "bg-rose-50/80 hover:bg-rose-100/80",
-                      "text-rose-600 hover:text-rose-700",
-                      "border border-rose-200/60",
-                      "shadow-sm",
-                      "transition-all duration-300",
-                      "hover:scale-105 hover:shadow-md",
-                      "hover:-translate-y-0.5",
+                      "h-7 w-7 rounded-md",
+                      "bg-white/80 text-gray-400",
+                      "border border-gray-200",
+                      "hover:text-red-500 hover:bg-red-50 hover:border-red-200",
+                      "transition-colors duration-150",
                       isDeleting && "opacity-50 cursor-not-allowed"
                     )}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </AlertDialogTrigger>
 
@@ -578,20 +575,17 @@ export function ResumesSection({
                   }}
                   disabled={isDeleting}
                   className={cn(
-                    "h-8 w-8 rounded-lg",
-                    "bg-indigo-50/80 hover:bg-indigo-100/80",
-                    "text-indigo-600 hover:text-indigo-700",
-                    "border border-indigo-200/60",
-                    "shadow-sm",
-                    "transition-all duration-300",
-                    "hover:scale-105 hover:shadow-md",
-                    "hover:-translate-y-0.5"
+                    "h-7 w-7 rounded-md",
+                    "bg-white/80 text-gray-400",
+                    "border border-gray-200",
+                    "hover:text-gray-700 hover:bg-gray-100 hover:border-gray-300",
+                    "transition-colors duration-150"
                   )}
                 >
-                  <Pencil className="h-4 w-4" />
+                  <Pencil className="h-3.5 w-3.5" />
                 </Button>
 
-                {/* Copy Button - Check if can create more */}
+                {/* Copy Button */}
                 {canCreateMore ? (
                   <Button
                     size="icon"
@@ -603,22 +597,19 @@ export function ResumesSection({
                     }}
                     disabled={isDeleting || isCopying}
                     className={cn(
-                      "h-8 w-8 rounded-lg",
-                      "bg-teal-50/80 hover:bg-teal-100/80",
-                      "text-teal-600 hover:text-teal-700",
-                      "border border-teal-200/60",
-                      "shadow-sm",
-                      "transition-all duration-300",
-                      "hover:scale-105 hover:shadow-md",
-                      "hover:-translate-y-0.5",
+                      "h-7 w-7 rounded-md",
+                      "bg-white/80 text-gray-400",
+                      "border border-gray-200",
+                      "hover:text-gray-700 hover:bg-gray-100 hover:border-gray-300",
+                      "transition-colors duration-150",
                       (isDeleting || isCopying) &&
                         "opacity-50 cursor-not-allowed"
                     )}
                   >
                     {isCopying ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     ) : (
-                      <Copy className="h-4 w-4" />
+                      <Copy className="h-3.5 w-3.5" />
                     )}
                   </Button>
                 ) : (
@@ -628,35 +619,33 @@ export function ResumesSection({
                         size="icon"
                         variant="ghost"
                         className={cn(
-                          "h-8 w-8 rounded-lg",
-                          "bg-amber-50/80 hover:bg-amber-100/80",
-                          "text-amber-600 hover:text-amber-700",
-                          "border border-amber-200/60",
-                          "shadow-sm",
-                          "transition-all duration-300",
-                          "hover:scale-105 hover:shadow-md",
-                          "hover:-translate-y-0.5"
+                          "h-7 w-7 rounded-md",
+                          "bg-white/80 text-gray-400",
+                          "border border-gray-200",
+                          "hover:text-gray-700 hover:bg-gray-100 hover:border-gray-300",
+                          "transition-colors duration-150"
                         )}
                       >
-                        <Copy className="h-4 w-4" />
+                        <Copy className="h-3.5 w-3.5" />
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent>
+                    <AlertDialogContent className="bg-white border border-gray-200 shadow-md">
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Upgrade Required</AlertDialogTitle>
+                        <AlertDialogTitle>Limit Reached</AlertDialogTitle>
                         <AlertDialogDescription>
                           You&apos;ve reached the maximum number of {type}{" "}
-                          resumes allowed on the free plan. Upgrade to Pro to
-                          create unlimited resumes and unlock additional
-                          features.
+                          resumes. Upgrade to create unlimited resumes and
+                          unlock additional features.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel className="border-gray-200 hover:bg-gray-50">
+                          Cancel
+                        </AlertDialogCancel>
                         <AlertDialogAction asChild>
                           <Link
                             href="/subscription"
-                            className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white hover:from-teal-700 hover:to-cyan-700"
+                            className="bg-gray-900 text-white hover:bg-gray-700 transition-colors duration-150"
                           >
                             Upgrade to Pro
                           </Link>
@@ -668,7 +657,7 @@ export function ResumesSection({
               </div>
             )}
           </div>
-          <AlertDialogContent>
+          <AlertDialogContent className="bg-white border border-gray-200 shadow-md">
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Resume</AlertDialogTitle>
               <AlertDialogDescription>
@@ -677,14 +666,16 @@ export function ResumesSection({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel className="border-gray-200 hover:bg-gray-50">
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
                   startTransition(() => {
                     handleDeleteResume(resume.id, resume.name);
                   });
                 }}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="bg-red-600 text-white hover:bg-red-700 transition-colors duration-150"
               >
                 Delete
               </AlertDialogAction>
@@ -854,9 +845,11 @@ export function ResumesSection({
         open={!!renamingResume}
         onOpenChange={(open) => !open && setRenamingResume(null)}
       >
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white border border-gray-200 shadow-md">
           <DialogHeader>
-            <DialogTitle>Rename Resume</DialogTitle>
+            <DialogTitle className="text-base font-semibold text-gray-900">
+              Rename Resume
+            </DialogTitle>
           </DialogHeader>
           <Input
             value={renameValue}
@@ -866,12 +859,21 @@ export function ResumesSection({
             }}
             placeholder="Resume name"
             autoFocus
+            className="h-9 border-gray-200 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRenamingResume(null)}>
+            <Button
+              variant="outline"
+              onClick={() => setRenamingResume(null)}
+              className="border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors duration-150"
+            >
               Cancel
             </Button>
-            <Button onClick={handleRenameResume} disabled={!renameValue.trim()}>
+            <Button
+              onClick={handleRenameResume}
+              disabled={!renameValue.trim()}
+              className="bg-gray-900 text-white hover:bg-gray-700 transition-colors duration-150"
+            >
               Rename
             </Button>
           </DialogFooter>

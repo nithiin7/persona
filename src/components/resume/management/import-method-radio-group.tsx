@@ -1,14 +1,13 @@
 import { cn } from "@/lib/utils";
-import { Copy } from "lucide-react";
-import { Brain } from "lucide-react";
+import { Copy, Brain } from "lucide-react";
 import { ComponentPropsWithoutRef } from "react";
 
 interface ImportMethodRadioItemProps extends ComponentPropsWithoutRef<"input"> {
   title: string;
   description: string;
   icon: React.ReactNode;
-  checked?: boolean;
   id: string;
+  accent?: "violet" | "gray";
 }
 
 function ImportMethodRadioItem({
@@ -16,6 +15,7 @@ function ImportMethodRadioItem({
   description,
   icon,
   id,
+  accent = "gray",
   ...props
 }: ImportMethodRadioItemProps) {
   return (
@@ -24,23 +24,35 @@ function ImportMethodRadioItem({
       <div
         tabIndex={0}
         className={cn(
-          "flex flex-col items-center justify-center rounded-lg p-3",
-          "bg-white/80 border-2 shadow-sm h-full",
-          "hover:border-pink-200 hover:bg-pink-50/50",
-          "transition-all duration-300",
-          "peer-checked:border-pink-500 peer-checked:bg-pink-50",
-          "peer-checked:shadow-md peer-checked:shadow-pink-100",
-          "focus:outline-none focus:ring-2 focus:ring-pink-500/50"
+          "flex flex-col items-center justify-center rounded-xl p-4",
+          "bg-white border-2 h-full",
+          "transition-all duration-150",
+          accent === "violet"
+            ? [
+                "hover:border-violet-200 hover:bg-violet-50/40",
+                "peer-checked:border-violet-600 peer-checked:bg-violet-50",
+              ]
+            : [
+                "hover:border-gray-300 hover:bg-gray-50",
+                "peer-checked:border-gray-900 peer-checked:bg-gray-50",
+              ],
+          "border-gray-200",
+          "focus:outline-none"
         )}
       >
-        <div className="flex flex-col items-center text-center">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-pink-50 to-rose-50 border border-pink-100 flex items-center justify-center mb-2">
-            <div className="scale-75">{icon}</div>
+        <div className="flex flex-col items-center text-center gap-2">
+          <div
+            className={cn(
+              "h-9 w-9 rounded-lg flex items-center justify-center",
+              accent === "violet"
+                ? "bg-violet-100 text-violet-600"
+                : "bg-gray-100 text-gray-600"
+            )}
+          >
+            {icon}
           </div>
-          <div className="font-semibold text-xs text-pink-950 mb-1">
-            {title}
-          </div>
-          <span className="text-xs leading-tight text-gray-600">
+          <div className="font-semibold text-xs text-gray-900">{title}</div>
+          <span className="text-xs leading-snug text-gray-500">
             {description}
           </span>
         </div>
@@ -59,27 +71,28 @@ export function ImportMethodRadioGroup({
   onChange,
 }: ImportMethodRadioGroupProps) {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-3">
       <ImportMethodRadioItem
         name="tailorOption"
         value="ai"
         id="ai-tailor"
         checked={value === "ai"}
         onChange={() => onChange("ai")}
+        accent="violet"
         title="Tailor with AI"
-        description="Let AI analyze the job description and optimize your resume for the best match"
-        icon={<Brain className="h-6 w-6 text-pink-600" />}
+        description="AI analyzes the job description and optimizes your resume for the best match"
+        icon={<Brain className="h-5 w-5" />}
       />
-
       <ImportMethodRadioItem
         name="tailorOption"
         value="import-profile"
         id="manual-tailor"
         checked={value === "import-profile"}
         onChange={() => onChange("import-profile")}
+        accent="gray"
         title="Copy Base Resume"
-        description="Create a copy of your base resume. Add a job description to link it to a specific position."
-        icon={<Copy className="h-6 w-6 text-pink-600" />}
+        description="Create an exact copy and optionally link it to a job posting"
+        icon={<Copy className="h-5 w-5" />}
       />
     </div>
   );
