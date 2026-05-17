@@ -165,13 +165,53 @@ export async function formatProfileWithAI(
               })
             )
             .optional(),
+          publications: z
+            .array(
+              z.object({
+                title: z.string(),
+                authors: z.string().optional(),
+                venue: z.string().optional(),
+                date: z.string().optional(),
+                url: z.string().optional(),
+              })
+            )
+            .optional(),
+          volunteer: z
+            .array(
+              z.object({
+                organization: z.string(),
+                role: z.string(),
+                location: z.string().optional(),
+                date: z.string().optional(),
+                description: z.array(z.string()).optional(),
+              })
+            )
+            .optional(),
+          languages: z
+            .array(
+              z.object({
+                language: z.string(),
+                proficiency: z.string().optional(),
+              })
+            )
+            .optional(),
+          awards: z
+            .array(
+              z.object({
+                title: z.string(),
+                issuer: z.string().optional(),
+                date: z.string().optional(),
+                description: z.string().optional(),
+              })
+            )
+            .optional(),
         }),
       }),
-      prompt: `Please analyze this resume text and extract all relevant information into a structured profile format. 
-                Include all sections (personal info, work experience, education, skills, projects, certifications) if present.
+      prompt: `Please analyze this resume/profile text and extract all relevant information into a structured profile format.
+                Include all sections if present: personal info, work experience, education, skills, projects, certifications, publications, volunteer work, languages, and awards.
                 Ensure all arrays (like description, technologies, achievements) are properly formatted as arrays.
                 For any missing or unclear information, use optional fields rather than making assumptions.
-  
+
                 Resume Text:
   ${userMessages}`,
       system: RESUME_FORMATTER_SYSTEM_MESSAGE.content as string,

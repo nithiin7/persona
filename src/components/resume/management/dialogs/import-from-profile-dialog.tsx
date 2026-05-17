@@ -7,6 +7,10 @@ import {
   Education,
   Skill,
   Certification,
+  Publication,
+  Volunteer,
+  Language,
+  Award,
 } from "@/lib/types";
 import {
   Dialog,
@@ -24,7 +28,16 @@ import { UserCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-type ImportItem = WorkExperience | Project | Education | Skill | Certification;
+type ImportItem =
+  | WorkExperience
+  | Project
+  | Education
+  | Skill
+  | Certification
+  | Publication
+  | Volunteer
+  | Language
+  | Award;
 
 interface ImportFromProfileDialogProps<T extends ImportItem> {
   profile: Profile;
@@ -34,7 +47,11 @@ interface ImportFromProfileDialogProps<T extends ImportItem> {
     | "projects"
     | "education"
     | "skills"
-    | "certifications";
+    | "certifications"
+    | "publications"
+    | "volunteer"
+    | "languages"
+    | "awards";
   buttonClassName?: string;
 }
 
@@ -47,7 +64,7 @@ export function ImportFromProfileDialog<T extends ImportItem>({
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
-  const items =
+  const items: ImportItem[] =
     type === "work_experience"
       ? profile.work_experience
       : type === "projects"
@@ -56,7 +73,15 @@ export function ImportFromProfileDialog<T extends ImportItem>({
           ? profile.education
           : type === "certifications"
             ? profile.certifications || []
-            : profile.skills;
+            : type === "publications"
+              ? profile.publications || []
+              : type === "volunteer"
+                ? profile.volunteer || []
+                : type === "languages"
+                  ? profile.languages || []
+                  : type === "awards"
+                    ? profile.awards || []
+                    : profile.skills;
 
   const title =
     type === "work_experience"
@@ -67,7 +92,15 @@ export function ImportFromProfileDialog<T extends ImportItem>({
           ? "Education"
           : type === "certifications"
             ? "Certifications"
-            : "Skills";
+            : type === "publications"
+              ? "Publications"
+              : type === "volunteer"
+                ? "Volunteer"
+                : type === "languages"
+                  ? "Languages"
+                  : type === "awards"
+                    ? "Awards"
+                    : "Skills";
 
   const handleImport = () => {
     const itemsToImport = items.filter((item) =>
@@ -90,6 +123,15 @@ export function ImportFromProfileDialog<T extends ImportItem>({
     } else if (type === "certifications") {
       const cert = item as Certification;
       return `${cert.name}-${cert.provider}`;
+    } else if (type === "publications") {
+      return (item as Publication).title;
+    } else if (type === "volunteer") {
+      const vol = item as Volunteer;
+      return `${vol.organization}-${vol.role}`;
+    } else if (type === "languages") {
+      return (item as Language).language;
+    } else if (type === "awards") {
+      return (item as Award).title;
     } else {
       return (item as Skill).category;
     }
@@ -103,6 +145,10 @@ export function ImportFromProfileDialog<T extends ImportItem>({
       return `${edu.degree} in ${edu.field}`;
     }
     if (type === "certifications") return (item as Certification).name;
+    if (type === "publications") return (item as Publication).title;
+    if (type === "volunteer") return (item as Volunteer).organization;
+    if (type === "languages") return (item as Language).language;
+    if (type === "awards") return (item as Award).title;
     return (item as Skill).category;
   };
 
@@ -111,7 +157,12 @@ export function ImportFromProfileDialog<T extends ImportItem>({
     if (type === "projects")
       return ((item as Project).technologies || []).join(", ") || null;
     if (type === "education") return (item as Education).school;
-    if (type === "certifications") return (item as Certification).provider;
+    if (type === "certifications")
+      return (item as Certification).provider || null;
+    if (type === "publications") return (item as Publication).venue || null;
+    if (type === "volunteer") return (item as Volunteer).role;
+    if (type === "languages") return (item as Language).proficiency || null;
+    if (type === "awards") return (item as Award).issuer || null;
     return null;
   };
 
@@ -120,6 +171,9 @@ export function ImportFromProfileDialog<T extends ImportItem>({
     if (type === "projects") return (item as Project).date || "";
     if (type === "education") return (item as Education).date;
     if (type === "certifications") return (item as Certification).date || "";
+    if (type === "publications") return (item as Publication).date || "";
+    if (type === "volunteer") return (item as Volunteer).date || "";
+    if (type === "awards") return (item as Award).date || "";
     return "";
   };
 

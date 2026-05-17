@@ -39,6 +39,34 @@ export interface Certification {
   credential_url?: string;
 }
 
+export interface Publication {
+  title: string;
+  authors?: string;
+  venue?: string;
+  date?: string;
+  url?: string;
+}
+
+export interface Volunteer {
+  organization: string;
+  role: string;
+  location?: string;
+  date?: string;
+  description?: string[];
+}
+
+export interface Language {
+  language: string;
+  proficiency?: string;
+}
+
+export interface Award {
+  title: string;
+  issuer?: string;
+  date?: string;
+  description?: string;
+}
+
 export type ApplicationStatus =
   | "saved"
   | "applied"
@@ -110,6 +138,10 @@ export interface Resume {
   skills: Skill[];
   projects: Project[];
   certifications?: Certification[];
+  publications?: Publication[];
+  volunteer?: Volunteer[];
+  languages?: Language[];
+  awards?: Award[];
   created_at: string;
   updated_at: string;
   document_settings?: DocumentSettings;
@@ -175,6 +207,30 @@ export interface DocumentSettings {
   certifications_margin_horizontal?: number;
   certifications_item_spacing?: number;
 
+  // Publications Section
+  publications_margin_top?: number;
+  publications_margin_bottom?: number;
+  publications_margin_horizontal?: number;
+  publications_item_spacing?: number;
+
+  // Volunteer Section
+  volunteer_margin_top?: number;
+  volunteer_margin_bottom?: number;
+  volunteer_margin_horizontal?: number;
+  volunteer_item_spacing?: number;
+
+  // Languages Section
+  languages_margin_top?: number;
+  languages_margin_bottom?: number;
+  languages_margin_horizontal?: number;
+  languages_item_spacing?: number;
+
+  // Awards Section
+  awards_margin_top?: number;
+  awards_margin_bottom?: number;
+  awards_margin_horizontal?: number;
+  awards_item_spacing?: number;
+
   // Style overrides
   accent_color?: string;
   font_family?: "helvetica" | "times-roman";
@@ -196,6 +252,10 @@ export interface Profile {
   skills: Skill[];
   projects: Project[];
   certifications?: Certification[];
+  publications?: Publication[];
+  volunteer?: Volunteer[];
+  languages?: Language[];
+  awards?: Award[];
   created_at: string;
   updated_at: string;
 }

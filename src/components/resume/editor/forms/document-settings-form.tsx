@@ -23,6 +23,10 @@ const SECTION_LABELS: Record<string, string> = {
   projects: "Projects",
   education: "Education",
   certifications: "Certifications",
+  publications: "Publications",
+  volunteer: "Volunteer",
+  languages: "Languages",
+  awards: "Awards",
 };
 
 const DEFAULT_SECTION_ORDER = [
@@ -32,6 +36,10 @@ const DEFAULT_SECTION_ORDER = [
   "projects",
   "education",
   "certifications",
+  "publications",
+  "volunteer",
+  "languages",
+  "awards",
 ];
 
 const ACCENT_COLORS = [
@@ -188,7 +196,11 @@ export function DocumentSettingsForm({
       | "experience"
       | "projects"
       | "education"
-      | "certifications";
+      | "certifications"
+      | "publications"
+      | "volunteer"
+      | "languages"
+      | "awards";
   }) => (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -975,6 +987,10 @@ export function DocumentSettingsForm({
               "projects",
               "education",
               "certifications",
+              "publications",
+              "volunteer",
+              "languages",
+              "awards",
             ] as const
           ).map((section) => {
             const title =

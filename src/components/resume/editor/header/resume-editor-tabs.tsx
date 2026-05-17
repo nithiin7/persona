@@ -10,6 +10,10 @@ import {
   Award,
   CheckCircle2,
   FileText,
+  BookOpen,
+  Heart,
+  Globe,
+  Trophy,
 } from "lucide-react";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -30,9 +34,13 @@ const contentTabs = [
   { value: "basic", icon: User, label: "Basic" },
   { value: "work", icon: Briefcase, label: "Work" },
   { value: "projects", icon: FolderGit2, label: "Projects" },
-  { value: "education", icon: GraduationCap, label: "Education" },
+  { value: "education", icon: GraduationCap, label: "Edu" },
   { value: "skills", icon: Wrench, label: "Skills" },
   { value: "certifications", icon: Award, label: "Certs" },
+  { value: "publications", icon: BookOpen, label: "Pubs" },
+  { value: "volunteer", icon: Heart, label: "Vol" },
+  { value: "languages", icon: Globe, label: "Lang" },
+  { value: "awards", icon: Trophy, label: "Awards" },
 ];
 
 const toolTabs = [
@@ -44,8 +52,8 @@ const toolTabs = [
 export function ResumeEditorTabs() {
   return (
     <div className="space-y-1 my-3">
-      {/* Content editing tabs — 3×2 grid */}
-      <TabsList className={`${listClass} grid grid-cols-3`}>
+      {/* Content editing tabs — 5×2 grid */}
+      <TabsList className={`${listClass} grid grid-cols-5`}>
         {contentTabs.map(({ value, icon: Icon, label }) => (
           <TabsTrigger key={value} value={value} className={editTrigger}>
             <Icon className="h-3.5 w-3.5 shrink-0" />

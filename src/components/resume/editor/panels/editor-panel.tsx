@@ -16,6 +16,10 @@ import {
   SkillsForm,
   ProjectsForm,
   CertificationsForm,
+  PublicationsForm,
+  VolunteerForm,
+  LanguagesForm,
+  AwardsForm,
   DocumentSettingsForm,
 } from "../dynamic-components";
 import { ResumeEditorTabs } from "../header/resume-editor-tabs";
@@ -167,6 +171,84 @@ export function EditorPanel({
                     onChange={(certifications) =>
                       onResumeChange("certifications", certifications)
                     }
+                    profile={profile}
+                  />
+                </Suspense>
+              </TabsContent>
+
+              {/* Publications Form */}
+              <TabsContent value="publications">
+                <Suspense
+                  fallback={
+                    <div className="space-y-4 animate-pulse">
+                      <div className="h-8 bg-muted rounded-md w-1/3" />
+                      <div className="h-24 bg-muted rounded-md" />
+                    </div>
+                  }
+                >
+                  <PublicationsForm
+                    publications={resume.publications || []}
+                    onChange={(publications) =>
+                      onResumeChange("publications", publications)
+                    }
+                    profile={profile}
+                  />
+                </Suspense>
+              </TabsContent>
+
+              {/* Volunteer Form */}
+              <TabsContent value="volunteer">
+                <Suspense
+                  fallback={
+                    <div className="space-y-4 animate-pulse">
+                      <div className="h-8 bg-muted rounded-md w-1/3" />
+                      <div className="h-24 bg-muted rounded-md" />
+                    </div>
+                  }
+                >
+                  <VolunteerForm
+                    volunteer={resume.volunteer || []}
+                    onChange={(volunteer) =>
+                      onResumeChange("volunteer", volunteer)
+                    }
+                    profile={profile}
+                  />
+                </Suspense>
+              </TabsContent>
+
+              {/* Languages Form */}
+              <TabsContent value="languages">
+                <Suspense
+                  fallback={
+                    <div className="space-y-4 animate-pulse">
+                      <div className="h-8 bg-muted rounded-md w-1/3" />
+                      <div className="h-24 bg-muted rounded-md" />
+                    </div>
+                  }
+                >
+                  <LanguagesForm
+                    languages={resume.languages || []}
+                    onChange={(languages) =>
+                      onResumeChange("languages", languages)
+                    }
+                    profile={profile}
+                  />
+                </Suspense>
+              </TabsContent>
+
+              {/* Awards Form */}
+              <TabsContent value="awards">
+                <Suspense
+                  fallback={
+                    <div className="space-y-4 animate-pulse">
+                      <div className="h-8 bg-muted rounded-md w-1/3" />
+                      <div className="h-24 bg-muted rounded-md" />
+                    </div>
+                  }
+                >
+                  <AwardsForm
+                    awards={resume.awards || []}
+                    onChange={(awards) => onResumeChange("awards", awards)}
                     profile={profile}
                   />
                 </Suspense>

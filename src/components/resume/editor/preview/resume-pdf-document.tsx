@@ -487,6 +487,182 @@ const CertificationsSection = memo(function CertificationsSection({
   );
 });
 
+const PublicationsSection = memo(function PublicationsSection({
+  publications,
+  styles,
+  visible = true,
+  fontFamily = "Helvetica",
+}: {
+  publications: Resume["publications"];
+  styles: ReturnType<typeof createResumeStyles>;
+  visible?: boolean;
+  fontFamily?: string;
+}) {
+  const processText = useTextProcessor(fontFamily);
+  if (!publications?.length || !visible) return null;
+
+  return (
+    <View style={styles.publicationsSection}>
+      <Text style={styles.sectionTitle}>Publications</Text>
+      {publications.map((pub, index) => (
+        <View key={index} style={styles.publicationItem}>
+          <View style={styles.publicationHeader}>
+            <View style={styles.publicationInfo}>
+              <Text style={styles.publicationTitle}>
+                {processText(pub.title, true)}
+              </Text>
+              {pub.authors && (
+                <Text style={styles.publicationAuthors}>
+                  {processText(pub.authors, true)}
+                </Text>
+              )}
+              {pub.venue && (
+                <Text style={styles.publicationVenue}>
+                  {processText(pub.venue, true)}
+                </Text>
+              )}
+            </View>
+            {pub.date && <Text style={styles.dateRange}>{pub.date}</Text>}
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+});
+
+const VolunteerSection = memo(function VolunteerSection({
+  volunteer,
+  styles,
+  visible = true,
+  fontFamily = "Helvetica",
+}: {
+  volunteer: Resume["volunteer"];
+  styles: ReturnType<typeof createResumeStyles>;
+  visible?: boolean;
+  fontFamily?: string;
+}) {
+  const processText = useTextProcessor(fontFamily);
+  if (!volunteer?.length || !visible) return null;
+
+  return (
+    <View style={styles.volunteerSection}>
+      <Text style={styles.sectionTitle}>Volunteer</Text>
+      {volunteer.map((entry, index) => (
+        <View key={index} style={styles.volunteerItem}>
+          <View style={styles.volunteerHeader}>
+            <View style={styles.volunteerInfo}>
+              <Text style={styles.volunteerOrg}>
+                {processText(entry.organization, true)}
+              </Text>
+              <View style={styles.volunteerRoleRow}>
+                <Text style={styles.volunteerRole}>
+                  {processText(entry.role, true)}
+                </Text>
+                {entry.location && (
+                  <Text style={styles.locationText}>
+                    {" · "}
+                    {entry.location}
+                  </Text>
+                )}
+              </View>
+            </View>
+            {entry.date && <Text style={styles.dateRange}>{entry.date}</Text>}
+          </View>
+          {entry.description?.map((line, i) => (
+            <View key={i} style={styles.bulletPoint}>
+              <Text>{"•  "}</Text>
+              <View style={styles.bulletText}>
+                <Text style={styles.bulletTextContent}>
+                  {processText(line, false)}
+                </Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      ))}
+    </View>
+  );
+});
+
+const LanguagesSection = memo(function LanguagesSection({
+  languages,
+  styles,
+  visible = true,
+  fontFamily = "Helvetica",
+}: {
+  languages: Resume["languages"];
+  styles: ReturnType<typeof createResumeStyles>;
+  visible?: boolean;
+  fontFamily?: string;
+}) {
+  const processText = useTextProcessor(fontFamily);
+  if (!languages?.length || !visible) return null;
+
+  return (
+    <View style={styles.languagesSection}>
+      <Text style={styles.sectionTitle}>Languages</Text>
+      <View style={styles.languagesGrid}>
+        {languages.map((lang, index) => (
+          <View key={index} style={styles.languageItem}>
+            <Text style={styles.languageName}>
+              {processText(lang.language, true)}
+            </Text>
+            {lang.proficiency && (
+              <Text style={styles.languageProficiency}>
+                {": "}
+                {lang.proficiency}
+              </Text>
+            )}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+});
+
+const AwardsSection = memo(function AwardsSection({
+  awards,
+  styles,
+  visible = true,
+  fontFamily = "Helvetica",
+}: {
+  awards: Resume["awards"];
+  styles: ReturnType<typeof createResumeStyles>;
+  visible?: boolean;
+  fontFamily?: string;
+}) {
+  const processText = useTextProcessor(fontFamily);
+  if (!awards?.length || !visible) return null;
+
+  return (
+    <View style={styles.awardsSection}>
+      <Text style={styles.sectionTitle}>Awards</Text>
+      {awards.map((award, index) => (
+        <View key={index} style={styles.awardItem}>
+          <View style={styles.awardHeader}>
+            <View style={styles.awardInfo}>
+              <Text style={styles.awardTitle}>
+                {processText(award.title, true)}
+              </Text>
+              {award.issuer && (
+                <Text style={styles.awardIssuer}>
+                  {processText(award.issuer, true)}
+                </Text>
+              )}
+            </View>
+            {award.date && <Text style={styles.dateRange}>{award.date}</Text>}
+          </View>
+          {award.description && (
+            <Text style={styles.awardDescription}>
+              {processText(award.description, false)}
+            </Text>
+          )}
+        </View>
+      ))}
+    </View>
+  );
+});
+
 // Style factory function
 function createResumeStyles(
   settings: Resume["document_settings"] = {
@@ -516,6 +692,22 @@ function createResumeStyles(
     certifications_margin_bottom: 2,
     certifications_margin_horizontal: 0,
     certifications_item_spacing: 4,
+    publications_margin_top: 2,
+    publications_margin_bottom: 2,
+    publications_margin_horizontal: 0,
+    publications_item_spacing: 4,
+    volunteer_margin_top: 2,
+    volunteer_margin_bottom: 2,
+    volunteer_margin_horizontal: 0,
+    volunteer_item_spacing: 4,
+    languages_margin_top: 2,
+    languages_margin_bottom: 2,
+    languages_margin_horizontal: 0,
+    languages_item_spacing: 2,
+    awards_margin_top: 2,
+    awards_margin_bottom: 2,
+    awards_margin_horizontal: 0,
+    awards_item_spacing: 4,
   },
   fontFamily: string = "Helvetica"
 ) {
@@ -546,6 +738,22 @@ function createResumeStyles(
     certifications_margin_bottom = 2,
     certifications_margin_horizontal = 0,
     certifications_item_spacing = 4,
+    publications_margin_top = 2,
+    publications_margin_bottom = 2,
+    publications_margin_horizontal = 0,
+    publications_item_spacing = 4,
+    volunteer_margin_top = 2,
+    volunteer_margin_bottom = 2,
+    volunteer_margin_horizontal = 0,
+    volunteer_item_spacing = 4,
+    languages_margin_top = 2,
+    languages_margin_bottom = 2,
+    languages_margin_horizontal = 0,
+    languages_item_spacing = 2,
+    awards_margin_top = 2,
+    awards_margin_bottom = 2,
+    awards_margin_horizontal = 0,
+    awards_item_spacing = 4,
   } = settings;
 
   return StyleSheet.create({
@@ -819,6 +1027,138 @@ function createResumeStyles(
       fontSize: document_font_size - 1,
       color: "#6b7280",
       marginTop: 1,
+    },
+    // Publications section
+    publicationsSection: {
+      marginTop: publications_margin_top,
+      marginBottom: publications_margin_bottom,
+      marginLeft: publications_margin_horizontal,
+      marginRight: publications_margin_horizontal,
+    },
+    publicationItem: {
+      marginBottom: publications_item_spacing,
+    },
+    publicationHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 2,
+    },
+    publicationInfo: {
+      flex: 1,
+    },
+    publicationTitle: {
+      fontSize: document_font_size,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      color: "#111827",
+    },
+    publicationAuthors: {
+      fontSize: document_font_size - 1,
+      color: "#374151",
+      marginTop: 1,
+    },
+    publicationVenue: {
+      fontSize: document_font_size - 1,
+      color: "#6b7280",
+      marginTop: 1,
+    },
+    // Volunteer section
+    volunteerSection: {
+      marginTop: volunteer_margin_top,
+      marginBottom: volunteer_margin_bottom,
+      marginLeft: volunteer_margin_horizontal,
+      marginRight: volunteer_margin_horizontal,
+    },
+    volunteerItem: {
+      marginBottom: volunteer_item_spacing,
+    },
+    volunteerHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 4,
+    },
+    volunteerInfo: {
+      flex: 1,
+    },
+    volunteerOrg: {
+      fontSize: document_font_size,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      color: "#111827",
+    },
+    volunteerRoleRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      flexWrap: "wrap",
+      marginTop: 2,
+    },
+    volunteerRole: {
+      fontSize: document_font_size,
+      color: "#111827",
+    },
+    // Languages section
+    languagesSection: {
+      marginTop: languages_margin_top,
+      marginBottom: languages_margin_bottom,
+      marginLeft: languages_margin_horizontal,
+      marginRight: languages_margin_horizontal,
+    },
+    languagesGrid: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: languages_item_spacing,
+      marginTop: 2,
+    },
+    languageItem: {
+      flexDirection: "row",
+      marginRight: 12,
+    },
+    languageName: {
+      fontSize: document_font_size,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      color: "#111827",
+    },
+    languageProficiency: {
+      fontSize: document_font_size,
+      color: "#374151",
+    },
+    // Awards section
+    awardsSection: {
+      marginTop: awards_margin_top,
+      marginBottom: awards_margin_bottom,
+      marginLeft: awards_margin_horizontal,
+      marginRight: awards_margin_horizontal,
+    },
+    awardItem: {
+      marginBottom: awards_item_spacing,
+    },
+    awardHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 2,
+    },
+    awardInfo: {
+      flex: 1,
+    },
+    awardTitle: {
+      fontSize: document_font_size,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      color: "#111827",
+    },
+    awardIssuer: {
+      fontSize: document_font_size,
+      color: "#111827",
+      marginTop: 1,
+    },
+    awardDescription: {
+      fontSize: document_font_size - 1,
+      color: "#374151",
+      marginTop: 2,
     },
   });
 }
@@ -1162,6 +1502,10 @@ const DEFAULT_SECTION_ORDER = [
   "projects",
   "education",
   "certifications",
+  "publications",
+  "volunteer",
+  "languages",
+  "awards",
 ];
 
 export const ResumePDFDocument = memo(
@@ -1269,6 +1613,46 @@ export const ResumePDFDocument = memo(
               certifications={resume.certifications}
               styles={styles}
               visible={isVisible("certifications")}
+              fontFamily={fontFamily}
+            />
+          );
+        case "publications":
+          return (
+            <PublicationsSection
+              key="publications"
+              publications={resume.publications}
+              styles={styles}
+              visible={isVisible("publications")}
+              fontFamily={fontFamily}
+            />
+          );
+        case "volunteer":
+          return (
+            <VolunteerSection
+              key="volunteer"
+              volunteer={resume.volunteer}
+              styles={styles}
+              visible={isVisible("volunteer")}
+              fontFamily={fontFamily}
+            />
+          );
+        case "languages":
+          return (
+            <LanguagesSection
+              key="languages"
+              languages={resume.languages}
+              styles={styles}
+              visible={isVisible("languages")}
+              fontFamily={fontFamily}
+            />
+          );
+        case "awards":
+          return (
+            <AwardsSection
+              key="awards"
+              awards={resume.awards}
+              styles={styles}
+              visible={isVisible("awards")}
               fontFamily={fontFamily}
             />
           );

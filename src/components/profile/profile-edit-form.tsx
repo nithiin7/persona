@@ -6,6 +6,10 @@ import {
   Education,
   Project,
   Certification,
+  Publication,
+  Volunteer,
+  Language,
+  Award,
 } from "@/lib/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,10 +28,14 @@ import {
   Upload,
   Save,
   Trash2,
-  Award,
+  Award as AwardIcon,
   Sparkles,
   ExternalLink,
   FileJson,
+  BookOpen,
+  Heart,
+  Globe,
+  Trophy,
 } from "lucide-react";
 
 function LinkedInIcon({ className }: { className?: string }) {
@@ -56,6 +64,10 @@ import { ProfileProjectsForm } from "@/components/profile/profile-projects-form"
 import { ProfileEducationForm } from "@/components/profile/profile-education-form";
 import { ProfileSkillsForm } from "@/components/profile/profile-skills-form";
 import { ProfileCertificationsForm } from "@/components/profile/profile-certifications-form";
+import { ProfilePublicationsForm } from "@/components/profile/profile-publications-form";
+import { ProfileVolunteerForm } from "@/components/profile/profile-volunteer-form";
+import { ProfileLanguagesForm } from "@/components/profile/profile-languages-form";
+import { ProfileAwardsForm } from "@/components/profile/profile-awards-form";
 import {
   formatProfileWithAI,
   fetchLinkedInProfileText,
@@ -166,6 +178,10 @@ export function ProfileEditForm({
         skills: [],
         projects: [],
         certifications: [],
+        publications: [],
+        volunteer: [],
+        languages: [],
+        awards: [],
         created_at: profile.created_at,
         updated_at: profile.updated_at,
       };
@@ -340,6 +356,40 @@ export function ProfileEditForm({
                 credential_url: cert.credential_url || undefined,
               }))
             : [],
+          publications: Array.isArray(result.publications)
+            ? result.publications.map((pub: Partial<Publication>) => ({
+                title: pub.title || "",
+                authors: pub.authors || undefined,
+                venue: pub.venue || undefined,
+                date: pub.date || undefined,
+                url: pub.url || undefined,
+              }))
+            : undefined,
+          volunteer: Array.isArray(result.volunteer)
+            ? result.volunteer.map((vol: Partial<Volunteer>) => ({
+                organization: vol.organization || "",
+                role: vol.role || "",
+                location: vol.location || undefined,
+                date: vol.date || undefined,
+                description: Array.isArray(vol.description)
+                  ? vol.description
+                  : [],
+              }))
+            : undefined,
+          languages: Array.isArray(result.languages)
+            ? result.languages.map((lang: Partial<Language>) => ({
+                language: lang.language || "",
+                proficiency: lang.proficiency || undefined,
+              }))
+            : undefined,
+          awards: Array.isArray(result.awards)
+            ? result.awards.map((award: Partial<Award>) => ({
+                title: award.title || "",
+                issuer: award.issuer || undefined,
+                date: award.date || undefined,
+                description: award.description || undefined,
+              }))
+            : undefined,
         };
 
         await importResume(cleanedProfile);
@@ -1104,9 +1154,17 @@ export function ProfileEditForm({
                 { value: "skills", icon: Wrench, label: "Skills" },
                 {
                   value: "certifications",
-                  icon: Award,
+                  icon: AwardIcon,
                   label: "Certifications",
                 },
+                {
+                  value: "publications",
+                  icon: BookOpen,
+                  label: "Publications",
+                },
+                { value: "volunteer", icon: Heart, label: "Volunteer" },
+                { value: "languages", icon: Globe, label: "Languages" },
+                { value: "awards", icon: Trophy, label: "Awards" },
               ].map(({ value, icon: Icon, label }) => (
                 <TabsTrigger
                   key={value}
@@ -1211,6 +1269,68 @@ export function ProfileEditForm({
                       onChange={(certifications) =>
                         updateField("certifications", certifications)
                       }
+                    />
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent
+                value="publications"
+                className="mt-0 animate-in fade-in-50 slide-in-from-bottom-1 duration-300"
+              >
+                <Card className="bg-white border border-gray-200 shadow-sm rounded-xl">
+                  <div className="p-6">
+                    <ProfilePublicationsForm
+                      publications={profile.publications || []}
+                      onChange={(publications) =>
+                        updateField("publications", publications)
+                      }
+                    />
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent
+                value="volunteer"
+                className="mt-0 animate-in fade-in-50 slide-in-from-bottom-1 duration-300"
+              >
+                <Card className="bg-white border border-gray-200 shadow-sm rounded-xl">
+                  <div className="p-6">
+                    <ProfileVolunteerForm
+                      volunteer={profile.volunteer || []}
+                      onChange={(volunteer) =>
+                        updateField("volunteer", volunteer)
+                      }
+                    />
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent
+                value="languages"
+                className="mt-0 animate-in fade-in-50 slide-in-from-bottom-1 duration-300"
+              >
+                <Card className="bg-white border border-gray-200 shadow-sm rounded-xl">
+                  <div className="p-6">
+                    <ProfileLanguagesForm
+                      languages={profile.languages || []}
+                      onChange={(languages) =>
+                        updateField("languages", languages)
+                      }
+                    />
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent
+                value="awards"
+                className="mt-0 animate-in fade-in-50 slide-in-from-bottom-1 duration-300"
+              >
+                <Card className="bg-white border border-gray-200 shadow-sm rounded-xl">
+                  <div className="p-6">
+                    <ProfileAwardsForm
+                      awards={profile.awards || []}
+                      onChange={(awards) => updateField("awards", awards)}
                     />
                   </div>
                 </Card>

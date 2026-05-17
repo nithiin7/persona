@@ -42,6 +42,34 @@ export const certificationSchema = z.object({
   credential_url: z.string().optional(),
 });
 
+export const publicationSchema = z.object({
+  title: z.string().optional(),
+  authors: z.string().optional(),
+  venue: z.string().optional(),
+  date: z.string().optional(),
+  url: z.string().optional(),
+});
+
+export const volunteerSchema = z.object({
+  organization: z.string().optional(),
+  role: z.string().optional(),
+  location: z.string().optional(),
+  date: z.string().optional(),
+  description: z.array(z.string()).optional(),
+});
+
+export const languageSchema = z.object({
+  language: z.string().optional(),
+  proficiency: z.string().optional(),
+});
+
+export const awardSchema = z.object({
+  title: z.string().optional(),
+  issuer: z.string().optional(),
+  date: z.string().optional(),
+  description: z.string().optional(),
+});
+
 // Schema for text import functionality
 export const textImportSchema = z.object({
   // Basic Information
@@ -112,6 +140,46 @@ export const textImportSchema = z.object({
       })
     )
     .optional(),
+  publications: z
+    .array(
+      z.object({
+        title: z.string(),
+        authors: z.string().optional(),
+        venue: z.string().optional(),
+        date: z.string().optional(),
+        url: z.string().optional(),
+      })
+    )
+    .optional(),
+  volunteer: z
+    .array(
+      z.object({
+        organization: z.string(),
+        role: z.string(),
+        location: z.string().optional(),
+        date: z.string().optional(),
+        description: z.array(z.string()).optional(),
+      })
+    )
+    .optional(),
+  languages: z
+    .array(
+      z.object({
+        language: z.string(),
+        proficiency: z.string().optional(),
+      })
+    )
+    .optional(),
+  awards: z
+    .array(
+      z.object({
+        title: z.string(),
+        issuer: z.string().optional(),
+        date: z.string().optional(),
+        description: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 
 export const documentSettingsSchema = z.object({
@@ -176,6 +244,10 @@ export const resumeSchema = z.object({
   skills: z.array(skillSchema).optional(),
   projects: z.array(projectSchema).optional(),
   certifications: z.array(certificationSchema).optional(),
+  publications: z.array(publicationSchema).optional(),
+  volunteer: z.array(volunteerSchema).optional(),
+  languages: z.array(languageSchema).optional(),
+  awards: z.array(awardSchema).optional(),
   has_cover_letter: z.boolean().default(false),
   cover_letter: z.record(z.unknown()).nullable().optional(),
 });
@@ -187,6 +259,10 @@ export type Education = z.infer<typeof educationSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type Skill = z.infer<typeof skillSchema>;
 export type Certification = z.infer<typeof certificationSchema>;
+export type Publication = z.infer<typeof publicationSchema>;
+export type Volunteer = z.infer<typeof volunteerSchema>;
+export type Language = z.infer<typeof languageSchema>;
+export type Award = z.infer<typeof awardSchema>;
 export type DocumentSettings = z.infer<typeof documentSettingsSchema>;
 export type SectionConfig = z.infer<typeof sectionConfigSchema>;
 
@@ -241,6 +317,10 @@ export const simplifiedResumeSchema = z.object({
   skills: z.array(skillSchema).optional(),
   projects: z.array(projectSchema).optional(),
   certifications: z.array(certificationSchema).optional(),
+  publications: z.array(publicationSchema).optional(),
+  volunteer: z.array(volunteerSchema).optional(),
+  languages: z.array(languageSchema).optional(),
+  awards: z.array(awardSchema).optional(),
   target_role: z.string(),
 });
 
