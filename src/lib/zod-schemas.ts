@@ -250,6 +250,7 @@ export const resumeSchema = z.object({
   awards: z.array(awardSchema).optional(),
   has_cover_letter: z.boolean().default(false),
   cover_letter: z.record(z.unknown()).nullable().optional(),
+  avatar_url: z.string().nullable().optional(),
 });
 
 // Type inference helpers

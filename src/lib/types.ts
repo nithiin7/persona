@@ -152,6 +152,7 @@ export interface Resume {
   };
   has_cover_letter: boolean;
   cover_letter?: Record<string, unknown> | null;
+  avatar_url?: string | null;
 }
 
 export interface ResumeVersion {
@@ -255,6 +256,7 @@ export interface Profile {
   website: string | null;
   linkedin_url: string | null;
   github_url: string | null;
+  avatar_url?: string | null;
   work_experience: WorkExperience[];
   education: Education[];
   skills: Skill[];

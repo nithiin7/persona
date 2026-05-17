@@ -8,6 +8,7 @@ import {
   View,
   StyleSheet,
   Link,
+  Image as PDFImage,
 } from "@react-pdf/renderer";
 import { memo, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
@@ -80,8 +81,8 @@ const HeaderSection = memo(function HeaderSection({
   resume: Resume;
   styles: ReturnType<typeof createResumeStyles>;
 }) {
-  return (
-    <View style={styles.header}>
+  const textContent = (
+    <>
       <Text style={styles.name}>
         {resume.first_name} {resume.last_name}
       </Text>
@@ -161,6 +162,28 @@ const HeaderSection = memo(function HeaderSection({
           </Link>
         )}
       </View>
+    </>
+  );
+
+  return (
+    <View style={styles.header}>
+      {resume.avatar_url ? (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ flex: 1 }}>{textContent}</View>
+          <PDFImage
+            src={resume.avatar_url}
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: 32,
+              marginLeft: 12,
+              flexShrink: 0,
+            }}
+          />
+        </View>
+      ) : (
+        textContent
+      )}
     </View>
   );
 });

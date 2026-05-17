@@ -12,11 +12,15 @@ import {
   Github,
   User,
   UserCircle2,
+  Camera,
+  Loader2,
+  X,
   LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useResumeContext } from "../resume-editor-context";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useRef, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 interface BasicInfoFormProps {
   profile: Profile;
@@ -73,6 +77,99 @@ const BasicInfoField = memo(function BasicInfoField({
   );
 });
 
+function AvatarUpload({
+  avatarUrl,
+  userId,
+}: {
+  avatarUrl?: string | null;
+  userId: string;
+}) {
+  const { dispatch } = useResumeContext();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const supabase = createClient();
+      const ext = file.name.split(".").pop() ?? "jpg";
+      const path = `${userId}/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      dispatch({ type: "UPDATE_FIELD", field: "avatar_url", value: data.publicUrl });
+    } catch {
+      // silently fail — user can retry
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dispatch({ type: "UPDATE_FIELD", field: "avatar_url", value: null });
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-1.5">
+      <div className="relative group">
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          className="relative h-16 w-16 rounded-full overflow-hidden border-2 border-dashed border-gray-200 hover:border-gray-400 transition-colors duration-150 focus:outline-none"
+        >
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+          ) : (
+            <span className="h-full w-full flex items-center justify-center bg-gray-50 group-hover:bg-gray-100 transition-colors duration-150">
+              {uploading ? (
+                <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+              ) : (
+                <Camera className="h-5 w-5 text-gray-300" />
+              )}
+            </span>
+          )}
+          {uploading && avatarUrl && (
+            <span className="absolute inset-0 bg-black/30 flex items-center justify-center">
+              <Loader2 className="h-4 w-4 text-white animate-spin" />
+            </span>
+          )}
+        </button>
+
+        {avatarUrl && !uploading && (
+          <button
+            type="button"
+            onClick={handleRemove}
+            className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-gray-200 hover:bg-red-100 hover:text-red-500 text-gray-500 flex items-center justify-center transition-colors duration-150"
+            aria-label="Remove photo"
+          >
+            <X className="h-2.5 w-2.5" />
+          </button>
+        )}
+      </div>
+
+      <span className="text-[10px] text-gray-400">
+        {avatarUrl ? "Click to change" : "Add photo"}
+      </span>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={handleUpload}
+        className="hidden"
+      />
+    </div>
+  );
+}
+
 export const BasicInfoForm = memo(function BasicInfoFormComponent({
   profile,
 }: BasicInfoFormProps) {
@@ -102,6 +199,8 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
 
   return (
     <div className="space-y-4 pt-2">
+      <AvatarUpload avatarUrl={resume.avatar_url} userId={profile.user_id} />
+
       {profile && (
         <Button
           onClick={handleFillFromProfile}
