@@ -101,7 +101,11 @@ function AvatarUpload({
         .upload(path, file, { upsert: true });
       if (error) throw error;
       const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      dispatch({ type: "UPDATE_FIELD", field: "avatar_url", value: data.publicUrl });
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "avatar_url",
+        value: data.publicUrl,
+      });
     } catch {
       // silently fail — user can retry
     } finally {
@@ -126,7 +130,11 @@ function AvatarUpload({
         >
           {avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+            <img
+              src={avatarUrl}
+              alt="Avatar"
+              className="h-full w-full object-cover"
+            />
           ) : (
             <span className="h-full w-full flex items-center justify-center bg-gray-50 group-hover:bg-gray-100 transition-colors duration-150">
               {uploading ? (
