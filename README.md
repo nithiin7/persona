@@ -12,6 +12,7 @@ Persona is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) wi
 - **Live PDF preview** — see your formatted resume update as you type
 - **AI chat assistant** — ask questions, request rewrites, and get feedback in a sidebar chat
 - **ATS score** — instant compatibility score against any job posting
+- **ATS keyword highlighter** — after scoring, matched and missing job keywords appear in a persistent bar across all editor tabs so you can see coverage while editing any section, with no extra AI call
 - **Cover letter generator** — one-click drafts based on your resume and the job
 - **Multiple templates** — Classic, Modern, and Minimal layouts with full style control
 - **Profile as source of truth** — maintain one master profile; spin off tailored resumes from it

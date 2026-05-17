@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
 import {
   MapPin,
   Clock,
@@ -13,7 +12,6 @@ import {
   Sparkles,
   AlertCircle,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Job, Resume } from "@/lib/types";
 import { createClient } from "@/utils/supabase/client";
@@ -30,7 +28,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-
 import { toast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
@@ -61,8 +58,8 @@ const STATUS_OPTIONS: {
   { value: "applied", label: "Applied", dot: "bg-blue-500" },
   { value: "phone_screen", label: "Phone Screen", dot: "bg-amber-500" },
   { value: "onsite", label: "Onsite", dot: "bg-purple-500" },
-  { value: "offer", label: "Offer", dot: "bg-green-500" },
-  { value: "rejected", label: "Rejected", dot: "bg-red-400" },
+  { value: "offer", label: "Offer", dot: "bg-emerald-500" },
+  { value: "rejected", label: "Rejected", dot: "bg-red-500" },
 ];
 
 function ApplicationStatusSelect({ job }: { job: Job }) {
@@ -91,20 +88,17 @@ function ApplicationStatusSelect({ job }: { job: Job }) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
-        Application Status
+      <span className="text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">
+        Status
       </span>
       <Select value={current} onValueChange={handleChange} disabled={updating}>
-        <SelectTrigger
-          className={cn(
-            "h-8 text-xs border rounded-full px-3",
-            "bg-white/80 backdrop-blur-sm",
-            "focus:ring-pink-400/30"
-          )}
-        >
+        <SelectTrigger className="h-7 text-xs border border-gray-200 rounded-full px-3 bg-white focus:ring-gray-300/40">
           <div className="flex items-center gap-1.5">
             <span
-              className={cn("w-2 h-2 rounded-full", cfg?.dot ?? "bg-gray-400")}
+              className={cn(
+                "w-1.5 h-1.5 rounded-full",
+                cfg?.dot ?? "bg-gray-400"
+              )}
             />
             <SelectValue />
           </div>
@@ -113,7 +107,7 @@ function ApplicationStatusSelect({ job }: { job: Job }) {
           {STATUS_OPTIONS.map((opt) => (
             <SelectItem key={opt.value} value={opt.value}>
               <div className="flex items-center gap-2">
-                <span className={cn("w-2 h-2 rounded-full", opt.dot)} />
+                <span className={cn("w-1.5 h-1.5 rounded-full", opt.dot)} />
                 {opt.label}
               </div>
             </SelectItem>
@@ -126,7 +120,6 @@ function ApplicationStatusSelect({ job }: { job: Job }) {
 
 interface TailoredJobCardProps {
   jobId: string | null;
-  // onJobDelete?: () => void;
   job?: Job | null;
   isLoading?: boolean;
 }
@@ -139,14 +132,12 @@ export function TailoredJobCard({
   const router = useRouter();
   const { state, dispatch } = useResumeContext();
 
-  // Only use internal state if external job is not provided
   const [internalJob, setInternalJob] = useState<Job | null>(null);
   const [internalIsLoading, setInternalIsLoading] = useState(true);
 
   const effectiveJob = externalJob ?? internalJob;
   const effectiveIsLoading = externalIsLoading ?? internalIsLoading;
 
-  // Only fetch if external job is not provided
   useEffect(() => {
     if (externalJob !== undefined) return;
 
@@ -167,9 +158,7 @@ export function TailoredJobCard({
           .single();
 
         if (error) {
-          if (error.code !== "PGRST116") {
-            throw error;
-          }
+          if (error.code !== "PGRST116") throw error;
           setInternalJob(null);
           return;
         }
@@ -235,7 +224,6 @@ export function TailoredJobCard({
     try {
       setIsFormatting(true);
 
-      // Get model and API key from local storage
       const MODEL_STORAGE_KEY = "persona-default-model";
       const LOCAL_STORAGE_KEY = "persona-api-keys";
 
@@ -249,7 +237,6 @@ export function TailoredJobCard({
         console.error("Error parsing API keys:", error);
       }
 
-      // Format job listing using AI
       const formattedJob = await formatJobListing(jobDescription, {
         model: selectedModel || "",
         apiKeys,
@@ -258,19 +245,15 @@ export function TailoredJobCard({
       setIsFormatting(false);
       setIsCreating(true);
 
-      // Create job in database
       const newJob = await createJob(formattedJob);
 
-      // Update resume with new job ID using context
       dispatch({ type: "UPDATE_FIELD", field: "job_id", value: newJob.id });
 
-      // Save the changes to the database
       await updateResume(state.resume.id, {
         ...state.resume,
         job_id: newJob.id,
       });
 
-      // Close dialog and refresh
       setCreateDialogOpen(false);
       router.refresh();
     } catch (error) {
@@ -289,320 +272,229 @@ export function TailoredJobCard({
   };
 
   const LoadingSkeleton = () => (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-4"
+    <div
+      className="space-y-3 p-4"
       role="status"
       aria-label="Loading job details"
     >
-      <div className="flex items-start justify-between">
-        <div className="space-y-2 w-3/4">
-          <div className="h-5 bg-gray-100 rounded-lg animate-pulse" />
-          <div className="h-3.5 bg-gray-100 rounded w-2/3 animate-pulse" />
-        </div>
-        <div className="h-7 w-7 bg-gray-100 rounded-lg animate-pulse" />
-      </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="flex items-center gap-2">
             <div className="h-3.5 w-3.5 rounded-full bg-gray-100 animate-pulse shrink-0" />
-            <div className="h-3.5 flex-1 bg-gray-100 rounded animate-pulse" />
+            <div className="h-3 flex-1 bg-gray-100 rounded animate-pulse" />
           </div>
         ))}
       </div>
-      <div className="flex gap-1.5">
+      <div className="h-7 w-48 bg-gray-100 rounded-full animate-pulse" />
+      <div className="space-y-1.5">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="h-5 w-16 bg-gray-100 rounded-full animate-pulse"
-          />
+          <div key={i} className="h-3 bg-gray-100 rounded animate-pulse" />
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 
-  // Enhanced error state with proper ARIA and animations
   const ErrorState = () => (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center justify-center p-8 space-y-4"
+    <div
+      className="flex flex-col items-center justify-center p-8 gap-3 text-center"
       role="alert"
       aria-live="polite"
     >
-      <div className="p-3 rounded-xl bg-red-50/80 backdrop-blur-sm border border-red-100">
-        <AlertCircle className="w-6 h-6 text-red-500" />
+      <div className="p-3 rounded-full bg-gray-100">
+        <AlertCircle className="w-5 h-5 text-gray-400" />
       </div>
-      <div className="text-center space-y-2">
-        <h3 className="font-semibold text-red-900">Unable to Load Job</h3>
-        <p className="text-sm text-red-600/90">
-          This job listing is no longer available or there was an error loading
-          it.
+      <div>
+        <h3 className="text-sm font-semibold text-gray-900 mb-1">
+          Unable to Load Job
+        </h3>
+        <p className="text-sm text-gray-500">
+          This job listing is no longer available.
         </p>
-        <Button
-          variant="outline"
-          onClick={() => router.refresh()}
-          className="mt-4 bg-white/80 border-red-200 hover:bg-red-50/80 hover:border-red-300 text-red-700"
-        >
-          <motion.div
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 0.5 }}
-          >
-            Try Again
-          </motion.div>
-        </Button>
       </div>
-    </motion.div>
+      <Button variant="outline" size="sm" onClick={() => router.refresh()}>
+        Try Again
+      </Button>
+    </div>
   );
 
   if (!jobId) {
     return (
-      <Card className="relative group">
-        <div className="relative p-8 flex flex-col items-center justify-center space-y-6 text-center">
-          <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500/5 to-rose-500/5 border border-pink-200/20 group-hover:scale-110 transition-transform duration-500">
-            <Plus className="w-8 h-8 text-pink-500" />
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-xl font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-              No Job Currently Linked
-            </h3>
-            <p className="text-sm text-gray-500/90 max-w-sm">
-              Create a new job listing to track the position you&apos;re
-              applying for and tailor your resume accordingly.
-            </p>
-          </div>
-
-          <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-            <DialogTrigger asChild>
-              <Button
-                className={cn(
-                  "relative overflow-hidden",
-                  "bg-gradient-to-r from-pink-500 to-rose-500",
-                  "text-white font-medium",
-                  "border border-pink-400/20",
-                  "shadow-lg shadow-pink-500/10",
-                  "hover:shadow-xl hover:shadow-pink-500/20",
-                  "hover:scale-105",
-                  "transition-all duration-500"
-                )}
-                aria-label="Create new job listing"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Create Job Listing
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent
-              className={cn(
-                "sm:max-w-[600px]",
-                "bg-gradient-to-b from-white/95 to-white/90",
-                "backdrop-blur-xl",
-                "border-pink-200/40",
-                "shadow-xl shadow-pink-500/10"
-              )}
-            >
-              <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-                Create New Job Listing
-              </DialogTitle>
-              <DialogDescription className="text-muted-foreground">
-                Paste the job description below and let our AI format it
-                automatically.
-              </DialogDescription>
-
-              <div className="space-y-4 mt-4">
-                <div className="space-y-2">
-                  <Textarea
-                    placeholder="Paste the job description here..."
-                    value={jobDescription}
-                    onChange={handleJobDescriptionChange}
-                    className={cn(
-                      "min-h-[200px]",
-                      "bg-white/80 backdrop-blur-sm",
-                      "border transition-all duration-300",
-                      "placeholder:text-gray-400",
-                      validationErrors.jobDescription
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
-                        : "border-gray-200 focus:border-pink-500 focus:ring-pink-500/20"
-                    )}
-                    aria-invalid={!!validationErrors.jobDescription}
-                    aria-describedby="job-description-error"
-                  />
-                  {validationErrors.jobDescription && (
-                    <Alert variant="destructive" className="mt-2" role="alert">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription id="job-description-error">
-                        {validationErrors.jobDescription}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-
-                <DialogFooter className="flex justify-end gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => setCreateDialogOpen(false)}
-                    className={cn(
-                      "border-gray-200",
-                      "hover:bg-gray-50",
-                      "transition-colors duration-300"
-                    )}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={handleCreateJobWithAI}
-                    disabled={
-                      isFormatting ||
-                      isCreating ||
-                      !!validationErrors.jobDescription
-                    }
-                    className={cn(
-                      "relative overflow-hidden",
-                      "bg-gradient-to-r from-pink-500 to-rose-500",
-                      "hover:from-pink-600 hover:to-rose-600",
-                      "text-white font-medium",
-                      "shadow-lg hover:shadow-xl",
-                      "disabled:opacity-50 disabled:cursor-not-allowed",
-                      "disabled:hover:from-pink-500 disabled:hover:to-rose-500",
-                      "transition-all duration-300"
-                    )}
-                    aria-busy={isFormatting || isCreating}
-                  >
-                    {isFormatting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Formatting...
-                      </>
-                    ) : isCreating ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Creating...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4 mr-2" />
-                        Create with AI
-                      </>
-                    )}
-                  </Button>
-                </DialogFooter>
-              </div>
-            </DialogContent>
-          </Dialog>
+      <div className="p-6 flex flex-col items-center gap-4 text-center">
+        <div className="p-3 rounded-full bg-gray-100">
+          <Plus className="w-5 h-5 text-gray-400" />
         </div>
-      </Card>
+        <div>
+          <h3 className="text-sm font-semibold text-gray-900 mb-1">
+            No Job Linked
+          </h3>
+          <p className="text-sm text-gray-500 max-w-xs">
+            Link a job listing to tailor your resume and track your application.
+          </p>
+        </div>
+
+        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm">
+              <Plus className="w-3.5 h-3.5 mr-1.5" />
+              Add Job Listing
+            </Button>
+          </DialogTrigger>
+
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogTitle className="text-lg font-semibold text-gray-900">
+              Add Job Listing
+            </DialogTitle>
+            <DialogDescription className="text-sm text-gray-500">
+              Paste the job description and AI will extract the details
+              automatically.
+            </DialogDescription>
+
+            <div className="space-y-4 mt-2">
+              <div className="space-y-2">
+                <Textarea
+                  placeholder="Paste the job description here..."
+                  value={jobDescription}
+                  onChange={handleJobDescriptionChange}
+                  className={cn(
+                    "min-h-[200px] text-sm",
+                    validationErrors.jobDescription
+                      ? "border-red-300 focus:border-red-400"
+                      : "border-gray-200"
+                  )}
+                  aria-invalid={!!validationErrors.jobDescription}
+                  aria-describedby="job-description-error"
+                />
+                {validationErrors.jobDescription && (
+                  <Alert variant="destructive" role="alert">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription id="job-description-error">
+                      {validationErrors.jobDescription}
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </div>
+
+              <DialogFooter className="gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setCreateDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleCreateJobWithAI}
+                  disabled={
+                    isFormatting ||
+                    isCreating ||
+                    !!validationErrors.jobDescription
+                  }
+                  aria-busy={isFormatting || isCreating}
+                >
+                  {isFormatting ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
+                      Formatting…
+                    </>
+                  ) : isCreating ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
+                      Creating…
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5 mr-2" />
+                      Create with AI
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
     );
   }
 
   return (
-    <Card className={cn("relative group border-none px-8")}>
-      <div className="relative">
-        <AnimatePresence mode="wait">
-          {effectiveIsLoading ? (
-            <LoadingSkeleton />
-          ) : effectiveJob ? (
-            <motion.div
-              key="content"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="p-4 space-y-6"
-            >
-              {/* Job Details Grid */}
-              <div className="grid grid-cols-2 gap-x-2 gap-y-3">
-                {[
-                  {
-                    icon: MapPin,
-                    text: effectiveJob.location || "Location not specified",
-                    color: "pink",
-                  },
-                  {
-                    icon: Briefcase,
-                    text: formatWorkLocation(effectiveJob.work_location),
-                    color: "rose",
-                  },
-                  {
-                    icon: DollarSign,
-                    text: effectiveJob.salary_range || "Salary not specified",
-                    color: "pink",
-                  },
-                  {
-                    icon: Clock,
-                    text:
-                      effectiveJob.employment_type?.replace("_", " ") ||
-                      "Employment type not specified",
-                    color: "rose",
-                  },
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 + index * 0.1 }}
-                    className={cn(
-                      "flex items-center gap-2",
-                      "text-sm text-gray-600",
-                      `group-hover:text-${item.color}-600`,
-                      "transition-colors duration-300"
-                    )}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    <span className="capitalize truncate">{item.text}</span>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Application Status */}
-              <ApplicationStatusSelect job={effectiveJob} />
-
-              {/* Description */}
-              {effectiveJob.description && (
-                <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-gray-700">
-                    Description
-                  </h4>
-                  <p className="text-sm text-gray-600 whitespace-pre-wrap">
-                    {effectiveJob.description}
-                  </p>
+    <div className="relative">
+      <AnimatePresence mode="wait">
+        {effectiveIsLoading ? (
+          <LoadingSkeleton />
+        ) : effectiveJob ? (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="p-4 space-y-4"
+          >
+            {/* Metadata grid */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              {[
+                {
+                  icon: MapPin,
+                  text: effectiveJob.location || "Location not specified",
+                },
+                {
+                  icon: Briefcase,
+                  text: formatWorkLocation(effectiveJob.work_location),
+                },
+                {
+                  icon: DollarSign,
+                  text: effectiveJob.salary_range || "Salary not specified",
+                },
+                {
+                  icon: Clock,
+                  text:
+                    effectiveJob.employment_type?.replace("_", " ") ||
+                    "Employment type not specified",
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 text-sm text-gray-500"
+                >
+                  <item.icon className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                  <span className="capitalize truncate">{item.text}</span>
                 </div>
-              )}
+              ))}
+            </div>
 
-              {/* Keywords */}
-              <div className="flex flex-wrap gap-2 ">
-                {effectiveJob.keywords?.map((keyword, index) => (
-                  <motion.div
+            {/* Application status */}
+            <ApplicationStatusSelect job={effectiveJob} />
+
+            {/* Description */}
+            {effectiveJob.description && (
+              <div className="space-y-1.5">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  Description
+                </p>
+                <p className="text-sm text-gray-500 whitespace-pre-wrap leading-relaxed">
+                  {effectiveJob.description}
+                </p>
+              </div>
+            )}
+
+            {/* Keywords */}
+            {effectiveJob.keywords && effectiveJob.keywords.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {effectiveJob.keywords.map((keyword) => (
+                  <span
                     key={keyword}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
+                    className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200"
                   >
-                    <Badge
-                      variant="secondary"
-                      className={cn(
-                        "text-xs py-0.5",
-                        "bg-gradient-to-r from-pink-50/50 to-rose-50/50",
-                        "hover:from-pink-100/50 hover:to-rose-100/50",
-                        "text-pink-700",
-                        "border border-pink-100/20",
-                        "transition-all duration-300",
-                        "cursor-default"
-                      )}
-                    >
-                      {keyword}
-                    </Badge>
-                  </motion.div>
+                    {keyword}
+                  </span>
                 ))}
               </div>
-            </motion.div>
-          ) : (
-            <ErrorState />
-          )}
-        </AnimatePresence>
-      </div>
-    </Card>
+            )}
+          </motion.div>
+        ) : (
+          <ErrorState />
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -647,63 +539,48 @@ export function TailoredJobAccordion({
   return (
     <AccordionItem
       value="job"
-      className="mb-4 backdrop-blur-xl rounded-lg shadow-lg bg-white border-pink-600/50 border-2"
+      className="mb-4 border border-gray-200 rounded-lg bg-white"
     >
       <div className="px-4">
-        <AccordionTrigger className="hover:no-underline group">
+        <AccordionTrigger className="hover:no-underline">
           <div className="flex items-center gap-2">
-            <div
-              className={cn(
-                "p-1 rounded-md transition-transform duration-300 group-data-[state=open]:scale-105",
-                "bg-pink-100/80"
-              )}
-            >
-              <BriefcaseIcon className={cn("h-3.5 w-3.5", "text-pink-600")} />
+            <div className="p-1 rounded-md bg-gray-100">
+              <BriefcaseIcon className="h-3.5 w-3.5 text-gray-500" />
             </div>
             <div className="flex flex-col items-start">
-              <span className={cn("text-sm font-medium", "text-pink-900")}>
-                {title}
-              </span>
+              <span className="text-sm font-medium text-gray-900">{title}</span>
               {company && (
-                <span className="text-xs text-pink-600/80">{company}</span>
+                <span className="text-xs text-gray-500">{company}</span>
               )}
             </div>
           </div>
         </AccordionTrigger>
       </div>
-      <AccordionContent className=" ">
-        <div className="">
-          <TailoredJobCard
-            jobId={resume.job_id || null}
-            job={job}
-            isLoading={isLoading}
-          />
-          {job && (
-            <div className="flex justify-end">
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className={cn(
-                  "text-gray-400",
-                  "hover:text-red-500",
-                  "hover:bg-red-50/50",
-                  "transition-all duration-300",
-                  "rounded-lg",
-                  "gap-2"
-                )}
-              >
-                {isDeleting ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Trash2 className="h-3.5 w-3.5" />
-                )}
-                Delete Job
-              </Button>
-            </div>
-          )}
-        </div>
+
+      <AccordionContent className="border-t border-gray-100">
+        <TailoredJobCard
+          jobId={resume.job_id || null}
+          job={job}
+          isLoading={isLoading}
+        />
+        {job && (
+          <div className="flex justify-end px-4 pb-3">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="text-gray-400 hover:text-red-500 hover:bg-red-50 gap-1.5 text-xs"
+            >
+              {isDeleting ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Trash2 className="h-3.5 w-3.5" />
+              )}
+              Delete Job
+            </Button>
+          </div>
+        )}
       </AccordionContent>
     </AccordionItem>
   );

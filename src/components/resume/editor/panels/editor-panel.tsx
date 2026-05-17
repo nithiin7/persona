@@ -4,7 +4,7 @@ import { Resume, Profile, Job } from "@/lib/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Accordion } from "@/components/ui/accordion";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState, useEffect, useCallback } from "react";
 import { ResumeEditorActions } from "../actions/resume-editor-actions";
 import { TailoredJobAccordion } from "../../management/cards/tailored-job-card";
 import { BasicInfoForm } from "../forms/basic-info-form";
@@ -24,6 +24,7 @@ import {
 } from "../dynamic-components";
 import { ResumeEditorTabs } from "../header/resume-editor-tabs";
 import ResumeScorePanel from "./resume-score-panel";
+import { KeywordHighlightBar } from "./keyword-highlight-bar";
 
 interface EditorPanelProps {
   resume: Resume;
@@ -33,6 +34,8 @@ interface EditorPanelProps {
   onResumeChange: (field: keyof Resume, value: Resume[keyof Resume]) => void;
 }
 
+const SCORE_STORAGE_KEY = "persona-resume-scores";
+
 export function EditorPanel({
   resume,
   profile,
@@ -41,6 +44,42 @@ export function EditorPanel({
   onResumeChange,
 }: EditorPanelProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [highlightKeywords, setHighlightKeywords] = useState<{
+    matched: string[];
+    missing: string[];
+  } | null>(null);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(SCORE_STORAGE_KEY);
+      if (!stored) return;
+      const scores = new Map(JSON.parse(stored));
+      const score = scores.get(resume.id) as {
+        jobAlignment?: {
+          keywordMatch?: {
+            matchedKeywords?: string[];
+            missingKeywords?: string[];
+          };
+        };
+      } | null;
+      const km = score?.jobAlignment?.keywordMatch;
+      if (km?.matchedKeywords?.length || km?.missingKeywords?.length) {
+        setHighlightKeywords({
+          matched: km.matchedKeywords ?? [],
+          missing: km.missingKeywords ?? [],
+        });
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, [resume.id]);
+
+  const handleKeywordsChange = useCallback(
+    (matched: string[], missing: string[]) => {
+      setHighlightKeywords({ matched, missing });
+    },
+    []
+  );
 
   return (
     <div className="flex flex-col sm:mr-4 relative h-full max-h-full  ">
@@ -70,6 +109,13 @@ export function EditorPanel({
             {/* Tabs */}
             <Tabs defaultValue="basic" className="mb-4">
               <ResumeEditorTabs />
+
+              {highlightKeywords && (
+                <KeywordHighlightBar
+                  matchedKeywords={highlightKeywords.matched}
+                  missingKeywords={highlightKeywords.missing}
+                />
+              )}
 
               {/* Basic Info Form */}
               <TabsContent value="basic">
@@ -292,7 +338,11 @@ export function EditorPanel({
 
               {/* Resume Score Form */}
               <TabsContent value="resume-score">
-                <ResumeScorePanel resume={resume} job={job} />
+                <ResumeScorePanel
+                  resume={resume}
+                  job={job}
+                  onKeywordsChange={handleKeywordsChange}
+                />
               </TabsContent>
             </Tabs>
           </div>

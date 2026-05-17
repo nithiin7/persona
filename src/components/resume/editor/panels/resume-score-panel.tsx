@@ -92,6 +92,7 @@ export interface ResumeScoreMetrics {
 interface ResumeScorePanelProps {
   resume: Resume;
   job?: JobType | null;
+  onKeywordsChange?: (matched: string[], missing: string[]) => void;
 }
 
 const LOCAL_STORAGE_KEY = "persona-resume-scores";
@@ -142,6 +143,7 @@ function updateStoredScores(resumeId: string, score: ResumeScoreMetrics) {
 export default function ResumeScorePanel({
   resume,
   job,
+  onKeywordsChange,
 }: ResumeScorePanelProps) {
   const [isCalculating, setIsCalculating] = useState(false);
   const [scoreData, setScoreData] = useState<ResumeScoreMetrics | null>(() => {
@@ -156,6 +158,14 @@ export default function ResumeScorePanel({
       setScoreData(storedScore);
     }
   }, [resume.id]);
+
+  // Propagate keywords whenever score data changes
+  useEffect(() => {
+    const km = scoreData?.jobAlignment?.keywordMatch;
+    if (km && onKeywordsChange) {
+      onKeywordsChange(km.matchedKeywords ?? [], km.missingKeywords ?? []);
+    }
+  }, [scoreData, onKeywordsChange]);
 
   const handleRecalculate = async () => {
     setIsCalculating(true);
