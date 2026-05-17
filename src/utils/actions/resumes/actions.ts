@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import {
   Profile,
   Resume,
+  ResumeVersion,
   WorkExperience,
   Education,
   Skill,
@@ -78,9 +79,12 @@ export async function getResumeById(
   }
 }
 
+const MAX_RESUME_VERSIONS = 5;
+
 export async function updateResume(
   resumeId: string,
-  data: Partial<Resume>
+  data: Partial<Resume>,
+  createSnapshot = false
 ): Promise<Resume> {
   const supabase = await createClient();
   const {
@@ -90,6 +94,34 @@ export async function updateResume(
 
   if (error || !user) {
     throw new Error("User not authenticated");
+  }
+
+  if (createSnapshot) {
+    const { data: current } = await supabase
+      .from("resumes")
+      .select("*")
+      .eq("id", resumeId)
+      .eq("user_id", user.id)
+      .single();
+
+    if (current) {
+      await supabase.from("resume_versions").insert({
+        resume_id: resumeId,
+        user_id: user.id,
+        snapshot: current,
+      });
+
+      const { data: versions } = await supabase
+        .from("resume_versions")
+        .select("id, created_at")
+        .eq("resume_id", resumeId)
+        .order("created_at", { ascending: false });
+
+      if (versions && versions.length > MAX_RESUME_VERSIONS) {
+        const toDelete = versions.slice(MAX_RESUME_VERSIONS).map((v) => v.id);
+        await supabase.from("resume_versions").delete().in("id", toDelete);
+      }
+    }
   }
 
   const { data: resume, error: updateError } = await supabase
@@ -105,6 +137,99 @@ export async function updateResume(
   }
 
   return resume;
+}
+
+export async function getResumeVersions(
+  resumeId: string
+): Promise<Omit<ResumeVersion, "snapshot">[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    throw new Error("User not authenticated");
+  }
+
+  const { data, error: fetchError } = await supabase
+    .from("resume_versions")
+    .select("id, resume_id, user_id, created_at")
+    .eq("resume_id", resumeId)
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (fetchError) {
+    throw new Error("Failed to fetch resume versions");
+  }
+
+  return data ?? [];
+}
+
+export async function restoreResumeVersion(
+  versionId: string,
+  resumeId: string
+): Promise<Resume> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    throw new Error("User not authenticated");
+  }
+
+  const { data: version, error: versionError } = await supabase
+    .from("resume_versions")
+    .select("snapshot")
+    .eq("id", versionId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (versionError || !version) {
+    throw new Error("Version not found");
+  }
+
+  const snapshot = version.snapshot as Resume;
+
+  // Snapshot current state before restoring so the restore itself is undoable
+  const { data: current } = await supabase
+    .from("resumes")
+    .select("*")
+    .eq("id", resumeId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (current) {
+    await supabase.from("resume_versions").insert({
+      resume_id: resumeId,
+      user_id: user.id,
+      snapshot: current,
+    });
+  }
+
+  const {
+    id: _id,
+    created_at: _ca,
+    updated_at: _ua,
+    user_id: _uid,
+    ...restoreData
+  } = snapshot;
+
+  const { data: restored, error: restoreError } = await supabase
+    .from("resumes")
+    .update(restoreData)
+    .eq("id", resumeId)
+    .eq("user_id", user.id)
+    .select()
+    .single();
+
+  if (restoreError || !restored) {
+    throw new Error("Failed to restore version");
+  }
+
+  return restored;
 }
 
 export async function deleteResume(resumeId: string): Promise<void> {
@@ -426,14 +551,12 @@ export async function copyResume(resumeId: string): Promise<Resume> {
   }
 
   // Exclude auto-generated fields that shouldn't be copied
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
     id: _id,
     created_at: _created_at,
     updated_at: _updated_at,
     ...resumeDataToCopy
   } = sourceResume;
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   const newResume = {
     ...resumeDataToCopy,

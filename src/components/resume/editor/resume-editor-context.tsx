@@ -10,6 +10,7 @@ interface ResumeState {
 
 type ResumeAction =
   | { type: "UPDATE_FIELD"; field: keyof Resume; value: Resume[keyof Resume] }
+  | { type: "SET_RESUME"; value: Resume }
   | { type: "SET_SAVING"; value: boolean }
   | { type: "SET_DELETING"; value: boolean }
   | { type: "SET_HAS_CHANGES"; value: boolean };
@@ -30,6 +31,9 @@ function resumeReducer(state: ResumeState, action: ResumeAction): ResumeState {
         },
       };
       return newState;
+
+    case "SET_RESUME":
+      return { ...state, resume: action.value, hasUnsavedChanges: false };
 
     case "SET_SAVING":
       return { ...state, isSaving: action.value };

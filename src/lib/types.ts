@@ -154,6 +154,14 @@ export interface Resume {
   cover_letter?: Record<string, unknown> | null;
 }
 
+export interface ResumeVersion {
+  id: string;
+  resume_id: string;
+  user_id: string;
+  snapshot: Resume;
+  created_at: string;
+}
+
 export interface ResumeSummary {
   id: string;
   user_id: string;

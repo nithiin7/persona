@@ -10,6 +10,7 @@ import {
   Loader2,
   Save,
 } from "lucide-react";
+import { VersionHistorySheet } from "../dialogs/version-history-sheet";
 import { toast } from "@/hooks/use-toast";
 import { pdf } from "@react-pdf/renderer";
 import { TextImport } from "../../text-import";
@@ -51,7 +52,7 @@ export function ResumeEditorActions({
     setSaveStatus("saving");
     dispatch({ type: "SET_SAVING", value: true });
     try {
-      await updateResume(state.resume.id, state.resume);
+      await updateResume(state.resume.id, state.resume, true);
       setSaveStatus("saved");
       setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (error) {
@@ -76,7 +77,7 @@ export function ResumeEditorActions({
 
   return (
     <div className="px-1 py-2 @container">
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         {/* Text Import Button */}
         <TextImport
           resume={resume}
@@ -240,6 +241,12 @@ export function ResumeEditorActions({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
+        {/* Version History Button */}
+        <VersionHistorySheet
+          resumeId={resume.id}
+          buttonClassName={buttonClass}
+        />
 
         {/* Save Button */}
         <Button

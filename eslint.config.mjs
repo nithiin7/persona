@@ -14,6 +14,18 @@ const eslintConfig = [
   {
     ignores: ["node_modules/**", ".next/**", "out/**", "dist/**"],
   },
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
   // Prettier must be last to override other configs
   ...compat.extends("prettier"),
 ];

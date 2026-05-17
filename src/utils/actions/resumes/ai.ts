@@ -30,8 +30,7 @@ export async function convertTextToResume(
   targetRole: string,
   config?: AIConfig
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _unusedConfig = config; // Keep parameter for future use
+  const _unusedConfig = config;
 
   // Use fast and cheap free model for text parsing
   const hardcodedConfig = {

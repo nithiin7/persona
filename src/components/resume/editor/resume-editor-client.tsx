@@ -105,6 +105,12 @@ export function ResumeEditorClient({
     }
   };
 
+  // Sync state when the server pushes a new resume (e.g. after version restore)
+  useEffect(() => {
+    dispatch({ type: "SET_RESUME", value: initialResume });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialResume.updated_at]);
+
   // Track changes
   useEffect(() => {
     const hasChanges =
