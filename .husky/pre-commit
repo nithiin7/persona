@@ -1,3 +1,4 @@
 pnpm tsc --noEmit
 pnpm lint
 pnpm format:check
+pnpm test:run

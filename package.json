@@ -9,6 +9,8 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "test": "vitest",
+    "test:run": "vitest run",
     "knip": "knip",
     "changelog": "changelogen --output CHANGELOG.md",
     "prepare": "husky"
@@ -90,20 +92,26 @@
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/typography": "^0.5.15",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/lodash": "^4.17.13",
     "@types/node": "^20.17.11",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^6.0.2",
     "changelogen": "^0.6.2",
     "eslint": "^9.17.0",
     "eslint-config-next": "15.1.2",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
     "knip": "^6.12.0",
     "postcss": "^8.4.49",
     "prettier": "^3.6.2",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.6"
   },
   "engines": {
     "node": ">=20.0.0"
