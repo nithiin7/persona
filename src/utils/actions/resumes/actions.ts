@@ -714,3 +714,21 @@ export async function generateResumeScore(
     throw error;
   }
 }
+
+export async function saveResumeMatchScore(
+  resumeId: string,
+  score: number
+): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+  if (error || !user) throw new Error("User not authenticated");
+
+  await supabase
+    .from("resumes")
+    .update({ match_score: score })
+    .eq("id", resumeId)
+    .eq("user_id", user.id);
+}

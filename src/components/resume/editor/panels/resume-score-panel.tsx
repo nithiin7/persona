@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw, TrendingUp, Target, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { generateResumeScore } from "@/utils/actions/resumes/actions";
+import { generateResumeScore, saveResumeMatchScore } from "@/utils/actions/resumes/actions";
 import { Resume, Job as JobType } from "@/lib/types";
 import { ApiKey } from "@/utils/ai-tools";
 
@@ -200,6 +200,12 @@ export default function ResumeScorePanel({
       // Update state and storage
       setScoreData(newScore as ResumeScoreMetrics);
       updateStoredScores(resume.id, newScore as ResumeScoreMetrics);
+
+      // Persist match score to DB for home screen display
+      const matchScore =
+        newScore.jobAlignment?.requirementsMatch?.score ??
+        newScore.overallScore.score;
+      saveResumeMatchScore(resume.id, matchScore).catch(console.error);
     } catch (error) {
       console.error("Error generating score:", error);
     } finally {
