@@ -8,7 +8,10 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw, TrendingUp, Target, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { generateResumeScore, saveResumeMatchScore } from "@/utils/actions/resumes/actions";
+import {
+  generateResumeScore,
+  saveResumeMatchScore,
+} from "@/utils/actions/resumes/actions";
 import { Resume, Job as JobType } from "@/lib/types";
 import { ApiKey } from "@/utils/ai-tools";
 

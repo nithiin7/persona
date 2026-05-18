@@ -1,11 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import {
-  type ApplicationStatus,
-  Profile,
-  ResumeSummary,
-} from "@/lib/types";
+import { type ApplicationStatus, Profile, ResumeSummary } from "@/lib/types";
 
 interface DashboardData {
   profile: Profile | null;
@@ -113,7 +109,11 @@ export async function getDashboardData(): Promise<DashboardData> {
     }
 
     const tailoredResumes = rawTailored.map((resume) => {
-      const { skills: _skills, match_score, ...rest } = resume as typeof resume & {
+      const {
+        skills: _skills,
+        match_score,
+        ...rest
+      } = resume as typeof resume & {
         skills?: unknown[];
         match_score?: number | null;
       };
