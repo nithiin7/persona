@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ImportFromProfileDialog } from "../../management/dialogs/import-from-profile-dialog";
+import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
+import { AddItemButton } from "@/components/ui/add-item-button";
 import { useState, useRef, useEffect, memo } from "react";
 import {
   Tooltip,
@@ -379,20 +381,15 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
               "transition-all duration-300 ease-in-out"
             )}
           >
-            <Button
-              variant="outline"
+            <AddItemButton
               onClick={addProject}
               className={cn(
-                "flex-1 h-9 min-w-[120px]",
-                "border-dashed border-gray-200 text-gray-400",
-                "hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50",
-                "transition-colors duration-150",
+                "flex-1 min-w-[120px]",
                 "whitespace-nowrap text-[11px] @[300px]:text-sm"
               )}
             >
-              <Plus className="h-4 w-4 mr-2 shrink-0" />
               Add Project
-            </Button>
+            </AddItemButton>
 
             <ImportFromProfileDialog<Project>
               profile={profile}
@@ -425,19 +422,16 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
               <div className="space-y-2 sm:space-y-3">
                 {/* Project Name - Full Width */}
                 <div className="flex items-start gap-2 sm:gap-3">
-                  <div className="flex-1 space-y-1">
-                    <label className="text-xs font-medium text-gray-500 block">
-                      PROJECT NAME
-                    </label>
+                  <FormField label="PROJECT NAME" className="flex-1">
                     <Input
                       value={project.name}
                       onChange={(e) =>
                         updateProject(index, "name", e.target.value)
                       }
-                      className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className={FORM_INPUT_CLASS}
                       placeholder="Project Name"
                     />
-                  </div>
+                  </FormField>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -450,49 +444,40 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
 
                 {/* URLs Row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 block">
-                      LIVE URL
-                    </label>
+                  <FormField label="LIVE URL">
                     <Input
                       value={project.url || ""}
                       onChange={(e) =>
                         updateProject(index, "url", e.target.value)
                       }
-                      className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className={FORM_INPUT_CLASS}
                       placeholder="Live URL"
                     />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 block">
-                      GITHUB URL
-                    </label>
+                  </FormField>
+                  <FormField label="GITHUB URL">
                     <Input
                       value={project.github_url || ""}
                       onChange={(e) =>
                         updateProject(index, "github_url", e.target.value)
                       }
-                      className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className={FORM_INPUT_CLASS}
                       placeholder="GitHub URL"
                     />
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Date */}
-                <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 block">
-                    DATE
-                  </label>
+                <FormField label="DATE">
                   <Input
                     type="text"
                     value={project.date || ""}
                     onChange={(e) =>
                       updateProject(index, "date", e.target.value)
                     }
-                    className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
+                    className={cn(FORM_INPUT_CLASS, "w-full")}
                     placeholder="e.g., 'Jan 2023 - Present' or '2020 - 2022'"
                   />
-                </div>
+                </FormField>
 
                 {/* Description Section */}
                 <div className="space-y-2 sm:space-y-3">
@@ -799,10 +784,7 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                     </div>
 
                     {/* New Technology Input */}
-                    <div className="space-y-1">
-                      <label className="text-xs font-medium text-gray-500 block">
-                        ADD TECHNOLOGY
-                      </label>
+                    <FormField label="ADD TECHNOLOGY">
                       <div className="flex gap-2">
                         <Input
                           value={newTechnologies[index] || ""}
@@ -813,7 +795,10 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                             })
                           }
                           onKeyPress={(e) => handleTechKeyPress(e, index)}
-                          className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 text-[10px] sm:text-xs"
+                          className={cn(
+                            FORM_INPUT_CLASS,
+                            "text-[10px] sm:text-xs"
+                          )}
                           placeholder="Type a technology and press Enter or click +"
                         />
                         <Button
@@ -825,7 +810,7 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                           <Plus className="h-4 w-4" />
                         </Button>
                       </div>
-                    </div>
+                    </FormField>
                   </div>
                 </div>
               </div>

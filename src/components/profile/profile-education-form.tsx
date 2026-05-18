@@ -2,8 +2,6 @@
 
 import { Education } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Accordion,
@@ -11,33 +9,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
+import { DeleteButton } from "@/components/ui/delete-button";
+import { AddItemButton } from "@/components/ui/add-item-button";
 
 interface ProfileEducationFormProps {
   education: Education[];
   onChange: (education: Education[]) => void;
-}
-
-const inputClass =
-  "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
-
-function Field({
-  label,
-  children,
-  hint,
-}: {
-  label: string;
-  children: React.ReactNode;
-  hint?: string;
-}) {
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-baseline justify-between">
-        <label className="text-xs font-medium text-gray-500">{label}</label>
-        {hint && <span className="text-[10px] text-gray-400">{hint}</span>}
-      </div>
-      {children}
-    </div>
-  );
 }
 
 export function ProfileEducationForm({
@@ -105,73 +83,63 @@ export function ProfileEducationForm({
             </AccordionTrigger>
             <AccordionContent>
               <div className="px-4 pb-4 pt-3 space-y-4 border-t border-gray-100">
-                {/* School + delete */}
                 <div className="flex items-end gap-2">
-                  <div className="flex-1">
-                    <Field label="Institution">
-                      <Input
-                        value={edu.school}
-                        onChange={(e) =>
-                          updateEducation(index, "school", e.target.value)
-                        }
-                        className={inputClass}
-                        placeholder="University Name"
-                      />
-                    </Field>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeEducation(index)}
-                    className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
+                  <FormField label="Institution" className="flex-1">
+                    <Input
+                      value={edu.school}
+                      onChange={(e) =>
+                        updateEducation(index, "school", e.target.value)
+                      }
+                      className={FORM_INPUT_CLASS}
+                      placeholder="University Name"
+                    />
+                  </FormField>
+                  <DeleteButton onClick={() => removeEducation(index)} />
                 </div>
 
-                <Field label="Location">
+                <FormField label="Location">
                   <Input
                     value={edu.location}
                     onChange={(e) =>
                       updateEducation(index, "location", e.target.value)
                     }
-                    className={inputClass}
+                    className={FORM_INPUT_CLASS}
                     placeholder="City, Country"
                   />
-                </Field>
+                </FormField>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <Field label="Degree">
+                  <FormField label="Degree">
                     <Input
                       value={edu.degree}
                       onChange={(e) =>
                         updateEducation(index, "degree", e.target.value)
                       }
-                      className={inputClass}
+                      className={FORM_INPUT_CLASS}
                       placeholder="Bachelor's, Master's…"
                     />
-                  </Field>
-                  <Field label="Field of Study">
+                  </FormField>
+                  <FormField label="Field of Study">
                     <Input
                       value={edu.field}
                       onChange={(e) =>
                         updateEducation(index, "field", e.target.value)
                       }
-                      className={inputClass}
+                      className={FORM_INPUT_CLASS}
                       placeholder="Computer Science"
                     />
-                  </Field>
-                  <Field label="Date">
+                  </FormField>
+                  <FormField label="Date">
                     <Input
                       value={edu.date}
                       onChange={(e) =>
                         updateEducation(index, "date", e.target.value)
                       }
-                      className={inputClass}
+                      className={FORM_INPUT_CLASS}
                       placeholder="2019 – 2023"
                     />
-                  </Field>
-                  <Field label="GPA" hint="Optional">
+                  </FormField>
+                  <FormField label="GPA" hint="Optional">
                     <Input
                       type="text"
                       value={edu.gpa || ""}
@@ -182,13 +150,13 @@ export function ProfileEducationForm({
                           e.target.value || undefined
                         )
                       }
-                      className={inputClass}
+                      className={FORM_INPUT_CLASS}
                       placeholder="3.9"
                     />
-                  </Field>
+                  </FormField>
                 </div>
 
-                <Field
+                <FormField
                   label="Achievements &amp; Activities"
                   hint="One per line"
                 >
@@ -206,21 +174,16 @@ export function ProfileEducationForm({
                     }
                     className="min-h-[90px] border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
                   />
-                </Field>
+                </FormField>
               </div>
             </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
 
-      <Button
-        variant="outline"
-        onClick={addEducation}
-        className="w-full h-9 border-dashed border-gray-200 text-gray-400 text-sm hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
-      >
-        <Plus className="h-3.5 w-3.5 mr-1.5" />
+      <AddItemButton onClick={addEducation} className="w-full">
         Add Education
-      </Button>
+      </AddItemButton>
     </div>
   );
 }

@@ -17,6 +17,7 @@ import {
   X,
   LucideIcon,
 } from "lucide-react";
+import { FORM_INPUT_CLASS } from "@/components/ui/form-field";
 import { Button } from "@/components/ui/button";
 import { useResumeContext } from "../resume-editor-context";
 import { memo, useCallback, useRef, useState } from "react";
@@ -33,8 +34,7 @@ function areBasicInfoPropsEqual(
   return prevProps.profile.id === nextProps.profile.id;
 }
 
-const inputClass =
-  "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
+const inputClass = FORM_INPUT_CLASS;
 
 const BasicInfoField = memo(function BasicInfoField({
   field,

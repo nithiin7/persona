@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import UsersTable from "./components/users-table";
 import {
   getTotalUserCount,

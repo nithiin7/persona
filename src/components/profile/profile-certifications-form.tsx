@@ -2,41 +2,19 @@
 
 import { Certification } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
+import { DeleteButton } from "@/components/ui/delete-button";
+import { AddItemButton } from "@/components/ui/add-item-button";
 
 interface ProfileCertificationsFormProps {
   certifications: Certification[];
   onChange: (certifications: Certification[]) => void;
-}
-
-const inputClass =
-  "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
-
-function Field({
-  label,
-  children,
-  hint,
-}: {
-  label: string;
-  children: React.ReactNode;
-  hint?: string;
-}) {
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-baseline justify-between">
-        <label className="text-xs font-medium text-gray-500">{label}</label>
-        {hint && <span className="text-[10px] text-gray-400">{hint}</span>}
-      </div>
-      {children}
-    </div>
-  );
 }
 
 export function ProfileCertificationsForm({
@@ -102,53 +80,43 @@ export function ProfileCertificationsForm({
             </AccordionTrigger>
             <AccordionContent>
               <div className="px-4 pb-4 pt-3 space-y-4 border-t border-gray-100">
-                {/* Name + delete */}
                 <div className="flex items-end gap-2">
-                  <div className="flex-1">
-                    <Field label="Certification Name">
-                      <Input
-                        value={cert.name}
-                        onChange={(e) =>
-                          updateCertification(index, "name", e.target.value)
-                        }
-                        className={inputClass}
-                        placeholder="AWS Certified Solutions Architect"
-                      />
-                    </Field>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeCertification(index)}
-                    className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
+                  <FormField label="Certification Name" className="flex-1">
+                    <Input
+                      value={cert.name}
+                      onChange={(e) =>
+                        updateCertification(index, "name", e.target.value)
+                      }
+                      className={FORM_INPUT_CLASS}
+                      placeholder="AWS Certified Solutions Architect"
+                    />
+                  </FormField>
+                  <DeleteButton onClick={() => removeCertification(index)} />
                 </div>
 
-                <Field label="Provider">
+                <FormField label="Provider">
                   <Input
                     value={cert.provider}
                     onChange={(e) =>
                       updateCertification(index, "provider", e.target.value)
                     }
-                    className={inputClass}
+                    className={FORM_INPUT_CLASS}
                     placeholder="Issuing Organization"
                   />
-                </Field>
+                </FormField>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <Field label="Date" hint="Optional">
+                  <FormField label="Date" hint="Optional">
                     <Input
                       value={cert.date}
                       onChange={(e) =>
                         updateCertification(index, "date", e.target.value)
                       }
-                      className={inputClass}
+                      className={FORM_INPUT_CLASS}
                       placeholder="June 2023"
                     />
-                  </Field>
-                  <Field label="Credential ID" hint="Optional">
+                  </FormField>
+                  <FormField label="Credential ID" hint="Optional">
                     <Input
                       value={cert.credential_id || ""}
                       onChange={(e) =>
@@ -158,13 +126,13 @@ export function ProfileCertificationsForm({
                           e.target.value || undefined
                         )
                       }
-                      className={inputClass}
+                      className={FORM_INPUT_CLASS}
                       placeholder="ABC-123456"
                     />
-                  </Field>
+                  </FormField>
                 </div>
 
-                <Field label="Credential URL" hint="Optional">
+                <FormField label="Credential URL" hint="Optional">
                   <Input
                     type="url"
                     value={cert.credential_url || ""}
@@ -175,24 +143,19 @@ export function ProfileCertificationsForm({
                         e.target.value || undefined
                       )
                     }
-                    className={inputClass}
+                    className={FORM_INPUT_CLASS}
                     placeholder="https://example.com/credentials/…"
                   />
-                </Field>
+                </FormField>
               </div>
             </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
 
-      <Button
-        variant="outline"
-        onClick={addCertification}
-        className="w-full h-9 border-dashed border-gray-200 text-gray-400 text-sm hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
-      >
-        <Plus className="h-3.5 w-3.5 mr-1.5" />
+      <AddItemButton onClick={addCertification} className="w-full">
         Add Certification
-      </Button>
+      </AddItemButton>
     </div>
   );
 }

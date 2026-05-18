@@ -2,16 +2,15 @@
 
 import { Language } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
+import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
+import { DeleteButton } from "@/components/ui/delete-button";
+import { AddItemButton } from "@/components/ui/add-item-button";
+import { cn } from "@/lib/utils";
 
 interface ProfileLanguagesFormProps {
   languages: Language[];
   onChange: (languages: Language[]) => void;
 }
-
-const inputClass =
-  "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
 
 const PROFICIENCY_LEVELS = [
   "Native",
@@ -50,30 +49,23 @@ export function ProfileLanguagesForm({
           key={index}
           className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors duration-150"
         >
-          <div className="flex-1 space-y-1.5">
-            <label className="text-xs font-medium text-gray-500">
-              Language
-            </label>
+          <FormField label="Language" className="flex-1">
             <Input
               value={lang.language}
               onChange={(e) =>
                 updateLanguage(index, "language", e.target.value)
               }
-              className={inputClass + " font-medium"}
+              className={cn(FORM_INPUT_CLASS, "font-medium")}
               placeholder="Spanish"
             />
-          </div>
-          <div className="flex-1 space-y-1.5">
-            <label className="text-xs font-medium text-gray-500">
-              Proficiency{" "}
-              <span className="text-gray-400 font-normal">(opt)</span>
-            </label>
+          </FormField>
+          <FormField label="Proficiency" hint="opt" className="flex-1">
             <Input
               value={lang.proficiency || ""}
               onChange={(e) =>
                 updateLanguage(index, "proficiency", e.target.value)
               }
-              className={inputClass}
+              className={FORM_INPUT_CLASS}
               placeholder="Native / Fluent / …"
               list={`proficiency-list-${index}`}
             />
@@ -82,26 +74,17 @@ export function ProfileLanguagesForm({
                 <option key={level} value={level} />
               ))}
             </datalist>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
+          </FormField>
+          <DeleteButton
             onClick={() => removeLanguage(index)}
-            className="h-8 w-8 mt-5 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
+            className="mt-5"
+          />
         </div>
       ))}
 
-      <Button
-        variant="outline"
-        onClick={addLanguage}
-        className="w-full h-9 border-dashed border-gray-200 text-gray-400 text-sm hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
-      >
-        <Plus className="h-3.5 w-3.5 mr-1.5" />
+      <AddItemButton onClick={addLanguage} className="w-full">
         Add Language
-      </Button>
+      </AddItemButton>
     </div>
   );
 }

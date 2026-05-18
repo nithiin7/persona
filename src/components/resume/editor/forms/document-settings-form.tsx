@@ -118,6 +118,49 @@ function NumberInput({ value, onChange, min, max, step }: NumberInputProps) {
   );
 }
 
+function SliderField({
+  label,
+  value,
+  min,
+  max,
+  step,
+  unit,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  unit: string;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <Label className="text-xs font-medium text-gray-500">{label}</Label>
+        <div className="flex items-center">
+          <NumberInput
+            value={value}
+            min={min}
+            max={max}
+            step={step}
+            onChange={onChange}
+          />
+          <span className="text-xs text-gray-400 ml-1">{unit}</span>
+        </div>
+      </div>
+      <Slider
+        value={[value]}
+        min={min}
+        max={max}
+        step={step}
+        onValueChange={([v]) => onChange(v)}
+      />
+    </div>
+  );
+}
+
 export function DocumentSettingsForm({
   resume,
   documentSettings,
@@ -203,147 +246,62 @@ export function DocumentSettingsForm({
       | "awards";
   }) => (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label className="text-xs font-medium text-gray-500">
-            Space Above {title} Section
-          </Label>
-          <div className="flex items-center">
-            <NumberInput
-              value={documentSettings?.[`${section}_margin_top`] ?? 2}
-              min={0}
-              max={48}
-              step={1}
-              onChange={(value) =>
-                handleSettingsChange({
-                  ...documentSettings,
-                  [`${section}_margin_top`]: value,
-                })
-              }
-            />
-            <span className="text-xs text-gray-400 ml-1">pt</span>
-          </div>
-        </div>
-        <Slider
-          value={[Number(documentSettings?.[`${section}_margin_top`] ?? 2)]}
-          min={0}
-          max={48}
-          step={1}
-          onValueChange={([value]) =>
-            handleSettingsChange({
-              ...documentSettings,
-              [`${section}_margin_top`]: value,
-            })
-          }
-        />
-      </div>
-
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label className="text-xs font-medium text-gray-500">
-            Space Below {title} Section
-          </Label>
-          <div className="flex items-center">
-            <NumberInput
-              value={documentSettings?.[`${section}_margin_bottom`] ?? 2}
-              min={0}
-              max={48}
-              step={1}
-              onChange={(value) =>
-                handleSettingsChange({
-                  ...documentSettings,
-                  [`${section}_margin_bottom`]: value,
-                })
-              }
-            />
-            <span className="text-xs text-gray-400 ml-1">pt</span>
-          </div>
-        </div>
-        <Slider
-          value={[Number(documentSettings?.[`${section}_margin_bottom`] ?? 2)]}
-          min={0}
-          max={48}
-          step={1}
-          onValueChange={([value]) =>
-            handleSettingsChange({
-              ...documentSettings,
-              [`${section}_margin_bottom`]: value,
-            })
-          }
-        />
-      </div>
-
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label className="text-xs font-medium text-gray-500">
-            Horizontal Margins
-          </Label>
-          <div className="flex items-center">
-            <NumberInput
-              value={documentSettings?.[`${section}_margin_horizontal`] ?? 0}
-              min={0}
-              max={72}
-              step={2}
-              onChange={(value) =>
-                handleSettingsChange({
-                  ...documentSettings,
-                  [`${section}_margin_horizontal`]: value,
-                })
-              }
-            />
-            <span className="text-xs text-gray-400 ml-1">pt</span>
-          </div>
-        </div>
-        <Slider
-          value={[
-            Number(documentSettings?.[`${section}_margin_horizontal`] ?? 0),
-          ]}
-          min={0}
-          max={72}
-          step={2}
-          onValueChange={([value]) =>
-            handleSettingsChange({
-              ...documentSettings,
-              [`${section}_margin_horizontal`]: value,
-            })
-          }
-        />
-      </div>
-
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label className="text-xs font-medium text-gray-500">
-            Space Between Items
-          </Label>
-          <div className="flex items-center">
-            <NumberInput
-              value={documentSettings?.[`${section}_item_spacing`] ?? 4}
-              min={0}
-              max={16}
-              step={0.5}
-              onChange={(value) =>
-                handleSettingsChange({
-                  ...documentSettings,
-                  [`${section}_item_spacing`]: value,
-                })
-              }
-            />
-            <span className="text-xs text-gray-400 ml-1">pt</span>
-          </div>
-        </div>
-        <Slider
-          value={[Number(documentSettings?.[`${section}_item_spacing`] ?? 4)]}
-          min={0}
-          max={16}
-          step={0.5}
-          onValueChange={([value]) =>
-            handleSettingsChange({
-              ...documentSettings,
-              [`${section}_item_spacing`]: value,
-            })
-          }
-        />
-      </div>
+      <SliderField
+        label={`Space Above ${title} Section`}
+        value={Number(documentSettings?.[`${section}_margin_top`] ?? 2)}
+        min={0}
+        max={48}
+        step={1}
+        unit="pt"
+        onChange={(value) =>
+          handleSettingsChange({
+            ...documentSettings,
+            [`${section}_margin_top`]: value,
+          })
+        }
+      />
+      <SliderField
+        label={`Space Below ${title} Section`}
+        value={Number(documentSettings?.[`${section}_margin_bottom`] ?? 2)}
+        min={0}
+        max={48}
+        step={1}
+        unit="pt"
+        onChange={(value) =>
+          handleSettingsChange({
+            ...documentSettings,
+            [`${section}_margin_bottom`]: value,
+          })
+        }
+      />
+      <SliderField
+        label="Horizontal Margins"
+        value={Number(documentSettings?.[`${section}_margin_horizontal`] ?? 0)}
+        min={0}
+        max={72}
+        step={2}
+        unit="pt"
+        onChange={(value) =>
+          handleSettingsChange({
+            ...documentSettings,
+            [`${section}_margin_horizontal`]: value,
+          })
+        }
+      />
+      <SliderField
+        label="Space Between Items"
+        value={Number(documentSettings?.[`${section}_item_spacing`] ?? 4)}
+        min={0}
+        max={16}
+        step={0.5}
+        unit="pt"
+        onChange={(value) =>
+          handleSettingsChange({
+            ...documentSettings,
+            [`${section}_item_spacing`]: value,
+          })
+        }
+      />
     </div>
   );
 
@@ -761,145 +719,62 @@ export function DocumentSettingsForm({
           <div className="space-y-3">
             <SectionDivider label="Document" />
             <div className="space-y-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs font-medium text-gray-500">
-                    Font Size
-                  </Label>
-                  <div className="flex items-center">
-                    <NumberInput
-                      value={documentSettings?.document_font_size ?? 10}
-                      min={8}
-                      max={12}
-                      step={0.5}
-                      onChange={(value) =>
-                        handleSettingsChange({
-                          ...documentSettings,
-                          document_font_size: value,
-                        })
-                      }
-                    />
-                    <span className="text-xs text-gray-400 ml-1">pt</span>
-                  </div>
-                </div>
-                <Slider
-                  value={[documentSettings?.document_font_size ?? 10]}
-                  min={8}
-                  max={12}
-                  step={0.5}
-                  onValueChange={([value]) =>
-                    handleSettingsChange({
-                      ...documentSettings,
-                      document_font_size: value,
-                    })
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs font-medium text-gray-500">
-                    Line Height
-                  </Label>
-                  <div className="flex items-center">
-                    <NumberInput
-                      value={documentSettings?.document_line_height ?? 1.5}
-                      min={1}
-                      max={2}
-                      step={0.1}
-                      onChange={(value) =>
-                        handleSettingsChange({
-                          ...documentSettings,
-                          document_line_height: value,
-                        })
-                      }
-                    />
-                    <span className="text-xs text-gray-400 ml-1">x</span>
-                  </div>
-                </div>
-                <Slider
-                  value={[documentSettings?.document_line_height ?? 1.5]}
-                  min={1}
-                  max={2}
-                  step={0.1}
-                  onValueChange={([value]) =>
-                    handleSettingsChange({
-                      ...documentSettings,
-                      document_line_height: value,
-                    })
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs font-medium text-gray-500">
-                    Vertical Margins
-                  </Label>
-                  <div className="flex items-center">
-                    <NumberInput
-                      value={documentSettings?.document_margin_vertical ?? 36}
-                      min={18}
-                      max={108}
-                      step={2}
-                      onChange={(value) =>
-                        handleSettingsChange({
-                          ...documentSettings,
-                          document_margin_vertical: value,
-                        })
-                      }
-                    />
-                    <span className="text-xs text-gray-400 ml-1">pt</span>
-                  </div>
-                </div>
-                <Slider
-                  value={[documentSettings?.document_margin_vertical ?? 36]}
-                  min={18}
-                  max={108}
-                  step={2}
-                  onValueChange={([value]) =>
-                    handleSettingsChange({
-                      ...documentSettings,
-                      document_margin_vertical: value,
-                    })
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs font-medium text-gray-500">
-                    Horizontal Margins
-                  </Label>
-                  <div className="flex items-center">
-                    <NumberInput
-                      value={documentSettings?.document_margin_horizontal ?? 36}
-                      min={18}
-                      max={108}
-                      step={2}
-                      onChange={(value) =>
-                        handleSettingsChange({
-                          ...documentSettings,
-                          document_margin_horizontal: value,
-                        })
-                      }
-                    />
-                    <span className="text-xs text-gray-400 ml-1">pt</span>
-                  </div>
-                </div>
-                <Slider
-                  value={[documentSettings?.document_margin_horizontal ?? 36]}
-                  min={18}
-                  max={108}
-                  step={2}
-                  onValueChange={([value]) =>
-                    handleSettingsChange({
-                      ...documentSettings,
-                      document_margin_horizontal: value,
-                    })
-                  }
-                />
-              </div>
+              <SliderField
+                label="Font Size"
+                value={documentSettings?.document_font_size ?? 10}
+                min={8}
+                max={12}
+                step={0.5}
+                unit="pt"
+                onChange={(value) =>
+                  handleSettingsChange({
+                    ...documentSettings,
+                    document_font_size: value,
+                  })
+                }
+              />
+              <SliderField
+                label="Line Height"
+                value={documentSettings?.document_line_height ?? 1.5}
+                min={1}
+                max={2}
+                step={0.1}
+                unit="x"
+                onChange={(value) =>
+                  handleSettingsChange({
+                    ...documentSettings,
+                    document_line_height: value,
+                  })
+                }
+              />
+              <SliderField
+                label="Vertical Margins"
+                value={documentSettings?.document_margin_vertical ?? 36}
+                min={18}
+                max={108}
+                step={2}
+                unit="pt"
+                onChange={(value) =>
+                  handleSettingsChange({
+                    ...documentSettings,
+                    document_margin_vertical: value,
+                  })
+                }
+              />
+              <SliderField
+                label="Horizontal Margins"
+                value={documentSettings?.document_margin_horizontal ?? 36}
+                min={18}
+                max={108}
+                step={2}
+                unit="pt"
+                onChange={(value) =>
+                  handleSettingsChange({
+                    ...documentSettings,
+                    document_margin_horizontal: value,
+                  })
+                }
+              />
             </div>
           </div>
 
@@ -907,75 +782,34 @@ export function DocumentSettingsForm({
           <div className="space-y-3">
             <SectionDivider label="Header" />
             <div className="space-y-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs font-medium text-gray-500">
-                    Name Size
-                  </Label>
-                  <div className="flex items-center">
-                    <NumberInput
-                      value={documentSettings?.header_name_size ?? 24}
-                      min={0}
-                      max={40}
-                      step={1}
-                      onChange={(value) =>
-                        handleSettingsChange({
-                          ...documentSettings,
-                          header_name_size: value,
-                        })
-                      }
-                    />
-                    <span className="text-xs text-gray-400 ml-1">pt</span>
-                  </div>
-                </div>
-                <Slider
-                  value={[documentSettings?.header_name_size ?? 24]}
-                  min={0}
-                  max={40}
-                  step={1}
-                  onValueChange={([value]) =>
-                    handleSettingsChange({
-                      ...documentSettings,
-                      header_name_size: value,
-                    })
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs font-medium text-gray-500">
-                    Space Below Name
-                  </Label>
-                  <div className="flex items-center">
-                    <NumberInput
-                      value={documentSettings?.header_name_bottom_spacing ?? 24}
-                      min={0}
-                      max={50}
-                      step={1}
-                      onChange={(value) =>
-                        handleSettingsChange({
-                          ...documentSettings,
-                          header_name_bottom_spacing: value,
-                        })
-                      }
-                    />
-                    <span className="text-xs text-gray-400 ml-1">pt</span>
-                  </div>
-                </div>
-                <Slider
-                  value={[documentSettings?.header_name_bottom_spacing ?? 24]}
-                  min={0}
-                  max={50}
-                  step={1}
-                  onValueChange={([value]) =>
-                    handleSettingsChange({
-                      ...documentSettings,
-                      header_name_bottom_spacing: value,
-                    })
-                  }
-                />
-              </div>
+              <SliderField
+                label="Name Size"
+                value={documentSettings?.header_name_size ?? 24}
+                min={0}
+                max={40}
+                step={1}
+                unit="pt"
+                onChange={(value) =>
+                  handleSettingsChange({
+                    ...documentSettings,
+                    header_name_size: value,
+                  })
+                }
+              />
+              <SliderField
+                label="Space Below Name"
+                value={documentSettings?.header_name_bottom_spacing ?? 24}
+                min={0}
+                max={50}
+                step={1}
+                unit="pt"
+                onChange={(value) =>
+                  handleSettingsChange({
+                    ...documentSettings,
+                    header_name_bottom_spacing: value,
+                  })
+                }
+              />
             </div>
           </div>
 

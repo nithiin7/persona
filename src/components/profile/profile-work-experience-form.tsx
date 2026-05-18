@@ -3,7 +3,7 @@
 import { WorkExperience } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -11,33 +11,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import React from "react";
+import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
+import { DeleteButton } from "@/components/ui/delete-button";
+import { AddItemButton } from "@/components/ui/add-item-button";
+import { cn } from "@/lib/utils";
 
 interface ProfileWorkExperienceFormProps {
   experiences: WorkExperience[];
   onChange: (experiences: WorkExperience[]) => void;
-}
-
-const inputClass =
-  "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
-
-function Field({
-  label,
-  children,
-  hint,
-}: {
-  label: string;
-  children: React.ReactNode;
-  hint?: string;
-}) {
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-baseline justify-between">
-        <label className="text-xs font-medium text-gray-500">{label}</label>
-        {hint && <span className="text-[10px] text-gray-400">{hint}</span>}
-      </div>
-      {children}
-    </div>
-  );
 }
 
 export function ProfileWorkExperienceForm({
@@ -118,65 +99,55 @@ export function ProfileWorkExperienceForm({
             </AccordionTrigger>
             <AccordionContent>
               <div className="px-4 pb-4 pt-3 space-y-4 border-t border-gray-100">
-                {/* Position row with delete */}
                 <div className="flex items-end gap-2">
-                  <Field label="Position">
+                  <FormField label="Position" className="flex-1">
                     <Input
                       value={exp.position}
                       onChange={(e) =>
                         updateExperience(index, "position", e.target.value)
                       }
-                      className={inputClass}
+                      className={FORM_INPUT_CLASS}
                       placeholder="Position Title"
                     />
-                  </Field>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeExperience(index)}
-                    className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
+                  </FormField>
+                  <DeleteButton onClick={() => removeExperience(index)} />
                 </div>
 
-                <Field label="Company">
+                <FormField label="Company">
                   <Input
                     value={exp.company}
                     onChange={(e) =>
                       updateExperience(index, "company", e.target.value)
                     }
-                    className={inputClass}
+                    className={FORM_INPUT_CLASS}
                     placeholder="Company Name"
                   />
-                </Field>
+                </FormField>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <Field label="Date">
+                  <FormField label="Date">
                     <Input
                       value={exp.date}
                       onChange={(e) =>
                         updateExperience(index, "date", e.target.value)
                       }
-                      className={inputClass}
+                      className={FORM_INPUT_CLASS}
                       placeholder="Jan 2023 – Present"
                     />
-                  </Field>
-                  <div className="md:col-span-2">
-                    <Field label="Location">
-                      <Input
-                        value={exp.location}
-                        onChange={(e) =>
-                          updateExperience(index, "location", e.target.value)
-                        }
-                        className={inputClass}
-                        placeholder="Vancouver, BC"
-                      />
-                    </Field>
-                  </div>
+                  </FormField>
+                  <FormField label="Location" className="md:col-span-2">
+                    <Input
+                      value={exp.location}
+                      onChange={(e) =>
+                        updateExperience(index, "location", e.target.value)
+                      }
+                      className={FORM_INPUT_CLASS}
+                      placeholder="Vancouver, BC"
+                    />
+                  </FormField>
                 </div>
 
-                <Field label="Technologies" hint="Separate with commas">
+                <FormField label="Technologies" hint="Separate with commas">
                   <Input
                     value={techInputs[index] || ""}
                     onChange={(e) => {
@@ -200,11 +171,10 @@ export function ProfileWorkExperienceForm({
                       }));
                     }}
                     placeholder="React, TypeScript, Node.js"
-                    className={inputClass}
+                    className={FORM_INPUT_CLASS}
                   />
-                </Field>
+                </FormField>
 
-                {/* Description bullets */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-medium text-gray-500">
@@ -239,11 +209,9 @@ export function ProfileWorkExperienceForm({
                             onChange(updated);
                           }}
                           placeholder="Start with a strong action verb…"
-                          className={inputClass + " flex-1"}
+                          className={cn(FORM_INPUT_CLASS, "flex-1")}
                         />
-                        <Button
-                          variant="ghost"
-                          size="sm"
+                        <DeleteButton
                           onClick={() => {
                             const updated = [...experiences];
                             updated[index].description = updated[
@@ -251,10 +219,7 @@ export function ProfileWorkExperienceForm({
                             ].description.filter((_, i) => i !== descIndex);
                             onChange(updated);
                           }}
-                          className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
+                        />
                       </div>
                     ))}
                     {exp.description.length === 0 && (
@@ -270,14 +235,9 @@ export function ProfileWorkExperienceForm({
         ))}
       </Accordion>
 
-      <Button
-        variant="outline"
-        onClick={addExperience}
-        className="w-full h-9 border-dashed border-gray-200 text-gray-400 text-sm hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
-      >
-        <Plus className="h-3.5 w-3.5 mr-1.5" />
+      <AddItemButton onClick={addExperience} className="w-full">
         Add Work Experience
-      </Button>
+      </AddItemButton>
     </div>
   );
 }

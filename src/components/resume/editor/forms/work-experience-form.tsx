@@ -14,6 +14,8 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react";
+import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
+import { AddItemButton } from "@/components/ui/add-item-button";
 import { cn } from "@/lib/utils";
 import { ImportFromProfileDialog } from "../../management/dialogs/import-from-profile-dialog";
 import { ApiErrorDialog } from "@/components/ui/api-error-dialog";
@@ -360,20 +362,15 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
               "transition-all duration-300 ease-in-out"
             )}
           >
-            <Button
-              variant="outline"
+            <AddItemButton
               onClick={addExperience}
               className={cn(
-                "flex-1 h-9 min-w-[120px]",
-                "border-dashed border-gray-200 text-gray-400",
-                "hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50",
-                "transition-colors duration-150",
+                "flex-1 min-w-[120px]",
                 "whitespace-nowrap text-[11px] @[300px]:text-sm"
               )}
             >
-              <Plus className="h-4 w-4 mr-2 shrink-0" />
               Add Work Experience
-            </Button>
+            </AddItemButton>
 
             <ImportFromProfileDialog<WorkExperience>
               profile={profile}
@@ -406,19 +403,16 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
               <div className="space-y-2 sm:space-y-3">
                 {/* Company Name - Full Width */}
                 <div className="flex items-start gap-2 sm:gap-3">
-                  <div className="flex-1 space-y-1">
-                    <label className="text-xs font-medium text-gray-500 block">
-                      COMPANY
-                    </label>
+                  <FormField label="COMPANY" className="flex-1">
                     <Input
                       value={exp.company}
                       onChange={(e) =>
                         updateExperience(index, "company", e.target.value)
                       }
-                      className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className={FORM_INPUT_CLASS}
                       placeholder="Company Name"
                     />
-                  </div>
+                  </FormField>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -431,53 +425,44 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
 
                 {/* Position and Location Row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 block">
-                      POSITION
-                    </label>
+                  <FormField label="POSITION">
                     <Input
                       value={exp.position}
                       onChange={(e) =>
                         updateExperience(index, "position", e.target.value)
                       }
-                      className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className={FORM_INPUT_CLASS}
                       placeholder="Position Title"
                     />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 block">
-                      LOCATION
-                    </label>
+                  </FormField>
+                  <FormField label="LOCATION">
                     <Input
                       value={exp.location}
                       onChange={(e) =>
                         updateExperience(index, "location", e.target.value)
                       }
-                      className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className={FORM_INPUT_CLASS}
                       placeholder="Location"
                     />
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Dates Row */}
-                <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 block">
-                    DATE
-                  </label>
+                <FormField label="DATE">
                   <Input
                     type="text"
                     value={exp.date}
                     onChange={(e) =>
                       updateExperience(index, "date", e.target.value)
                     }
-                    className="h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
+                    className={cn(FORM_INPUT_CLASS, "w-full")}
                     placeholder="e.g., 'Jan 2023 - Present' or '2020 - 2022'"
                   />
                   <span className="ml-2 text-[8px] sm:text-[10px] text-gray-500">
                     Use &apos;Present&apos; in the date field for current
                     positions
                   </span>
-                </div>
+                </FormField>
 
                 {/* Description Section */}
                 <div className="space-y-3">

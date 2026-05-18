@@ -2,8 +2,6 @@
 
 import { Skill } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -11,14 +9,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import React from "react";
+import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
+import { DeleteButton } from "@/components/ui/delete-button";
+import { AddItemButton } from "@/components/ui/add-item-button";
 
 interface ProfileSkillsFormProps {
   skills: Skill[];
   onChange: (skills: Skill[]) => void;
 }
-
-const inputClass =
-  "h-8 border-gray-200 bg-white placeholder:text-gray-400 text-sm focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0";
 
 export function ProfileSkillsForm({
   skills,
@@ -79,40 +77,21 @@ export function ProfileSkillsForm({
             </AccordionTrigger>
             <AccordionContent>
               <div className="px-4 pb-4 pt-3 space-y-4 border-t border-gray-100">
-                {/* Category + delete */}
                 <div className="flex items-end gap-2">
-                  <div className="space-y-1.5 flex-1">
-                    <label className="text-xs font-medium text-gray-500">
-                      Category
-                    </label>
+                  <FormField label="Category" className="flex-1">
                     <Input
                       value={skill.category}
                       onChange={(e) =>
                         updateSkill(index, "category", e.target.value)
                       }
-                      className={inputClass}
+                      className={FORM_INPUT_CLASS}
                       placeholder="e.g., Programming Languages, Frameworks, Tools"
                     />
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeSkill(index)}
-                    className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
+                  </FormField>
+                  <DeleteButton onClick={() => removeSkill(index)} />
                 </div>
 
-                <div className="space-y-1.5">
-                  <div className="flex items-baseline justify-between">
-                    <label className="text-xs font-medium text-gray-500">
-                      Skills
-                    </label>
-                    <span className="text-[10px] text-gray-400">
-                      Separate with commas
-                    </span>
-                  </div>
+                <FormField label="Skills" hint="Separate with commas">
                   <Input
                     value={skillInputs[index] || ""}
                     onChange={(e) => {
@@ -136,23 +115,18 @@ export function ProfileSkillsForm({
                       }));
                     }}
                     placeholder="TypeScript, React, Node.js, AWS"
-                    className={inputClass}
+                    className={FORM_INPUT_CLASS}
                   />
-                </div>
+                </FormField>
               </div>
             </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
 
-      <Button
-        variant="outline"
-        onClick={addSkill}
-        className="w-full h-9 border-dashed border-gray-200 text-gray-400 text-sm hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
-      >
-        <Plus className="h-3.5 w-3.5 mr-1.5" />
+      <AddItemButton onClick={addSkill} className="w-full">
         Add Skill Category
-      </Button>
+      </AddItemButton>
     </div>
   );
 }
