@@ -633,19 +633,33 @@ export async function generateResumeScore(
   try {
     let prompt = `
     Generate a comprehensive score for this resume: ${JSON.stringify(resume)}
-    
-    MUST include a 'miscellaneous' field with 2-3 metrics following this format:
+
+    You MUST return a JSON object with ALL of the following top-level fields (no nesting changes):
+
     {
-      "metricName": {
-        "score": number,
-        "reason": "string explanation"
-      }
+      "overallScore": { "score": <0-100>, "reason": "<string>" },
+      "completeness": {
+        "contactInformation": { "score": <0-100>, "reason": "<string>" },
+        "detailLevel": { "score": <0-100>, "reason": "<string>" }
+      },
+      "impactScore": {
+        "activeVoiceUsage": { "score": <0-100>, "reason": "<string>" },
+        "quantifiedAchievements": { "score": <0-100>, "reason": "<string>" }
+      },
+      "roleMatch": {
+        "skillsRelevance": { "score": <0-100>, "reason": "<string>" },
+        "experienceAlignment": { "score": <0-100>, "reason": "<string>" },
+        "educationFit": { "score": <0-100>, "reason": "<string>" }
+      },
+      "miscellaneous": {
+        "keywordOptimization": { "score": <0-100>, "reason": "<string>" },
+        "formattingClarity": { "score": <0-100>, "reason": "<string>" }
+      },
+      "overallImprovements": ["<suggestion1>", "<suggestion2>", "<suggestion3>"]
     }
-    Example: 
-    "keywordOptimization": {
-      "score": 85,
-      "reason": "Good use of industry keywords but could add more variation"
-    }
+
+    IMPORTANT: "impactScore" and "roleMatch" are TOP-LEVEL fields, NOT nested inside "completeness".
+    "overallImprovements" is required and must be a non-empty array of strings.
     `;
 
     // Enhanced prompt for tailored resumes with job context
