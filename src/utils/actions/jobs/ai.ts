@@ -119,7 +119,8 @@ export async function tailorResumeToJob(
   resume: Resume,
   jobListing: z.infer<typeof simplifiedJobSchema>,
   config?: AIConfig,
-  profile?: Profile
+  profile?: Profile,
+  additionalContext?: string
 ) {
   const isPro = true;
   const aiClient = initializeAIClient(config, isPro, true);
@@ -239,6 +240,7 @@ For each work_experience and project entry, update the technologies array to:
 
     This is the Job Description:
     ${JSON.stringify(jobListing, null, 2)}
+    ${additionalContext ? `\nAdditional context provided by the candidate (treat this as supplementary information about their background, skills, or experience that may not appear in their resume or profile — use it when tailoring if relevant to the role):\n${additionalContext}` : ""}
     `,
     });
 

@@ -558,16 +558,6 @@ export function ResumesSection({
               </Link>
             )}
 
-            {/* Application Status Badge (tailored only) */}
-            {!resume.isOptimistic && type === "tailored" && resume.job_id && (
-              <div className="absolute top-1.5 right-1.5 z-10 flex flex-col items-end gap-1">
-                <StatusBadge resume={resume} />
-                {resume.matchScore !== undefined && (
-                  <MatchScoreBadge score={resume.matchScore} />
-                )}
-              </div>
-            )}
-
             {/* Action Buttons */}
             {!resume.isOptimistic && (
               <div className="absolute bottom-2 left-2 flex gap-2">
@@ -681,6 +671,17 @@ export function ResumesSection({
               </div>
             )}
           </div>
+
+          {/* Application Status + Match badges below card */}
+          {!resume.isOptimistic && type === "tailored" && resume.job_id && (
+            <div className="flex items-center justify-end gap-1 mt-1 px-0.5">
+              <StatusBadge resume={resume} />
+              {resume.matchScore !== undefined && (
+                <MatchScoreBadge score={resume.matchScore} />
+              )}
+            </div>
+          )}
+
           <AlertDialogContent className="bg-white border border-gray-200 shadow-md">
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Resume</AlertDialogTitle>

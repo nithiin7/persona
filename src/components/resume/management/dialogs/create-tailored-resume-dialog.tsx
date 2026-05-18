@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Profile, ResumeSummary } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
+import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Sparkles, Plus, Brain, Copy } from "lucide-react";
 import {
   createTailoredResume,
@@ -21,7 +22,6 @@ import { CreateBaseResumeDialog } from "./create-base-resume-dialog";
 import { tailorResumeToJob } from "@/utils/actions/jobs/ai";
 import { formatJobListing } from "@/utils/actions/jobs/ai";
 import { createJob } from "@/utils/actions/jobs/actions";
-import { MiniResumePreview } from "../../shared/mini-resume-preview";
 import { LoadingOverlay, type CreationStep } from "../loading-overlay";
 import { BaseResumeSelector } from "../base-resume-selector";
 import { ImportMethodRadioGroup } from "../import-method-radio-group";
@@ -51,6 +51,7 @@ export function CreateTailoredResumeDialog({
   const [importOption, setImportOption] = useState<"import-profile" | "ai">(
     "ai"
   );
+  const [additionalContext, setAdditionalContext] = useState("");
   const [isBaseResumeInvalid, setIsBaseResumeInvalid] = useState(false);
   const [isJobDescriptionInvalid, setIsJobDescriptionInvalid] = useState(false);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
@@ -227,7 +228,8 @@ export function CreateTailoredResumeDialog({
           baseResume,
           formattedJobListing,
           { model: selectedModel || "", apiKeys },
-          profile
+          profile,
+          additionalContext.trim() || undefined
         );
       } catch (error: Error | unknown) {
         const isKeyError =
@@ -282,6 +284,7 @@ export function CreateTailoredResumeDialog({
     setOpen(newOpen);
     if (newOpen) {
       setJobDescription("");
+      setAdditionalContext("");
       setDialogStep(1);
       setImportOption("ai");
       setSelectedBaseResume(baseResumes?.[0]?.id || "");
@@ -327,9 +330,9 @@ export function CreateTailoredResumeDialog({
     <>
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="sm:max-w-[760px] p-0 max-h-[90vh] overflow-y-auto bg-white border border-gray-200 shadow-lg rounded-xl">
+        <DialogContent className="sm:max-w-[760px] p-0 max-h-[90vh] overflow-hidden flex flex-col bg-white border border-gray-200 shadow-lg rounded-xl">
           {/* Header — pr-12 leaves room for the Dialog close button */}
-          <div className="px-6 pr-12 py-4 border-b border-gray-100">
+          <div className="px-6 pr-12 py-4 border-b border-gray-100 shrink-0">
             <div className="flex items-center gap-3">
               <div className="h-9 w-9 rounded-xl bg-violet-100 flex items-center justify-center shrink-0">
                 <Sparkles className="w-4 h-4 text-violet-600" />
@@ -378,7 +381,7 @@ export function CreateTailoredResumeDialog({
           </div>
 
           {/* Content */}
-          <div className="px-6 py-5 min-h-[380px] relative">
+          <div className="px-6 py-5 min-h-[380px] relative flex-1 overflow-y-auto">
             {isCreating && <LoadingOverlay currentStep={currentStep} />}
 
             {/* Step 1 — Choose base resume */}
@@ -406,14 +409,14 @@ export function CreateTailoredResumeDialog({
               <div className="space-y-5">
                 {/* Selected resume pill */}
                 <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-                  <MiniResumePreview
-                    name={
-                      baseResumes.find((r) => r.id === selectedBaseResume)
-                        ?.name || ""
-                    }
-                    type="base"
-                    className="w-8 h-8 shrink-0"
-                  />
+                  <div className="w-8 h-8 rounded-md bg-violet-100 flex items-center justify-center shrink-0">
+                    <span className="text-sm font-semibold text-violet-600 uppercase">
+                      {
+                        (baseResumes.find((r) => r.id === selectedBaseResume)
+                          ?.name || "?")[0]
+                      }
+                    </span>
+                  </div>
                   <div className="min-w-0">
                     <p className="text-[11px] text-gray-400 leading-none mb-0.5">
                       Foundation
@@ -455,21 +458,40 @@ export function CreateTailoredResumeDialog({
 
                 {/* Method description */}
                 {importOption === "ai" && (
-                  <div className="flex items-start gap-3 bg-violet-50 border border-violet-200 rounded-lg px-3 py-3">
-                    <div className="h-7 w-7 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
-                      <Brain className="w-3.5 h-3.5 text-violet-600" />
+                  <>
+                    <div className="flex items-start gap-3 bg-violet-50 border border-violet-200 rounded-lg px-3 py-3">
+                      <div className="h-7 w-7 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
+                        <Brain className="w-3.5 h-3.5 text-violet-600" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs font-semibold text-violet-800">
+                          AI Tailoring
+                        </p>
+                        <ul className="space-y-0.5 text-xs text-violet-700">
+                          <li>• Analyzes job requirements and keywords</li>
+                          <li>• Optimizes your experience descriptions</li>
+                          <li>• Highlights relevant skills and achievements</li>
+                        </ul>
+                      </div>
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-xs font-semibold text-violet-800">
-                        AI Tailoring
-                      </p>
-                      <ul className="space-y-0.5 text-xs text-violet-700">
-                        <li>• Analyzes job requirements and keywords</li>
-                        <li>• Optimizes your experience descriptions</li>
-                        <li>• Highlights relevant skills and achievements</li>
-                      </ul>
+
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-gray-700">
+                          Additional Context
+                        </span>
+                        <span className="text-[10px] text-gray-400">
+                          Optional
+                        </span>
+                      </div>
+                      <Textarea
+                        value={additionalContext}
+                        onChange={(e) => setAdditionalContext(e.target.value)}
+                        placeholder="Add any context the AI should know — e.g. 'I have 2 years of .NET experience not listed in my resume' or 'I led the migration to Kubernetes at my last role'."
+                        className="min-h-[80px] text-xs resize-none border-gray-200 focus:border-violet-300 focus:ring-violet-200 placeholder:text-gray-400"
+                      />
                     </div>
-                  </div>
+                  </>
                 )}
 
                 {importOption === "import-profile" && (
@@ -494,7 +516,7 @@ export function CreateTailoredResumeDialog({
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-3 border-t border-gray-100 bg-gray-50/60">
+          <div className="px-6 py-3 border-t border-gray-100 bg-gray-50/60 shrink-0">
             <div className="flex items-center justify-between">
               <div>
                 {dialogStep === 2 && (
