@@ -90,7 +90,8 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
   const [ollamaBaseUrl, setOllamaBaseUrl] = React.useState<string>(
     "http://localhost:11434"
   );
-  const [pendingWholeResume, setPendingWholeResume] = React.useState<Partial<Resume> | null>(null);
+  const [pendingWholeResume, setPendingWholeResume] =
+    React.useState<Partial<Resume> | null>(null);
   const [isInitialLoading, setIsInitialLoading] = React.useState(false);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState<string>("");
@@ -237,11 +238,14 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
         if (updates.basic_info) {
           Object.assign(staged, updates.basic_info);
         }
-        if (updates.work_experience !== undefined) staged.work_experience = updates.work_experience;
-        if (updates.education !== undefined) staged.education = updates.education;
+        if (updates.work_experience !== undefined)
+          staged.work_experience = updates.work_experience;
+        if (updates.education !== undefined)
+          staged.education = updates.education;
         if (updates.skills !== undefined) staged.skills = updates.skills;
         if (updates.projects !== undefined) staged.projects = updates.projects;
-        if (updates.certifications !== undefined) staged.certifications = updates.certifications;
+        if (updates.certifications !== undefined)
+          staged.certifications = updates.certifications;
         setPendingWholeResume(staged);
 
         const result = { success: true };
@@ -525,9 +529,11 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                         >
                                           Reading Resume...
                                         </div>
-                                      ) : toolName === "suggest_professional_summary" ? (
+                                      ) : toolName ===
+                                        "suggest_professional_summary" ? (
                                         <SuggestionSkeleton />
-                                      ) : toolName === "suggest_certification" ? (
+                                      ) : toolName ===
+                                        "suggest_certification" ? (
                                         <SuggestionSkeleton />
                                       ) : toolName === "modifyWholeResume" ? (
                                         <div
@@ -630,8 +636,13 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                       <WholeResumeSuggestion
                                         onAccept={() => {
                                           if (pendingWholeResume) {
-                                            Object.entries(pendingWholeResume).forEach(([key, value]) => {
-                                              onResumeChange(key as keyof Resume, value);
+                                            Object.entries(
+                                              pendingWholeResume
+                                            ).forEach(([key, value]) => {
+                                              onResumeChange(
+                                                key as keyof Resume,
+                                                value
+                                              );
                                             });
                                             setPendingWholeResume(null);
                                           }
@@ -646,13 +657,21 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
 
                                 if (config.type === "professional_summary") {
                                   return (
-                                    <div key={toolCallId} className="mt-2 w-[90%]">
+                                    <div
+                                      key={toolCallId}
+                                      className="mt-2 w-[90%]"
+                                    >
                                       <Suggestion
                                         type="professional_summary"
                                         content={args.improved_summary}
-                                        currentContent={resume.professional_summary ?? null}
+                                        currentContent={
+                                          resume.professional_summary ?? null
+                                        }
                                         onAccept={() =>
-                                          onResumeChange("professional_summary", args.improved_summary)
+                                          onResumeChange(
+                                            "professional_summary",
+                                            args.improved_summary
+                                          )
                                         }
                                         onReject={() => {}}
                                       />
@@ -664,21 +683,39 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                   const isNew = args.index === -1;
                                   const currentCert = isNew
                                     ? null
-                                    : (resume.certifications ?? [])[args.index] ?? null;
+                                    : ((resume.certifications ?? [])[
+                                        args.index
+                                      ] ?? null);
                                   return (
-                                    <div key={toolCallId} className="mt-2 w-[90%]">
+                                    <div
+                                      key={toolCallId}
+                                      className="mt-2 w-[90%]"
+                                    >
                                       <Suggestion
                                         type="certification"
                                         content={args.improved_certification}
                                         currentContent={currentCert}
                                         onAccept={() => {
-                                          const existing = resume.certifications ?? [];
+                                          const existing =
+                                            resume.certifications ?? [];
                                           const updated = isNew
-                                            ? [...existing, args.improved_certification]
-                                            : existing.map((c: Certification, i: number) =>
-                                                i === args.index ? args.improved_certification : c
+                                            ? [
+                                                ...existing,
+                                                args.improved_certification,
+                                              ]
+                                            : existing.map(
+                                                (
+                                                  c: Certification,
+                                                  i: number
+                                                ) =>
+                                                  i === args.index
+                                                    ? args.improved_certification
+                                                    : c
                                               );
-                                          onResumeChange("certifications", updated);
+                                          onResumeChange(
+                                            "certifications",
+                                            updated
+                                          );
                                         }}
                                         onReject={() => {}}
                                       />

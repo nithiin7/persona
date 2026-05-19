@@ -4,16 +4,34 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check, X, Sparkles } from "lucide-react";
-import { WorkExperience, Project, Skill, Education, Certification } from "@/lib/types";
+import {
+  WorkExperience,
+  Project,
+  Skill,
+  Education,
+  Certification,
+} from "@/lib/types";
 import { useState } from "react";
 import Tiptap from "@/components/ui/tiptap";
 
 const DIFF_HIGHLIGHT_CLASSES = "bg-green-300 px-1  rounded-sm";
 
-type SuggestionContent = WorkExperience | Project | Skill | Education | Certification | string;
+type SuggestionContent =
+  | WorkExperience
+  | Project
+  | Skill
+  | Education
+  | Certification
+  | string;
 
 interface SuggestionProps {
-  type: "work_experience" | "project" | "skill" | "education" | "professional_summary" | "certification";
+  type:
+    | "work_experience"
+    | "project"
+    | "skill"
+    | "education"
+    | "professional_summary"
+    | "certification";
   content: SuggestionContent;
   currentContent: SuggestionContent | null;
   onAccept: () => void;
@@ -322,14 +340,17 @@ function CertificationSuggestion({
   return (
     <div className="space-y-1.5">
       {isNew && (
-        <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">New Certification</p>
+        <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">
+          New Certification
+        </p>
       )}
       <div className="flex justify-between items-start">
         <div>
           <h3
             className={cn(
               "text-sm font-semibold text-gray-900",
-              (!currentCert || currentCert.name !== cert.name) && DIFF_HIGHLIGHT_CLASSES
+              (!currentCert || currentCert.name !== cert.name) &&
+                DIFF_HIGHLIGHT_CLASSES
             )}
           >
             {cert.name}
@@ -337,7 +358,8 @@ function CertificationSuggestion({
           <p
             className={cn(
               "text-xs text-gray-600",
-              (!currentCert || currentCert.provider !== cert.provider) && DIFF_HIGHLIGHT_CLASSES
+              (!currentCert || currentCert.provider !== cert.provider) &&
+                DIFF_HIGHLIGHT_CLASSES
             )}
           >
             {cert.provider}
@@ -347,7 +369,8 @@ function CertificationSuggestion({
           <span
             className={cn(
               "text-xs text-gray-500",
-              (!currentCert || currentCert.date !== cert.date) && DIFF_HIGHLIGHT_CLASSES
+              (!currentCert || currentCert.date !== cert.date) &&
+                DIFF_HIGHLIGHT_CLASSES
             )}
           >
             {cert.date}
@@ -372,11 +395,21 @@ function ProfessionalSummarySuggestion({
 }: ProfessionalSummarySuggestionProps) {
   const comparedWords = current
     ? compareDescriptions(current, suggested)
-    : [{ text: suggested.replace(/\*\*/g, ""), isNew: true, isBold: false, isStart: true, isEnd: true }];
+    : [
+        {
+          text: suggested.replace(/\*\*/g, ""),
+          isNew: true,
+          isBold: false,
+          isStart: true,
+          isEnd: true,
+        },
+      ];
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Professional Summary</p>
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+        Professional Summary
+      </p>
       <p className="text-sm text-gray-800 flex flex-wrap leading-relaxed">
         {comparedWords.map((word, i) => (
           <span
