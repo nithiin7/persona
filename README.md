@@ -21,6 +21,7 @@ Persona is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) wi
 - **DOCX export** — download your resume as a Word document for ATS and job boards that require `.docx` over PDF; toggle between PDF and DOCX in the download menu or via the right-click context menu on the preview
 - **LinkedIn import** — populate your profile or resume from LinkedIn in two ways: paste your profile URL for a server-side fetch (extracts JSON-LD structured data + visible text), or copy all text from your browser profile page and paste it; AI parses either format into structured fields. Available on the Profile page (dedicated LinkedIn import dialog) and in the resume editor's Import dialog
 - **Version history** — every manual save snapshots the previous state; open the History panel in the editor to browse up to 5 timestamped checkpoints and restore any of them with one click. Restoring also snapshots the current state first, so the restore itself is undoable
+- **AI inline assist** — one-click AI buttons throughout the editor: generate a professional summary from your work history (Basic Info tab), suggest achievement bullet points per education entry (Education tab), and surface missing skill keywords pre-mapped to existing or new categories (Skills tab)
 
 ---
 
