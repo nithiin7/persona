@@ -16,7 +16,7 @@ export const educationSchema = z.object({
   field: z.string().optional(),
   location: z.string().optional(),
   date: z.string().optional(),
-  gpa: z.string().optional(),
+  gpa: z.union([z.string(), z.number()]).optional(),
   achievements: z.array(z.string()).optional(),
 });
 
@@ -103,7 +103,7 @@ export const textImportSchema = z.object({
         field: z.string().optional(),
         date: z.string().optional(),
         description: z.array(z.string()).optional(),
-        gpa: z.string().optional(),
+        gpa: z.union([z.string(), z.number()]).optional(),
         location: z.string().optional(),
         achievements: z.array(z.string()).optional(),
       })
@@ -226,11 +226,8 @@ export const sectionConfigSchema = z.object({
 
 // Main Resume Schema
 export const resumeSchema = z.object({
-  //   id: z.string().uuid(),
-  //   user_id: z.string().uuid(),
   name: z.string(),
   target_role: z.string(),
-  //   is_base_resume: z.boolean(),
   first_name: z.string().optional(),
   last_name: z.string().optional(),
   email: z.string().email().optional(),
@@ -313,6 +310,7 @@ export const simplifiedJobSchema = z.object({
 });
 
 export const simplifiedResumeSchema = z.object({
+  professional_summary: z.string().optional(),
   work_experience: z.array(workExperienceSchema).optional(),
   education: z.array(educationSchema).optional(),
   skills: z.array(skillSchema).optional(),

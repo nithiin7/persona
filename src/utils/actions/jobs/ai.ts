@@ -102,6 +102,7 @@ function normalizeSkills(val: unknown) {
 // Schema that tolerates the field name variations Ollama and other smaller
 // models tend to produce instead of strictly following the schema field names.
 const resumeAISchema = z.object({
+  professional_summary: z.string().optional(),
   work_experience: z
     .array(z.preprocess(normalizeWorkExp, workExperienceSchema))
     .optional(),
@@ -185,13 +186,22 @@ For each work experience entry, keep only bullet points relevant to this role (m
 
 ---
 
-**STEP 3 — KEYWORD GAP ANALYSIS**
+**STEP 3 — INCORPORATE ADDITIONAL CONTEXT (only applies when additional context is provided in the prompt)**
 
-Compare extracted JD keywords against the selected content. For each JD keyword that is absent but plausibly within the candidate's actual experience (implied by their existing bullets or technologies), plan to inject it naturally. Never fabricate experience — only inject terms consistent with what the candidate demonstrably did.
+If the candidate provided additional context, treat it as an authoritative supplement to their profile. Before proceeding:
+- Identify skills, tools, or technologies mentioned → add each as an item inside the most relevant EXISTING skill category (never create a new category for this)
+- Identify experience, achievements, or domain knowledge mentioned → plan to weave into the relevant work experience bullet points or the professional summary
+- Do NOT surface context as a standalone section or new category — it must be integrated into existing sections
 
 ---
 
-**STEP 4 — SKILLS SECTION REORDERING & ENRICHMENT**
+**STEP 4 — KEYWORD GAP ANALYSIS**
+
+Compare extracted JD keywords against the selected content (including additional context). For each JD keyword that is absent but plausibly within the candidate's actual experience (implied by their existing bullets, technologies, or additional context), plan to inject it naturally. Never fabricate experience — only inject terms consistent with what the candidate demonstrably did.
+
+---
+
+**STEP 5 — SKILLS SECTION REORDERING & ENRICHMENT**
 
 - Reorganize skill categories so the category with the most JD-matching skills appears first.
 - Within each category, move JD-matching skills to the front of the items list.
@@ -201,7 +211,7 @@ Compare extracted JD keywords against the selected content. For each JD keyword 
 
 ---
 
-**STEP 5 — BULLET POINT REWRITING WITH KEYWORD INJECTION**
+**STEP 6 — BULLET POINT REWRITING WITH KEYWORD INJECTION**
 
 For EVERY selected work experience and project bullet point:
 - Rewrite using the STAR pattern in a single concise sentence: [Action verb] + [what was built/done with specific technology] + [business or technical context] + [quantified or concrete result]
@@ -213,11 +223,22 @@ For EVERY selected work experience and project bullet point:
 
 ---
 
-**STEP 6 — TECHNOLOGIES ARRAYS**
+**STEP 7 — TECHNOLOGIES ARRAYS**
 
 For each work_experience and project entry, update the technologies array to:
 - Include all JD keywords consistent with what was done in that role or project (using exact JD spelling)
 - Remove technologies completely irrelevant to the target role to improve signal-to-noise ratio
+
+---
+
+**STEP 8 — PROFESSIONAL SUMMARY**
+
+Write a 2–4 sentence professional summary tailored to this specific role:
+- Open with the candidate's title/years of experience and the target role
+- Highlight the 2–3 most relevant technical strengths using exact JD keyword spelling
+- If additional context was provided by the candidate, weave in those details naturally (e.g., domain knowledge, career goals, unique strengths not visible in the resume)
+- Close with a concrete value statement (what they bring to the team)
+- Do NOT use first-person pronouns; write in third-person implicit style (e.g., "Experienced engineer…")
 
 ---
 
@@ -226,7 +247,8 @@ For each work_experience and project entry, update the technologies array to:
 - NEVER change company names, job titles held, school names, degree names, project names, or dates
 - Always include all education entries
 - Set target_role to the EXACT job position title from the job description
-- Return ONLY these field names: work_experience, education, skills, projects, certifications, target_role
+- Return ONLY these field names: professional_summary, work_experience, education, skills, projects, certifications, target_role
+- professional_summary: string (2–4 sentences, no first-person pronouns)
 - work_experience items: { company, position, location, date, description (string[]), technologies (string[]) }
 - education items: { school, degree, field, location, date, gpa, achievements (string[]) }
 - skills items: { category (string), items (string[]) }
@@ -240,7 +262,7 @@ For each work_experience and project entry, update the technologies array to:
 
     This is the Job Description:
     ${JSON.stringify(jobListing, null, 2)}
-    ${additionalContext ? `\nAdditional context provided by the candidate (treat this as supplementary information about their background, skills, or experience that may not appear in their resume or profile — use it when tailoring if relevant to the role):\n${additionalContext}` : ""}
+    ${additionalContext ? `\nAdditional context from the candidate:\n${additionalContext}\n\nHow to use this context (follow all rules strictly):\n- NEVER create a new skill category for context-derived content\n- Skills mentioned: add them as individual items inside the most relevant EXISTING skill category (e.g., add "Python" to an existing "Languages and Frameworks" category, not a new one)\n- Experience or achievements mentioned: rewrite or supplement the most relevant work experience bullet points to incorporate them naturally — do not fabricate new jobs or dates\n- Any detail relevant to the target role: weave it into the professional_summary\n- Ignore anything irrelevant to the job description` : ""}
     `,
     });
 
