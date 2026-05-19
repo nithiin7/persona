@@ -4,16 +4,16 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check, X, Sparkles } from "lucide-react";
-import { WorkExperience, Project, Skill, Education } from "@/lib/types";
+import { WorkExperience, Project, Skill, Education, Certification } from "@/lib/types";
 import { useState } from "react";
 import Tiptap from "@/components/ui/tiptap";
 
 const DIFF_HIGHLIGHT_CLASSES = "bg-green-300 px-1  rounded-sm";
 
-type SuggestionContent = WorkExperience | Project | Skill | Education;
+type SuggestionContent = WorkExperience | Project | Skill | Education | Certification | string;
 
 interface SuggestionProps {
-  type: "work_experience" | "project" | "skill" | "education";
+  type: "work_experience" | "project" | "skill" | "education" | "professional_summary" | "certification";
   content: SuggestionContent;
   currentContent: SuggestionContent | null;
   onAccept: () => void;
@@ -21,6 +21,7 @@ interface SuggestionProps {
 }
 
 interface WholeResumeSuggestionProps {
+  onAccept: () => void;
   onReject: () => void;
 }
 
@@ -307,6 +308,95 @@ function SkillSuggestion({
   );
 }
 
+interface CertificationSuggestionProps {
+  content: Certification;
+  currentContent: Certification | null;
+  isNew: boolean;
+}
+
+function CertificationSuggestion({
+  content: cert,
+  currentContent: currentCert,
+  isNew,
+}: CertificationSuggestionProps) {
+  return (
+    <div className="space-y-1.5">
+      {isNew && (
+        <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">New Certification</p>
+      )}
+      <div className="flex justify-between items-start">
+        <div>
+          <h3
+            className={cn(
+              "text-sm font-semibold text-gray-900",
+              (!currentCert || currentCert.name !== cert.name) && DIFF_HIGHLIGHT_CLASSES
+            )}
+          >
+            {cert.name}
+          </h3>
+          <p
+            className={cn(
+              "text-xs text-gray-600",
+              (!currentCert || currentCert.provider !== cert.provider) && DIFF_HIGHLIGHT_CLASSES
+            )}
+          >
+            {cert.provider}
+          </p>
+        </div>
+        {cert.date && (
+          <span
+            className={cn(
+              "text-xs text-gray-500",
+              (!currentCert || currentCert.date !== cert.date) && DIFF_HIGHLIGHT_CLASSES
+            )}
+          >
+            {cert.date}
+          </span>
+        )}
+      </div>
+      {cert.credential_id && (
+        <p className="text-xs text-gray-500">ID: {cert.credential_id}</p>
+      )}
+    </div>
+  );
+}
+
+interface ProfessionalSummarySuggestionProps {
+  content: string;
+  currentContent: string | null;
+}
+
+function ProfessionalSummarySuggestion({
+  content: suggested,
+  currentContent: current,
+}: ProfessionalSummarySuggestionProps) {
+  const comparedWords = current
+    ? compareDescriptions(current, suggested)
+    : [{ text: suggested.replace(/\*\*/g, ""), isNew: true, isBold: false, isStart: true, isEnd: true }];
+
+  return (
+    <div className="space-y-2">
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Professional Summary</p>
+      <p className="text-sm text-gray-800 flex flex-wrap leading-relaxed">
+        {comparedWords.map((word, i) => (
+          <span
+            key={i}
+            className={cn(
+              "inline-flex items-center",
+              word.isStart && "rounded-l-sm pl-1",
+              word.isEnd && "rounded-r-sm pr-1",
+              i < comparedWords.length - 1 && "mr-1",
+              word.isNew && "bg-green-300 px-1 mx-0"
+            )}
+          >
+            {word.isBold ? <strong>{word.text}</strong> : word.text}
+          </span>
+        ))}
+      </p>
+    </div>
+  );
+}
+
 interface EducationSuggestionProps {
   content: Education;
   currentContent: Education | null;
@@ -552,6 +642,21 @@ export function Suggestion({
   // Helper function to render content based on type
   const renderContent = () => {
     switch (type) {
+      case "certification":
+        return (
+          <CertificationSuggestion
+            content={content as Certification}
+            currentContent={currentContent as Certification | null}
+            isNew={currentContent === null}
+          />
+        );
+      case "professional_summary":
+        return (
+          <ProfessionalSummarySuggestion
+            content={content as string}
+            currentContent={currentContent as string | null}
+          />
+        );
       case "work_experience":
         return (
           <WorkExperienceSuggestion
@@ -691,6 +796,7 @@ export function Suggestion({
 }
 
 export function WholeResumeSuggestion({
+  onAccept,
   onReject,
 }: WholeResumeSuggestionProps) {
   const [status, setStatus] = useState<"pending" | "accepted" | "rejected">(
@@ -699,7 +805,7 @@ export function WholeResumeSuggestion({
 
   const handleAccept = () => {
     setStatus("accepted");
-    // No need to do anything as changes are already applied
+    onAccept();
   };
 
   const handleReject = () => {
@@ -808,7 +914,7 @@ export function WholeResumeSuggestion({
 
             <div className="relative flex items-center justify-center gap-1.5">
               <Check className="h-3.5 w-3.5 transition-transform duration-500 group-hover/button:scale-110" />
-              <span className="font-medium">Keep Changes</span>
+              <span className="font-medium">Apply Changes</span>
             </div>
           </Button>
         </div>

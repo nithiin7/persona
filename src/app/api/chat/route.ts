@@ -39,6 +39,7 @@ export async function POST(req: Request) {
 
       The target role is ${target_role}. The job is ${job ? JSON.stringify(job) : "No job specified"}.
       Current resume: ${resume ? `${resume.first_name} ${resume.last_name} - ${resume.target_role}` : "No resume data"}.
+      Professional summary: ${resume?.professional_summary ? `"${resume.professional_summary}"` : "None set yet."}.
       Work experience: ${JSON.stringify(resume?.work_experience ?? [])}.
       Skills: ${JSON.stringify(resume?.skills ?? [])}.
       Projects: ${JSON.stringify(resume?.projects ?? [])}.
@@ -53,32 +54,48 @@ export async function POST(req: Request) {
       practices for tech job applications.
 
       TOOL USAGE INSTRUCTIONS:
-      1. For work experience improvements:
+      1. For professional summary improvements:
+         - Use 'suggest_professional_summary' with 'improved_summary' field
+         - Write 2-4 sentences tailored to the target role and job description
+
+      2. For work experience improvements:
          - Use 'suggest_work_experience_improvement' with 'index' and 'improved_experience' fields
          - Always include company, position, date, and description
 
-      2. For project improvements:
+      3. For project improvements:
          - Use 'suggest_project_improvement' with 'index' and 'improved_project' fields
          - Always include name and description
 
-      3. For skill improvements:
+      4. For skill improvements:
          - Use 'suggest_skill_improvement' with 'index' and 'improved_skill' fields
          - Only use for adding new or removing existing skills
 
-      4. For education improvements:
+      5. For education improvements:
          - Use 'suggest_education_improvement' with 'index' and 'improved_education' fields
          - Always include school, degree, field, and date
 
-      5. For viewing resume sections:
-         - Use 'getResume' with 'sections' array
-         - Valid sections: 'all', 'personal_info', 'work_experience', 'education', 'skills', 'projects'
+      6. For certifications:
+         - Use 'suggest_certification' with 'index' and 'improved_certification' fields
+         - For a new certification use index -1
+         - Always include name and provider
 
-      6. For multiple section updates:
+      7. For viewing resume sections:
+         - Use 'getResume' with 'sections' array
+         - Valid sections: 'all', 'personal_info', 'work_experience', 'education', 'skills', 'projects', 'certifications'
+
+      8. For multiple section updates:
          - Use 'modifyWholeResume' when changing multiple sections at once
+
+      CRITICAL RULES — always follow these:
+      - When asked to rate, score, review, or analyze the resume: ALWAYS call getResume(['all']) first. Never ask the user to provide their resume content.
+      - When modifying skills: ALWAYS call getResume(['skills']) first. Find the exact index of the matching category. Include ALL existing items plus the new one — never drop existing skills. Capitalize the first letter of each skill item.
+      - When adding a certification: ALWAYS call getResume(['certifications']) first to check existing certs and their indices. Use suggest_certification with index -1 for a brand new cert. NEVER put certifications in the education section.
+      - When modifying any section by index: call getResume first to confirm the correct index.
 
       Aim to use a maximum of 5 tools in one go, then confirm with the user if they would like you to continue.
       The target role is ${target_role}.
-      Current resume summary: ${resume ? `${resume.first_name} ${resume.last_name} - ${resume.target_role}` : "No resume data"}.
+      Current resume: ${resume ? `${resume.first_name} ${resume.last_name} — ${resume.target_role}` : "No resume data"}.
+      Professional summary: ${resume?.professional_summary ? `"${resume.professional_summary}"` : "None set yet."}.
 
       ${
         job

@@ -16,10 +16,22 @@ export const getResumeTool = createTool({
             "education",
             "skills",
             "projects",
+            "certifications",
           ])
         ),
       ])
       .transform((val) => (Array.isArray(val) ? val : [val])),
+  }),
+});
+
+export const suggestProfessionalSummaryTool = createTool({
+  description: "Suggest an improved professional summary for the resume",
+  parameters: z.object({
+    improved_summary: z
+      .string()
+      .describe(
+        "Improved professional summary. For important keywords, format them as bold, like this: **keyword**."
+      ),
   }),
 });
 
@@ -96,6 +108,27 @@ export const suggestEducationTool = createTool({
   }),
 });
 
+export const suggestCertificationTool = createTool({
+  description:
+    "Suggest adding or improving a certification entry. Use index -1 to add a brand new certification.",
+  parameters: z.object({
+    index: z
+      .number()
+      .describe(
+        "Index of the certification to improve, or -1 to add a new one"
+      ),
+    improved_certification: z
+      .object({
+        name: z.string(),
+        provider: z.string(),
+        date: z.string().optional(),
+        credential_id: z.string().optional(),
+        credential_url: z.string().optional(),
+      })
+      .describe("The certification entry to add or replace"),
+  }),
+});
+
 export const modifyWholeResumeTool = createTool({
   description:
     "Modify multiple sections of the resume at once. For important keywords, format them as bold, like this: **keyword**. Put two asterisks around the keyword or phrase.",
@@ -157,15 +190,28 @@ export const modifyWholeResumeTool = createTool({
         })
       )
       .optional(),
+    certifications: z
+      .array(
+        z.object({
+          name: z.string(),
+          provider: z.string(),
+          date: z.string().optional(),
+          credential_id: z.string().optional(),
+          credential_url: z.string().optional(),
+        })
+      )
+      .optional(),
   }),
 });
 
 // Export all tools in a single object for convenience
 export const tools = {
   getResume: getResumeTool,
+  suggest_professional_summary: suggestProfessionalSummaryTool,
   suggest_work_experience_improvement: suggestWorkExperienceTool,
   suggest_project_improvement: suggestProjectTool,
   suggest_skill_improvement: suggestSkillTool,
   suggest_education_improvement: suggestEducationTool,
+  suggest_certification: suggestCertificationTool,
   modifyWholeResume: modifyWholeResumeTool,
 };

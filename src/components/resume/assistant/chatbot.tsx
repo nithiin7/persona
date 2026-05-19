@@ -5,6 +5,7 @@ import { useChat } from "ai/react";
 import { Card } from "@/components/ui/card";
 import { Bot, Trash2, Pencil, ChevronDown, RefreshCw } from "lucide-react";
 import {
+  Certification,
   Education,
   Project,
   Resume,
@@ -89,9 +90,7 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
   const [ollamaBaseUrl, setOllamaBaseUrl] = React.useState<string>(
     "http://localhost:11434"
   );
-  const [originalResume, setOriginalResume] = React.useState<Resume | null>(
-    null
-  );
+  const [pendingWholeResume, setPendingWholeResume] = React.useState<Partial<Resume> | null>(null);
   const [isInitialLoading, setIsInitialLoading] = React.useState(false);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState<string>("");
@@ -172,6 +171,7 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
           education: resume.education,
           skills: resume.skills,
           projects: resume.projects,
+          certifications: resume.certifications ?? [],
         };
 
         const result = params.sections.includes("all")
@@ -187,6 +187,14 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
         addToolResult({ toolCallId: toolCall.toolCallId, result });
         console.log("Tool call READ RESUME result:", result);
         return result;
+      }
+
+      if (toolCall.toolName === "suggest_professional_summary") {
+        return toolCall.args;
+      }
+
+      if (toolCall.toolName === "suggest_certification") {
+        return toolCall.args;
       }
 
       if (toolCall.toolName === "suggest_work_experience_improvement") {
@@ -221,34 +229,21 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
           education?: Education[];
           skills?: Skill[];
           projects?: Project[];
+          certifications?: Certification[];
         };
 
-        // Store the current resume state before applying updates
-        setOriginalResume({ ...resume });
-
-        // Apply updates as before
+        // Stage the proposed changes — do NOT apply yet
+        const staged: Partial<Resume> = {};
         if (updates.basic_info) {
-          Object.entries(updates.basic_info).forEach(([key, value]) => {
-            if (value !== undefined) {
-              onResumeChange(key as keyof Resume, value);
-            }
-          });
+          Object.assign(staged, updates.basic_info);
         }
+        if (updates.work_experience !== undefined) staged.work_experience = updates.work_experience;
+        if (updates.education !== undefined) staged.education = updates.education;
+        if (updates.skills !== undefined) staged.skills = updates.skills;
+        if (updates.projects !== undefined) staged.projects = updates.projects;
+        if (updates.certifications !== undefined) staged.certifications = updates.certifications;
+        setPendingWholeResume(staged);
 
-        const sections = {
-          work_experience: updates.work_experience,
-          education: updates.education,
-          skills: updates.skills,
-          projects: updates.projects,
-        };
-
-        Object.entries(sections).forEach(([key, value]) => {
-          if (value !== undefined) {
-            onResumeChange(key as keyof Resume, value);
-          }
-        });
-
-        // Add a simple, serializable result for the tool call
         const result = { success: true };
         addToolResult({ toolCallId: toolCall.toolCallId, result });
         return result;
@@ -300,7 +295,7 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
 
   const handleClearChat = useCallback(() => {
     setMessages([]);
-    setOriginalResume(null);
+    setPendingWholeResume(null);
     setEditingMessageId(null);
     setEditContent("");
   }, [setMessages]);
@@ -530,6 +525,10 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                         >
                                           Reading Resume...
                                         </div>
+                                      ) : toolName === "suggest_professional_summary" ? (
+                                        <SuggestionSkeleton />
+                                      ) : toolName === "suggest_certification" ? (
+                                        <SuggestionSkeleton />
                                       ) : toolName === "modifyWholeResume" ? (
                                         <div
                                           className={cn(
@@ -553,6 +552,16 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                               case "result":
                                 // Map tool names to resume sections and handle suggestions
                                 const toolConfig = {
+                                  suggest_professional_summary: {
+                                    type: "professional_summary" as const,
+                                    field: "professional_summary",
+                                    content: "improved_summary",
+                                  },
+                                  suggest_certification: {
+                                    type: "certification" as const,
+                                    field: "certifications",
+                                    content: "improved_certification",
+                                  },
                                   suggest_work_experience_improvement: {
                                     type: "work_experience" as const,
                                     field: "work_experience",
@@ -619,27 +628,59 @@ export default function ChatBot({ resume, onResumeChange, job }: ChatBotProps) {
                                       className="mt-2 w-[90%]"
                                     >
                                       <WholeResumeSuggestion
-                                        onReject={() => {
-                                          if (originalResume) {
-                                            Object.keys(originalResume).forEach(
-                                              (key) => {
-                                                if (
-                                                  key !== "id" &&
-                                                  key !== "created_at" &&
-                                                  key !== "updated_at"
-                                                ) {
-                                                  onResumeChange(
-                                                    key as keyof Resume,
-                                                    originalResume[
-                                                      key as keyof Resume
-                                                    ]
-                                                  );
-                                                }
-                                              }
-                                            );
-                                            setOriginalResume(null);
+                                        onAccept={() => {
+                                          if (pendingWholeResume) {
+                                            Object.entries(pendingWholeResume).forEach(([key, value]) => {
+                                              onResumeChange(key as keyof Resume, value);
+                                            });
+                                            setPendingWholeResume(null);
                                           }
                                         }}
+                                        onReject={() => {
+                                          setPendingWholeResume(null);
+                                        }}
+                                      />
+                                    </div>
+                                  );
+                                }
+
+                                if (config.type === "professional_summary") {
+                                  return (
+                                    <div key={toolCallId} className="mt-2 w-[90%]">
+                                      <Suggestion
+                                        type="professional_summary"
+                                        content={args.improved_summary}
+                                        currentContent={resume.professional_summary ?? null}
+                                        onAccept={() =>
+                                          onResumeChange("professional_summary", args.improved_summary)
+                                        }
+                                        onReject={() => {}}
+                                      />
+                                    </div>
+                                  );
+                                }
+
+                                if (config.type === "certification") {
+                                  const isNew = args.index === -1;
+                                  const currentCert = isNew
+                                    ? null
+                                    : (resume.certifications ?? [])[args.index] ?? null;
+                                  return (
+                                    <div key={toolCallId} className="mt-2 w-[90%]">
+                                      <Suggestion
+                                        type="certification"
+                                        content={args.improved_certification}
+                                        currentContent={currentCert}
+                                        onAccept={() => {
+                                          const existing = resume.certifications ?? [];
+                                          const updated = isNew
+                                            ? [...existing, args.improved_certification]
+                                            : existing.map((c: Certification, i: number) =>
+                                                i === args.index ? args.improved_certification : c
+                                              );
+                                          onResumeChange("certifications", updated);
+                                        }}
+                                        onReject={() => {}}
                                       />
                                     </div>
                                   );
