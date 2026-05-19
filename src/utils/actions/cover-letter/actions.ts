@@ -8,30 +8,44 @@ export type CoverLetterStyle = "professional" | "casual" | "startup";
 
 const FORMATTING_RULES = `
 CRITICAL FORMATTING REQUIREMENTS – YOU MUST FOLLOW THESE EXACTLY:
-1. Do NOT use any square brackets [] in the output.
-2. Only include information that is available in the job or resume data.
-3. Each piece of information MUST be on its own separate line using <br /> tags.
-4. Use actual values directly, not placeholders.
-5. Format the header EXACTLY like this (using real data):
+1. Do NOT use any square brackets [] in the output. Use actual values only.
+2. Only include information that is explicitly available in the data provided.
+3. Output is HTML — do NOT wrap in \`\`\`html code fences or start with <html>/<body> tags.
+4. Structure the letter in this EXACT order:
+
+   STEP A — Title heading:
+   <h1>Cover Letter — [Job Position Title], [Company Name]</h1>
+
+   STEP B — Candidate contact block:
    <p>
-   Date<br />
-   Company Name<br />
-   City, Province/State, Country<br />
+   Full Name<br />
+   City, State/Province, Country<br />
+   Email | Phone Number<br />
+   Portfolio URL | LinkedIn URL<br />
    </p>
-   If certain data (like company address) is missing, omit that line entirely.
-6. Format the signature EXACTLY like this (using real data):
+   Rules: omit any line for which data is missing. If only one of Portfolio/LinkedIn is available, show it alone without a pipe.
+
+   STEP C — Date (format: D Month YYYY, e.g. "19 May 2026"):
+   <p>[Date]</p>
+
+   STEP D — Recipient block:
+   <p>
+   Hiring Team<br />
+   Company Name — Office or City<br />
+   </p>
+   Use the hiring manager's name instead of "Hiring Team" only if it is explicitly known. Include office/city only if available in the job data.
+
+   STEP E — Salutation:
+   <p>Dear Hiring Team,</p>
+   (or "Dear [Name]," if the hiring manager's name is known)
+
+   STEP F — Body paragraphs, each wrapped in <p> tags.
+
+   STEP G — Closing (name only — do NOT repeat email, phone, or URLs):
    <p>
    Sincerely,<br /><br />
    Full Name<br />
    </p>
-   <p>
-   Email Address<br />
-   Phone Number<br />
-   LinkedIn URL<br />
-   </p>
-7. NEVER combine multiple pieces of information on the same line; ALWAYS use <br /> tags between each piece.
-8. Add an extra <br /> after the date and after "Sincerely,".
-9. Output is HTML — do NOT wrap in \`\`\`html code fences or start with <html>/<body> tags.
 `;
 
 const SYSTEMS: Record<CoverLetterStyle, string> = {
@@ -96,15 +110,16 @@ export async function generate(
     const isPro = true;
     const aiClient = initializeAIClient(config, isPro);
     const baseSystem = SYSTEMS[style];
-    const system = wordCountTarget
-      ? `${baseSystem}\n\nLENGTH OVERRIDE: Write approximately ${wordCountTarget} words total. This takes priority over any length specified above.`
-      : baseSystem;
+    const maxWords = wordCountTarget ?? 650;
+    const maxTokens = Math.ceil(maxWords * 1.6) + 300; // ~1.6 tokens/word + header overhead
+    const system = `${baseSystem}\n\nHARD WORD LIMIT: You MUST stop writing before reaching ${maxWords} words. Count carefully. Do NOT exceed this limit under any circumstances.`;
 
     (async () => {
       const { textStream } = streamText({
         model: aiClient as LanguageModelV1,
         system,
         prompt: input,
+        maxTokens,
         onFinish: ({ usage }) => {
           const { promptTokens, completionTokens, totalTokens } = usage;
           console.log("----------Usage:----------");

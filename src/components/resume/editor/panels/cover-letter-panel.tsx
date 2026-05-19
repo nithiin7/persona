@@ -72,13 +72,20 @@ export function CoverLetterPanel({
         /* ignore */
       }
 
+      const dateStr = new Date().toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
       const prompt = `Write a cover letter for the following job using my resume information:
       ${JSON.stringify(job)}
       ${JSON.stringify(resume)}
-      Today's date is ${new Date().toLocaleDateString()}.
+      Today's date is ${dateStr}.
       Full Name: ${resume.first_name} ${resume.last_name}
+      Location: ${resume.location || ""}
       Email: ${resume.email}
       ${resume.phone_number ? `Phone: ${resume.phone_number}` : ""}
+      ${resume.website ? `Portfolio: ${resume.website}` : ""}
       ${resume.linkedin_url ? `LinkedIn: ${resume.linkedin_url}` : ""}
       ${resume.github_url ? `GitHub: ${resume.github_url}` : ""}
       ${customPrompt ? `\nAdditional requirements: ${customPrompt}` : ""}`;

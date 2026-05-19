@@ -2,7 +2,7 @@
 
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import {
@@ -33,6 +33,18 @@ function CoverLetterEditor({
   containerWidth,
   isPrintVersion = false,
 }: CoverLetterEditorProps) {
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [innerHeight, setInnerHeight] = useState(1056);
+
+  useEffect(() => {
+    if (isPrintVersion || !innerRef.current) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setInnerHeight(entry.contentRect.height);
+    });
+    observer.observe(innerRef.current);
+    return () => observer.disconnect();
+  }, [isPrintVersion]);
+
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -77,6 +89,11 @@ function CoverLetterEditor({
       editor?.destroy();
     };
   }, [editor]);
+
+  const scale = isPrintVersion ? 1 : containerWidth / 816;
+  const outerHeight = isPrintVersion
+    ? undefined
+    : Math.max(innerHeight * scale, 96);
 
   return (
     <div className="relative w-full max-w-[816px] mx-auto shadow-lg overflow-hidden mb-12 bg-white">
@@ -219,37 +236,34 @@ function CoverLetterEditor({
           </div>
         </BubbleMenu>
       )}
+      {/* Outer sizing shell — height tracks scaled content */}
       <div
-        className={cn(
-          "relative pb-[129.41%] print:!pb-0",
-          isPrintVersion && "!pb-0 !relative !shadow-none"
-        )}
+        className={cn("relative", isPrintVersion && "!h-auto")}
+        style={!isPrintVersion ? { height: outerHeight } : undefined}
       >
+        {/* Scaled content layer */}
         <div
+          ref={innerRef}
           className={cn(
-            "absolute inset-0 origin-top-left h-full print:!relative",
-            isPrintVersion && "!relative !transform-none !w-full !h-auto"
+            "origin-top-left",
+            isPrintVersion ? "relative w-full" : "absolute top-0 left-0"
           )}
           style={
             !isPrintVersion
-              ? {
-                  transform: `scale(${containerWidth / 816})`,
-                  width: `${100 / (containerWidth / 816)}%`,
-                  height: `${100 / (containerWidth / 816)}%`,
-                }
-              : {}
+              ? { transform: `scale(${scale})`, width: 816 }
+              : undefined
           }
         >
           <div
             className={cn(
-              "absolute inset-0 my-12 mx-16 overflow-hidden",
+              "my-12 mx-16 min-h-[960px]",
               isPrintVersion && "!my-0 !mx-8"
             )}
           >
             <EditorContent
               editor={editor}
               className={cn(
-                "h-full focus:outline-none prose prose-xxs max-w-none flex flex-col",
+                "focus:outline-none prose prose-xxs max-w-none",
                 isPrintVersion && "!prose-sm !text-[12pt]"
               )}
             />
