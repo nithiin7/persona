@@ -4,12 +4,16 @@ import { Education, Profile } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ImportFromProfileDialog } from "../../management/dialogs/import-from-profile-dialog";
-import { memo } from "react";
+import { memo, useState } from "react";
 import Tiptap from "@/components/ui/tiptap";
 import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
 import { DeleteButton } from "@/components/ui/delete-button";
 import { AddItemButton } from "@/components/ui/add-item-button";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Sparkles, Loader2 } from "lucide-react";
+import { useResumeContext } from "../resume-editor-context";
+import { generateEducationAchievements } from "@/utils/actions/resumes/ai";
 
 interface EducationFormProps {
   education: Education[];
@@ -33,6 +37,47 @@ export const EducationForm = memo(function EducationFormComponent({
   onChange,
   profile,
 }: EducationFormProps) {
+  const { state } = useResumeContext();
+  const { resume } = state;
+  const [generatingAchievements, setGeneratingAchievements] = useState<{
+    [key: number]: boolean;
+  }>({});
+
+  const handleGenerateAchievements = async (index: number) => {
+    const edu = education[index];
+    setGeneratingAchievements((prev) => ({ ...prev, [index]: true }));
+    try {
+      const MODEL_STORAGE_KEY = "persona-default-model";
+      const LOCAL_STORAGE_KEY = "persona-api-keys";
+      const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+      let apiKeys = [];
+      try {
+        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+        apiKeys = stored ? JSON.parse(stored) : [];
+      } catch {
+        // ignore
+      }
+      const achievements = await generateEducationAchievements(
+        {
+          school: edu.school,
+          degree: edu.degree,
+          field: edu.field,
+          date: edu.date,
+        },
+        resume,
+        undefined,
+        { model: selectedModel || "", apiKeys }
+      );
+      const updated = [...education];
+      updated[index] = { ...updated[index], achievements };
+      onChange(updated);
+    } catch {
+      // silently fail
+    } finally {
+      setGeneratingAchievements((prev) => ({ ...prev, [index]: false }));
+    }
+  };
+
   const addEducation = () => {
     onChange([
       {
@@ -171,7 +216,34 @@ export const EducationForm = memo(function EducationFormComponent({
               </FormField>
             </div>
 
-            <FormField label="Achievements" hint="One per line">
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-medium text-gray-500">
+                    Achievements
+                  </span>
+                  <span className="text-[10px] text-gray-400">
+                    (one per line)
+                  </span>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleGenerateAchievements(index)}
+                  disabled={generatingAchievements[index]}
+                  className="h-6 px-2 text-[11px] text-violet-600 hover:text-violet-700 hover:bg-violet-50 gap-1"
+                >
+                  {generatingAchievements[index] ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-3 w-3" />
+                  )}
+                  {generatingAchievements[index]
+                    ? "Generating…"
+                    : "AI Generate"}
+                </Button>
+              </div>
               <Tiptap
                 content={(edu.achievements || []).join("\n")}
                 onChange={(newContent) =>
@@ -188,7 +260,7 @@ export const EducationForm = memo(function EducationFormComponent({
                 }}
                 className="min-h-[80px] border-gray-200 bg-white text-sm focus:border-gray-400 focus:ring-0 hover:border-gray-300"
               />
-            </FormField>
+            </div>
           </CardContent>
         </Card>
       ))}

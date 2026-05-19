@@ -104,6 +104,100 @@ export async function convertTextToResume(
   return updatedResume;
 }
 
+// EDUCATION ACHIEVEMENTS GENERATION
+export async function generateEducationAchievements(
+  edu: { school: string; degree: string; field: string; date?: string },
+  resume: Resume,
+  jobDescription?: string,
+  config?: AIConfig
+) {
+  const isPro = true;
+  const aiClient = initializeAIClient(config, isPro);
+
+  const existingSkills = resume.skills
+    .flatMap((s) => s.items)
+    .slice(0, 20)
+    .join(", ");
+
+  const { object } = await generateObject({
+    model: aiClient,
+    schema: z.object({
+      achievements: z
+        .array(z.string())
+        .min(2)
+        .max(5)
+        .describe("List of achievement bullet points for the education entry"),
+    }),
+    prompt: `Generate 3-5 achievement bullet points for an education section of a resume.
+
+Education:
+- School: ${edu.school}
+- Degree: ${edu.degree} in ${edu.field}
+${edu.date ? `- Date: ${edu.date}` : ""}
+${existingSkills ? `\nCandidate's Skills: ${existingSkills}` : ""}
+${resume.target_role ? `Target Role: ${resume.target_role}` : ""}
+${jobDescription ? `\nTarget Job Description:\n${jobDescription.slice(0, 1000)}` : ""}`,
+    system: `You are an expert resume writer. Generate concise, impactful achievement bullet points for an education section. Focus on: academic honors, relevant coursework, clubs/leadership, research, or projects. Start each bullet with a strong action verb or noun. Be specific but do not fabricate GPA or awards not mentioned. Keep each bullet under 15 words.`,
+  });
+
+  return object.achievements;
+}
+
+// SKILL SUGGESTIONS
+export async function suggestSkills(
+  resume: Resume,
+  jobDescription?: string,
+  config?: AIConfig
+) {
+  const isPro = true;
+  const aiClient = initializeAIClient(config, isPro);
+
+  const existingCategories = resume.skills
+    .map((s) => s.category)
+    .filter(Boolean);
+  const existingItems = resume.skills.flatMap((s) => s.items);
+
+  const workContext = resume.work_experience
+    .slice(0, 3)
+    .map((w) => `${w.position} at ${w.company}`)
+    .join(", ");
+
+  const { object } = await generateObject({
+    model: aiClient,
+    schema: z.object({
+      suggestions: z
+        .array(
+          z.object({
+            skill: z.string().describe("The skill keyword to add"),
+            category: z
+              .string()
+              .describe(
+                "The category name — must exactly match an existing category if it fits there, or a new category name"
+              ),
+            isNewCategory: z
+              .boolean()
+              .describe(
+                "true if this requires creating a new category, false if it should go into an existing one"
+              ),
+          })
+        )
+        .min(5)
+        .max(20)
+        .describe("Skill suggestions"),
+    }),
+    prompt: `Suggest relevant skills to add to this resume. Do NOT suggest skills already present.
+
+Target Role: ${resume.target_role || "Not specified"}
+${workContext ? `Work Experience: ${workContext}` : ""}
+Existing Skill Categories: ${existingCategories.join(", ") || "none"}
+Existing Skills: ${existingItems.join(", ") || "none"}
+${jobDescription ? `\nJob Description (prioritize keywords from here):\n${jobDescription.slice(0, 1500)}` : ""}`,
+    system: `You are an expert resume strategist. Suggest specific, high-value skill keywords that are missing from the resume. Map each skill to the best-fitting existing category (use the exact category name) or propose a new category name if it doesn't fit. Prefer concrete technologies, tools, methodologies, and domain terms over vague soft skills.`,
+  });
+
+  return object.suggestions;
+}
+
 // PROFESSIONAL SUMMARY GENERATION
 export async function generateProfessionalSummary(
   resume: Resume,
