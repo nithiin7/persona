@@ -104,6 +104,53 @@ export async function convertTextToResume(
   return updatedResume;
 }
 
+// PROFESSIONAL SUMMARY GENERATION
+export async function generateProfessionalSummary(
+  resume: Resume,
+  jobDescription?: string,
+  config?: AIConfig
+) {
+  const isPro = true;
+  const aiClient = initializeAIClient(config, isPro);
+
+  const workExp = resume.work_experience
+    .slice(0, 3)
+    .map(
+      (w) =>
+        `${w.position} at ${w.company}${w.date ? ` (${w.date})` : ""}${w.description?.length ? ": " + w.description.slice(0, 2).join("; ") : ""}`
+    )
+    .join("\n");
+
+  const education = resume.education
+    .slice(0, 2)
+    .map((e) => `${e.degree} from ${e.school}`)
+    .join(", ");
+
+  const skills = resume.skills
+    .flatMap((s) => s.items)
+    .slice(0, 15)
+    .join(", ");
+
+  const { object } = await generateObject({
+    model: aiClient,
+    schema: z.object({
+      summary: z
+        .string()
+        .describe("A concise 2-4 sentence professional summary for the resume"),
+    }),
+    prompt: `Generate a professional summary for a resume. Keep it to 2-4 sentences, written in implied first person (no "I" or "my"). Focus on seniority, key skills, and value proposition.
+
+Name: ${resume.first_name} ${resume.last_name}
+Target Role: ${resume.target_role || "Not specified"}
+${workExp ? `\nWork Experience:\n${workExp}` : ""}
+${education ? `\nEducation: ${education}` : ""}
+${skills ? `\nKey Skills: ${skills}` : ""}
+${jobDescription ? `\nTarget Job Description (tailor the summary to match):\n${jobDescription.slice(0, 1500)}` : ""}`,
+    system: `You are an expert resume writer. Write professional summaries that are concise, impactful, and tailored to the candidate's experience and target role. Never fabricate details not present in the provided information. Do not use "I" or "my". Avoid clichés like "results-driven" or "passionate".`,
+  });
+
+  return object.summary;
+}
 // NEW WORK EXPERIENCE BULLET POINTS
 export async function generateWorkExperiencePoints(
   position: string,

@@ -15,6 +15,7 @@ import {
   Camera,
   Loader2,
   X,
+  Sparkles,
   LucideIcon,
 } from "lucide-react";
 import { FORM_INPUT_CLASS } from "@/components/ui/form-field";
@@ -22,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { useResumeContext } from "../resume-editor-context";
 import { memo, useCallback, useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { generateProfessionalSummary } from "@/utils/actions/resumes/ai";
 
 interface BasicInfoFormProps {
   profile: Profile;
@@ -183,9 +185,40 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
 }: BasicInfoFormProps) {
   const { state, dispatch } = useResumeContext();
   const { resume } = state;
+  const [generatingSummary, setGeneratingSummary] = useState(false);
 
   const updateField = (field: keyof typeof resume, value: string) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
+  };
+
+  const handleGenerateSummary = async () => {
+    setGeneratingSummary(true);
+    try {
+      const MODEL_STORAGE_KEY = "persona-default-model";
+      const LOCAL_STORAGE_KEY = "persona-api-keys";
+      const selectedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+      let apiKeys = [];
+      try {
+        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+        apiKeys = stored ? JSON.parse(stored) : [];
+      } catch {
+        // ignore parse errors
+      }
+
+      const summary = await generateProfessionalSummary(resume, undefined, {
+        model: selectedModel || "",
+        apiKeys,
+      });
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "professional_summary",
+        value: summary,
+      });
+    } catch {
+      // silently fail — user can retry
+    } finally {
+      setGeneratingSummary(false);
+    }
   };
 
   const handleFillFromProfile = () => {
@@ -265,7 +298,24 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
 
         {/* Summary */}
         <div className="space-y-1">
-          <label className="text-xs font-medium text-gray-500">Summary</label>
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-medium text-gray-500">Summary</label>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={handleGenerateSummary}
+              disabled={generatingSummary}
+              className="h-6 px-2 text-[11px] text-violet-600 hover:text-violet-700 hover:bg-violet-50 gap-1"
+            >
+              {generatingSummary ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <Sparkles className="h-3 w-3" />
+              )}
+              {generatingSummary ? "Generating…" : "AI Generate"}
+            </Button>
+          </div>
           <Textarea
             value={resume.professional_summary || ""}
             onChange={(e) =>
@@ -275,7 +325,7 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
                 value: e.target.value,
               })
             }
-            className="text-sm border-gray-200 bg-white placeholder:text-gray-400 min-h-[80px] focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
+            className="text-sm border-gray-200 bg-white placeholder:text-gray-400 min-h-[140px] focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
             placeholder="Brief professional summary…"
           />
         </div>
