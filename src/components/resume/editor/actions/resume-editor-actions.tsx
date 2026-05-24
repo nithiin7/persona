@@ -7,10 +7,12 @@ import {
   Check,
   Circle,
   Download,
+  GitCompare,
   Loader2,
   Save,
 } from "lucide-react";
 import { VersionHistorySheet } from "../dialogs/version-history-sheet";
+import { ResumeDiffDialog } from "../dialogs/resume-diff-dialog";
 import { toast } from "@/hooks/use-toast";
 import { pdf } from "@react-pdf/renderer";
 import { TextImport } from "../../text-import";
@@ -48,6 +50,7 @@ export function ResumeEditorActions({
     coverLetter: true,
     resumeFormat: "pdf" as "pdf" | "docx",
   });
+  const [showDiff, setShowDiff] = useState(false);
 
   // Save Resume
   const handleSave = async () => {
@@ -79,7 +82,21 @@ export function ResumeEditorActions({
 
   return (
     <div className="px-1 py-2 @container">
-      <div className="grid grid-cols-4 gap-2">
+      {/* Diff dialog — only mounted for tailored resumes */}
+      {!resume.is_base_resume && (
+        <ResumeDiffDialog
+          open={showDiff}
+          onOpenChange={setShowDiff}
+          tailoredResume={resume}
+        />
+      )}
+
+      <div
+        className={cn(
+          "grid gap-2",
+          resume.is_base_resume ? "grid-cols-4" : "grid-cols-5"
+        )}
+      >
         {/* Text Import Button */}
         <TextImport
           resume={resume}
@@ -249,6 +266,17 @@ export function ResumeEditorActions({
           resumeId={resume.id}
           buttonClassName={buttonClass}
         />
+
+        {/* Compare Button — tailored resumes only */}
+        {!resume.is_base_resume && (
+          <Button
+            onClick={() => setShowDiff(true)}
+            className={cn(buttonClass, "bg-gray-700 hover:bg-gray-600")}
+          >
+            <GitCompare className="mr-1.5 h-3.5 w-3.5" />
+            Compare
+          </Button>
+        )}
 
         {/* Save Button */}
         <Button
