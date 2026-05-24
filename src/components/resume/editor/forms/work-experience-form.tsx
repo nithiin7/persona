@@ -35,6 +35,7 @@ import {
 import { AIImprovementPrompt } from "../../shared/ai-improvement-prompt";
 import { AIGenerationSettingsTooltip } from "../components/ai-generation-tooltip";
 import { AISuggestions } from "../../shared/ai-suggestions";
+import { SectionTemplatePicker } from "../components/section-template-picker";
 
 interface AISuggestion {
   id: string;
@@ -715,6 +716,21 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                       <Plus className="h-4 w-4 mr-1" />
                       Add Point
                     </Button>
+
+                    {/* SECTION TEMPLATES */}
+                    <SectionTemplatePicker
+                      onInsert={(bullets) => {
+                        const updated = experiences.map((exp, i) =>
+                          i === index
+                            ? {
+                                ...exp,
+                                description: [...exp.description, ...bullets],
+                              }
+                            : exp
+                        );
+                        onChange(updated);
+                      }}
+                    />
 
                     {/* AI GENERATION SETTINGS */}
                     <AIGenerationSettingsTooltip
