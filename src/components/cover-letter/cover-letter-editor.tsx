@@ -1,10 +1,11 @@
 "use client";
 
-import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
+import Link from "@tiptap/extension-link";
 import {
   Bold as BoldIcon,
   Italic as ItalicIcon,
@@ -15,10 +16,16 @@ import {
   AlignRight,
   Heading1,
   Heading2,
+  Link as LinkIcon,
+  Unlink,
+  Check,
+  X,
+  ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
 
 interface CoverLetterEditorProps {
   initialData: Record<string, unknown>;
@@ -26,6 +33,8 @@ interface CoverLetterEditorProps {
   containerWidth: number;
   isPrintVersion?: boolean;
 }
+
+type ToolbarMode = "format" | "link-edit";
 
 function CoverLetterEditor({
   initialData,
@@ -35,6 +44,10 @@ function CoverLetterEditor({
 }: CoverLetterEditorProps) {
   const innerRef = useRef<HTMLDivElement>(null);
   const [innerHeight, setInnerHeight] = useState(1056);
+  const [toolbarMode, setToolbarMode] = useState<ToolbarMode>("format");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [linkText, setLinkText] = useState("");
+  const urlInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isPrintVersion || !innerRef.current) return;
@@ -53,6 +66,14 @@ function CoverLetterEditor({
       TextAlign.configure({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right"],
+      }),
+      Link.configure({
+        openOnClick: true,
+        HTMLAttributes: {
+          class: "text-blue-600 underline cursor-pointer hover:text-blue-800",
+          rel: "noopener noreferrer",
+          target: "_blank",
+        },
       }),
     ],
     content:
@@ -90,183 +111,345 @@ function CoverLetterEditor({
     };
   }, [editor]);
 
+  const openLinkDialog = useCallback(() => {
+    if (!editor) return;
+    const existingHref = editor.getAttributes("link").href as
+      | string
+      | undefined;
+    const { from, to } = editor.state.selection;
+    const selectedText = editor.state.doc.textBetween(from, to, "");
+    setLinkUrl(existingHref ?? "");
+    setLinkText(selectedText);
+    setToolbarMode("link-edit");
+    setTimeout(() => urlInputRef.current?.focus(), 50);
+  }, [editor]);
+
+  const applyLink = useCallback(() => {
+    if (!editor) return;
+    const url = linkUrl.trim();
+    if (!url) {
+      editor.chain().focus().unsetLink().run();
+      setToolbarMode("format");
+      return;
+    }
+    const href = url.startsWith("http") ? url : `https://${url}`;
+    const { from, to } = editor.state.selection;
+    const hasTextSelected = from !== to;
+
+    if (hasTextSelected) {
+      editor.chain().focus().setLink({ href }).run();
+    } else {
+      const displayText = linkText.trim() || href;
+      editor
+        .chain()
+        .focus()
+        .insertContent(`<a href="${href}">${displayText}</a>`)
+        .run();
+    }
+    setToolbarMode("format");
+  }, [editor, linkUrl, linkText]);
+
+  const cancelLink = useCallback(() => {
+    setToolbarMode("format");
+    editor?.chain().focus().run();
+  }, [editor]);
+
+  const removeLink = useCallback(() => {
+    editor?.chain().focus().unsetLink().run();
+    setToolbarMode("format");
+  }, [editor]);
+
+  const isOnLink = editor?.isActive("link") ?? false;
+  const hasSelection = editor
+    ? editor.state.selection.from !== editor.state.selection.to
+    : false;
+
   const scale = isPrintVersion ? 1 : containerWidth / 816;
   const outerHeight = isPrintVersion
     ? undefined
     : Math.max(innerHeight * scale, 96);
 
   return (
-    <div className="relative w-full max-w-[816px] mx-auto shadow-lg overflow-hidden mb-12 bg-white">
-      {editor && (
-        <BubbleMenu
-          editor={editor}
-          tippyOptions={{ duration: 100 }}
-          className="flex overflow-hidden rounded-lg border border-gray-300 bg-white shadow-xl"
-        >
-          {/* Text Style */}
-          <div className="flex items-center">
-            <Button
-              onClick={() => editor.chain().focus().toggleBold().run()}
-              className={cn(
-                "h-8 px-3 hover:bg-gray-100 transition-colors",
-                editor.isActive("bold") && "bg-gray-100 text-gray-900"
+    <div className="relative w-full max-w-[816px] mx-auto mb-12">
+      {/* Persistent toolbar — always visible, not scaled */}
+      {!isPrintVersion && editor && (
+        <div className="flex items-center flex-wrap gap-0.5 px-2 py-1.5 bg-white border border-gray-200 rounded-t-lg shadow-sm">
+          {toolbarMode === "link-edit" ? (
+            /* Link input row */
+            <div className="flex items-center gap-1 w-full">
+              {!hasSelection && (
+                <>
+                  <Input
+                    value={linkText}
+                    onChange={(e) => setLinkText(e.target.value)}
+                    placeholder="Link text"
+                    className="h-7 w-28 text-xs border-gray-300"
+                  />
+                  <Separator orientation="vertical" className="mx-0.5 h-6" />
+                </>
               )}
-              variant="ghost"
-              size="sm"
-            >
-              <BoldIcon className="h-4 w-4" />
-            </Button>
+              <Input
+                ref={urlInputRef}
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") applyLink();
+                  if (e.key === "Escape") cancelLink();
+                }}
+                placeholder="https://..."
+                className="h-7 w-52 text-xs border-gray-300"
+              />
+              <Button
+                onClick={applyLink}
+                className="h-7 w-7 p-0 hover:bg-green-50 hover:text-green-700"
+                variant="ghost"
+                size="sm"
+                title="Apply link"
+              >
+                <Check className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                onClick={cancelLink}
+                className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-700"
+                variant="ghost"
+                size="sm"
+                title="Cancel"
+              >
+                <X className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          ) : (
+            <>
+              {/* Text style */}
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  editor.chain().focus().toggleBold().run();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  editor.isActive("bold") && "bg-gray-100 text-gray-900"
+                )}
+                variant="ghost"
+                size="sm"
+                title="Bold"
+              >
+                <BoldIcon className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  editor.chain().focus().toggleItalic().run();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  editor.isActive("italic") && "bg-gray-100 text-gray-900"
+                )}
+                variant="ghost"
+                size="sm"
+                title="Italic"
+              >
+                <ItalicIcon className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  editor.chain().focus().toggleUnderline().run();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  editor.isActive("underline") && "bg-gray-100 text-gray-900"
+                )}
+                variant="ghost"
+                size="sm"
+                title="Underline"
+              >
+                <UnderlineIcon className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  editor.chain().focus().toggleStrike().run();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  editor.isActive("strike") && "bg-gray-100 text-gray-900"
+                )}
+                variant="ghost"
+                size="sm"
+                title="Strikethrough"
+              >
+                <StrikeIcon className="h-3.5 w-3.5" />
+              </Button>
 
-            <Button
-              onClick={() => editor.chain().focus().toggleItalic().run()}
-              className={cn(
-                "h-8 px-3 hover:bg-gray-100 transition-colors",
-                editor.isActive("italic") && "bg-gray-100 text-gray-900"
+              <Separator orientation="vertical" className="mx-0.5 h-5" />
+
+              {/* Link */}
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  openLinkDialog();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  isOnLink && "bg-gray-100 text-blue-600"
+                )}
+                variant="ghost"
+                size="sm"
+                title={isOnLink ? "Edit link" : "Add link"}
+              >
+                {isOnLink ? (
+                  <ExternalLink className="h-3.5 w-3.5" />
+                ) : (
+                  <LinkIcon className="h-3.5 w-3.5" />
+                )}
+              </Button>
+              {isOnLink && (
+                <Button
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    removeLink();
+                  }}
+                  className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600 transition-colors"
+                  variant="ghost"
+                  size="sm"
+                  title="Remove link"
+                >
+                  <Unlink className="h-3.5 w-3.5" />
+                </Button>
               )}
-              variant="ghost"
-              size="sm"
-            >
-              <ItalicIcon className="h-4 w-4" />
-            </Button>
 
-            <Button
-              onClick={() => editor.chain().focus().toggleUnderline().run()}
-              className={cn(
-                "h-8 px-3 hover:bg-gray-100 transition-colors",
-                editor.isActive("underline") && "bg-gray-100 text-gray-900"
-              )}
-              variant="ghost"
-              size="sm"
-            >
-              <UnderlineIcon className="h-4 w-4" />
-            </Button>
+              <Separator orientation="vertical" className="mx-0.5 h-5" />
 
-            <Button
-              onClick={() => editor.chain().focus().toggleStrike().run()}
-              className={cn(
-                "h-8 px-3 hover:bg-gray-100 transition-colors",
-                editor.isActive("strike") && "bg-gray-100 text-gray-900"
-              )}
-              variant="ghost"
-              size="sm"
-            >
-              <StrikeIcon className="h-4 w-4" />
-            </Button>
-          </div>
+              {/* Alignment */}
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  editor.chain().focus().setTextAlign("left").run();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  editor.isActive({ textAlign: "left" }) &&
+                    "bg-gray-100 text-gray-900"
+                )}
+                variant="ghost"
+                size="sm"
+                title="Align left"
+              >
+                <AlignLeft className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  editor.chain().focus().setTextAlign("center").run();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  editor.isActive({ textAlign: "center" }) &&
+                    "bg-gray-100 text-gray-900"
+                )}
+                variant="ghost"
+                size="sm"
+                title="Align center"
+              >
+                <AlignCenter className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  editor.chain().focus().setTextAlign("right").run();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  editor.isActive({ textAlign: "right" }) &&
+                    "bg-gray-100 text-gray-900"
+                )}
+                variant="ghost"
+                size="sm"
+                title="Align right"
+              >
+                <AlignRight className="h-3.5 w-3.5" />
+              </Button>
 
-          <Separator orientation="vertical" className="mx-1 h-8" />
+              <Separator orientation="vertical" className="mx-0.5 h-5" />
 
-          {/* Text Alignment */}
-          <div className="flex items-center">
-            <Button
-              onClick={() => editor.chain().focus().setTextAlign("left").run()}
-              className={cn(
-                "h-8 px-3 hover:bg-gray-100 transition-colors",
-                editor.isActive({ textAlign: "left" }) &&
-                  "bg-gray-100 text-gray-900"
-              )}
-              variant="ghost"
-              size="sm"
-            >
-              <AlignLeft className="h-4 w-4" />
-            </Button>
-
-            <Button
-              onClick={() =>
-                editor.chain().focus().setTextAlign("center").run()
-              }
-              className={cn(
-                "h-8 px-3 hover:bg-gray-100 transition-colors",
-                editor.isActive({ textAlign: "center" }) &&
-                  "bg-gray-100 text-gray-900"
-              )}
-              variant="ghost"
-              size="sm"
-            >
-              <AlignCenter className="h-4 w-4" />
-            </Button>
-
-            <Button
-              onClick={() => editor.chain().focus().setTextAlign("right").run()}
-              className={cn(
-                "h-8 px-3 hover:bg-gray-100 transition-colors",
-                editor.isActive({ textAlign: "right" }) &&
-                  "bg-gray-100 text-gray-900"
-              )}
-              variant="ghost"
-              size="sm"
-            >
-              <AlignRight className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <Separator orientation="vertical" className="mx-1 h-8" />
-
-          {/* Headings */}
-          <div className="flex items-center">
-            <Button
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 1 }).run()
-              }
-              className={cn(
-                "h-8 px-3 hover:bg-gray-100 transition-colors",
-                editor.isActive("heading", { level: 1 }) &&
-                  "bg-gray-100 text-gray-900"
-              )}
-              variant="ghost"
-              size="sm"
-            >
-              <Heading1 className="h-4 w-4" />
-            </Button>
-
-            <Button
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 2 }).run()
-              }
-              className={cn(
-                "h-8 px-3 hover:bg-gray-100 transition-colors",
-                editor.isActive("heading", { level: 2 }) &&
-                  "bg-gray-100 text-gray-900"
-              )}
-              variant="ghost"
-              size="sm"
-            >
-              <Heading2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </BubbleMenu>
-      )}
-      {/* Outer sizing shell — height tracks scaled content */}
-      <div
-        className={cn("relative", isPrintVersion && "!h-auto")}
-        style={!isPrintVersion ? { height: outerHeight } : undefined}
-      >
-        {/* Scaled content layer */}
-        <div
-          ref={innerRef}
-          className={cn(
-            "origin-top-left",
-            isPrintVersion ? "relative w-full" : "absolute top-0 left-0"
+              {/* Headings */}
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  editor.chain().focus().toggleHeading({ level: 1 }).run();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  editor.isActive("heading", { level: 1 }) &&
+                    "bg-gray-100 text-gray-900"
+                )}
+                variant="ghost"
+                size="sm"
+                title="Heading 1"
+              >
+                <Heading1 className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  editor.chain().focus().toggleHeading({ level: 2 }).run();
+                }}
+                className={cn(
+                  "h-7 w-7 p-0 hover:bg-gray-100 transition-colors",
+                  editor.isActive("heading", { level: 2 }) &&
+                    "bg-gray-100 text-gray-900"
+                )}
+                variant="ghost"
+                size="sm"
+                title="Heading 2"
+              >
+                <Heading2 className="h-3.5 w-3.5" />
+              </Button>
+            </>
           )}
-          style={
-            !isPrintVersion
-              ? { transform: `scale(${scale})`, width: 816 }
-              : undefined
-          }
+        </div>
+      )}
+
+      {/* Editor paper */}
+      <div
+        className={cn(
+          "bg-white shadow-lg overflow-hidden",
+          !isPrintVersion && "rounded-b-lg"
+        )}
+      >
+        {/* Outer sizing shell — height tracks scaled content */}
+        <div
+          className={cn("relative", isPrintVersion && "!h-auto")}
+          style={!isPrintVersion ? { height: outerHeight } : undefined}
         >
+          {/* Scaled content layer */}
           <div
+            ref={innerRef}
             className={cn(
-              "my-12 mx-16 min-h-[960px]",
-              isPrintVersion && "!my-0 !mx-8"
+              "origin-top-left",
+              isPrintVersion ? "relative w-full" : "absolute top-0 left-0"
             )}
+            style={
+              !isPrintVersion
+                ? { transform: `scale(${scale})`, width: 816 }
+                : undefined
+            }
           >
-            <EditorContent
-              editor={editor}
+            <div
               className={cn(
-                "focus:outline-none prose prose-xxs max-w-none",
-                isPrintVersion && "!prose-sm !text-[12pt]"
+                "my-12 mx-16 min-h-[960px]",
+                isPrintVersion && "!my-0 !mx-8"
               )}
-            />
+            >
+              <EditorContent
+                editor={editor}
+                className={cn(
+                  "focus:outline-none prose prose-xxs max-w-none",
+                  isPrintVersion && "!prose-sm !text-[12pt]"
+                )}
+              />
+            </div>
           </div>
         </div>
       </div>
