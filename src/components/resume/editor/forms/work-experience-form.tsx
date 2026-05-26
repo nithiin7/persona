@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
+import { WorkDatePicker } from "./work-date-picker";
 import { AddItemButton } from "@/components/ui/add-item-button";
 import { cn } from "@/lib/utils";
 import { ImportFromProfileDialog } from "../../management/dialogs/import-from-profile-dialog";
@@ -505,19 +506,10 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
 
                 {/* Dates Row */}
                 <FormField label="DATE">
-                  <Input
-                    type="text"
+                  <WorkDatePicker
                     value={exp.date}
-                    onChange={(e) =>
-                      updateExperience(index, "date", e.target.value)
-                    }
-                    className={cn(FORM_INPUT_CLASS, "w-full")}
-                    placeholder="e.g., 'Jan 2023 - Present' or '2020 - 2022'"
+                    onChange={(val) => updateExperience(index, "date", val)}
                   />
-                  <span className="ml-2 text-[8px] sm:text-[10px] text-gray-500">
-                    Use &apos;Present&apos; in the date field for current
-                    positions
-                  </span>
                 </FormField>
 
                 {/* Description Section */}
