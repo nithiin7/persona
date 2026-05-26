@@ -15,7 +15,7 @@ Persona is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) wi
 - **ATS keyword highlighter** — after scoring, matched and missing job keywords appear in a persistent bar across all editor tabs so you can see coverage while editing any section, with no extra AI call
 - **Cover letter generator** — one-click drafts based on your resume and the job
 - **Multiple templates** — Classic, Modern, and Minimal layouts with full style control
-- **Profile as source of truth** — maintain one master profile; spin off tailored resumes from it
+- **Profile as source of truth** — maintain one master profile; spin off tailored resumes from it. Includes a profile photo: upload once and it carries through to any resume via "Fill from Profile", rendering as a circular headshot in the PDF header
 - **Optional resume sections** — Publications, Volunteer, Languages, and Awards sections sit alongside the core ones; each is editable in the profile (for prefilling) and in the resume editor, supports "Import from Profile", renders in the PDF with full visibility/ordering control via the Layout tab, and is extracted automatically during AI resume/LinkedIn import
 - **Application pipeline (Kanban)** — track every job through Saved → Applied → Phone Screen → Onsite → Offer / Rejected on a drag-and-drop Kanban board on the home dashboard; status is also visible on resume cards and in the resume editor
 - **DOCX export** — download your resume as a Word document for ATS and job boards that require `.docx` over PDF; toggle between PDF and DOCX in the download menu or via the right-click context menu on the preview
