@@ -643,23 +643,25 @@ export function ResumesSection({
                         <Copy className="h-3.5 w-3.5" />
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-white border border-gray-200 shadow-md">
+                    <AlertDialogContent className="bg-white border border-gray-200 shadow-sm rounded-xl sm:max-w-md">
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Limit Reached</AlertDialogTitle>
-                        <AlertDialogDescription>
+                        <AlertDialogTitle className="text-base font-semibold text-gray-900">
+                          Limit Reached
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-sm text-gray-500">
                           You&apos;ve reached the maximum number of {type}{" "}
                           resumes. Upgrade to create unlimited resumes and
                           unlock additional features.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel className="border-gray-200 hover:bg-gray-50">
+                        <AlertDialogCancel className="border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-200">
                           Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction asChild>
                           <Link
                             href="/subscription"
-                            className="bg-gray-900 text-white hover:bg-gray-700 transition-colors duration-150"
+                            className="bg-gray-900 text-white hover:bg-gray-700 transition-colors duration-200"
                           >
                             Upgrade to Pro
                           </Link>
@@ -682,16 +684,18 @@ export function ResumesSection({
             </div>
           )}
 
-          <AlertDialogContent className="bg-white border border-gray-200 shadow-md">
+          <AlertDialogContent className="bg-white border border-gray-200 shadow-sm rounded-xl sm:max-w-md">
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Resume</AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogTitle className="text-base font-semibold text-gray-900">
+                Delete Resume
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-sm text-gray-500">
                 Are you sure you want to delete &quot;{resume.name}&quot;? This
                 action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="border-gray-200 hover:bg-gray-50">
+              <AlertDialogCancel className="border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-200">
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
@@ -700,7 +704,7 @@ export function ResumesSection({
                     handleDeleteResume(resume.id, resume.name);
                   });
                 }}
-                className="bg-red-600 text-white hover:bg-red-700 transition-colors duration-150"
+                className="border border-gray-200 bg-white text-red-600 hover:bg-red-50 hover:border-red-200 transition-colors duration-200"
               >
                 Delete
               </AlertDialogAction>
