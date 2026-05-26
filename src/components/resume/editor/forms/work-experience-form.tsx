@@ -95,6 +95,9 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
     {}
   );
   const textareaRefs = useRef<{ [key: number]: HTMLTextAreaElement }>({});
+  // Always-current ref so debounced Tiptap callbacks don't close over stale experiences
+  const experiencesRef = useRef(experiences);
+  experiencesRef.current = experiences;
   const [improvedPoints, setImprovedPoints] = useState<{
     [key: number]: { [key: number]: ImprovedPoint };
   }>({});
@@ -480,16 +483,17 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                           <Tiptap
                             content={desc}
                             onChange={(newContent) => {
-                              const updated = experiences.map((exp, i) =>
-                                i === index
-                                  ? {
-                                      ...exp,
-                                      description: exp.description.map(
-                                        (d, j) =>
-                                          j === descIndex ? newContent : d
-                                      ),
-                                    }
-                                  : exp
+                              const updated = experiencesRef.current.map(
+                                (exp, i) =>
+                                  i === index
+                                    ? {
+                                        ...exp,
+                                        description: exp.description.map(
+                                          (d, j) =>
+                                            j === descIndex ? newContent : d
+                                        ),
+                                      }
+                                    : exp
                               );
                               onChange(updated);
 

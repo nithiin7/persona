@@ -103,6 +103,9 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
     description: "",
   });
   const textareaRefs = useRef<{ [key: number]: HTMLTextAreaElement }>({});
+  // Always-current ref so debounced Tiptap callbacks don't close over stale projects
+  const projectsRef = useRef(projects);
+  projectsRef.current = projects;
   const [newTechnologies, setNewTechnologies] = useState<{
     [key: number]: string;
   }>({});
@@ -494,9 +497,18 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                           <Tiptap
                             content={desc}
                             onChange={(newContent) => {
-                              const updated = [...projects];
-                              updated[index].description[descIndex] =
-                                newContent;
+                              const updated = projectsRef.current.map(
+                                (proj, i) =>
+                                  i === index
+                                    ? {
+                                        ...proj,
+                                        description: proj.description.map(
+                                          (d, j) =>
+                                            j === descIndex ? newContent : d
+                                        ),
+                                      }
+                                    : proj
+                              );
                               onChange(updated);
 
                               if (improvedPoints[index]?.[descIndex]) {

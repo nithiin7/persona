@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useEffect } from "react";
+import { useCallback, useMemo, useEffect, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Text from "@tiptap/extension-text";
@@ -39,13 +39,19 @@ const Tiptap = memo(
       return content.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     }, []);
 
-    // Debounce the onChange callback
+    // Keep a ref to the latest onChange so the debounce always calls the
+    // current handler even when Tiptap is memo-prevented from re-rendering.
+    const onChangeRef = useRef(onChange);
+    useEffect(() => {
+      onChangeRef.current = onChange;
+    }, [onChange]);
+
     const debouncedOnChange = useMemo(
       () =>
         debounce((text: string) => {
-          onChange(text);
+          onChangeRef.current(text);
         }, 300),
-      [onChange]
+      [] // stable — ref access always gives the latest onChange
     );
 
     // Memoize editor configuration
