@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import {
   Plus,
   Trash2,
-  GripVertical,
+  ChevronUp,
+  ChevronDown,
   Loader2,
   Sparkles,
   Check,
@@ -374,6 +375,17 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
     onChange(updated);
   };
 
+  const moveProject = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= projects.length) return;
+    const updated = [...projects];
+    [updated[index], updated[targetIndex]] = [
+      updated[targetIndex],
+      updated[index],
+    ];
+    onChange(updated);
+  };
+
   return (
     <>
       <div className="space-y-2 sm:space-y-3">
@@ -414,12 +426,6 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
             key={index}
             className="relative group transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm"
           >
-            <div className="absolute -left-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="bg-gray-100 rounded-md p-1.5 cursor-move">
-                <GripVertical className="h-4 w-4 text-gray-400" />
-              </div>
-            </div>
-
             <CardContent className="p-3 sm:p-4 space-y-3 sm:space-y-4">
               {/* Header with Delete Button */}
               <div className="space-y-2 sm:space-y-3">
@@ -435,6 +441,26 @@ export const ProjectsForm = memo(function ProjectsFormComponent({
                       placeholder="Project Name"
                     />
                   </FormField>
+                  <div className="flex flex-col gap-0.5 mt-5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => moveProject(index, "up")}
+                      disabled={index === 0}
+                      className="h-5 w-5 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                    >
+                      <ChevronUp className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => moveProject(index, "down")}
+                      disabled={index === projects.length - 1}
+                      className="h-5 w-5 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                    >
+                      <ChevronDown className="h-3 w-3" />
+                    </Button>
+                  </div>
                   <Button
                     variant="ghost"
                     size="icon"

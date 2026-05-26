@@ -18,17 +18,17 @@ import {
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const editTrigger =
-  "flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-md text-[11px] font-medium text-gray-500 " +
-  "transition-colors duration-150 hover:text-gray-800 " +
-  "data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:shadow-none";
+  "flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-[5px] text-[11px] font-medium text-gray-500 " +
+  "transition-colors duration-150 hover:text-gray-800 hover:bg-white/60 " +
+  "data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-gray-200";
 
 const toolTrigger =
-  "flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-md text-[11px] font-medium text-gray-400 " +
-  "transition-colors duration-150 hover:text-violet-600 " +
-  "data-[state=active]:bg-violet-100 data-[state=active]:text-violet-700 data-[state=active]:shadow-none";
+  "flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-[5px] text-[11px] font-medium text-gray-500 " +
+  "transition-colors duration-150 hover:text-violet-600 hover:bg-white/60 " +
+  "data-[state=active]:bg-white data-[state=active]:text-violet-700 data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-gray-200";
 
 const listClass =
-  "w-full h-auto bg-white border border-gray-200 rounded-lg p-0.5 shadow-none gap-0.5";
+  "w-full h-auto bg-gray-100 border border-gray-200 rounded-lg p-0.5 shadow-none gap-0.5";
 
 const contentTabs = [
   { value: "basic", icon: User, label: "Basic" },

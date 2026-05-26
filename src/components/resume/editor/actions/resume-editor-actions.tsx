@@ -299,7 +299,7 @@ export function ResumeEditorActions({
       </div>
 
       {/* Save status indicator */}
-      <div className="h-4 flex items-center justify-end mt-1 pr-0.5">
+      <div className="h-3 flex items-center justify-end pr-0.5 mt-0.5">
         {saveStatus === "saving" && (
           <span className="flex items-center gap-1 text-[10px] text-gray-400">
             <Loader2 className="h-2.5 w-2.5 animate-spin" />

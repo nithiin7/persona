@@ -8,6 +8,8 @@ import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
 import { DeleteButton } from "@/components/ui/delete-button";
 import { AddItemButton } from "@/components/ui/add-item-button";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 interface PublicationsFormProps {
   publications: Publication[];
@@ -39,6 +41,17 @@ export function PublicationsForm({
 
   const removePublication = (index: number) => {
     onChange(publications.filter((_, i) => i !== index));
+  };
+
+  const movePublication = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= publications.length) return;
+    const updated = [...publications];
+    [updated[index], updated[targetIndex]] = [
+      updated[targetIndex],
+      updated[index],
+    ];
+    onChange(updated);
   };
 
   const handleImportFromProfile = (imported: Publication[]) => {
@@ -85,6 +98,26 @@ export function PublicationsForm({
                   placeholder="Research Paper Title"
                 />
               </FormField>
+              <div className="flex flex-col gap-0.5">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => movePublication(index, "up")}
+                  disabled={index === 0}
+                  className="h-4 w-7 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                >
+                  <ChevronUp className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => movePublication(index, "down")}
+                  disabled={index === publications.length - 1}
+                  className="h-4 w-7 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                >
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </div>
               <DeleteButton onClick={() => removePublication(index)} />
             </div>
 

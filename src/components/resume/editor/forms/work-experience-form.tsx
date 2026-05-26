@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import {
   Plus,
   Trash2,
-  GripVertical,
+  ChevronUp,
+  ChevronDown,
   Check,
   X,
   Loader2,
@@ -148,6 +149,17 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
 
   const removeExperience = (index: number) => {
     onChange(experiences.filter((_, i) => i !== index));
+  };
+
+  const moveExperience = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= experiences.length) return;
+    const updated = [...experiences];
+    [updated[index], updated[targetIndex]] = [
+      updated[targetIndex],
+      updated[index],
+    ];
+    onChange(updated);
   };
 
   const handleImportFromProfile = (importedExperiences: WorkExperience[]) => {
@@ -356,6 +368,32 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
     }
   };
 
+  const movePoint = (
+    expIndex: number,
+    pointIndex: number,
+    direction: "up" | "down"
+  ) => {
+    const targetIndex = direction === "up" ? pointIndex - 1 : pointIndex + 1;
+    const exp = experiences[expIndex];
+    if (targetIndex < 0 || targetIndex >= exp.description.length) return;
+    const desc = [...exp.description];
+    [desc[pointIndex], desc[targetIndex]] = [
+      desc[targetIndex],
+      desc[pointIndex],
+    ];
+    const updated = experiences.map((e, i) =>
+      i === expIndex ? { ...e, description: desc } : e
+    );
+    onChange(updated);
+    setImprovedPoints((prev) => {
+      if (!prev[expIndex]) return prev;
+      const pts = { ...prev[expIndex] };
+      delete pts[pointIndex];
+      delete pts[targetIndex];
+      return { ...prev, [expIndex]: pts };
+    });
+  };
+
   return (
     <>
       <div className="space-y-2 sm:space-y-3">
@@ -396,17 +434,11 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
             key={index}
             className="relative group transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm"
           >
-            <div className="absolute -left-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="bg-gray-100 rounded-md p-1.5 cursor-move">
-                <GripVertical className="h-4 w-4 text-gray-400" />
-              </div>
-            </div>
-
             <CardContent className="p-3 sm:p-4 space-y-3 sm:space-y-4">
               {/* Header with Delete Button */}
               <div className="space-y-2 sm:space-y-3">
                 {/* Company Name - Full Width */}
-                <div className="flex items-start gap-2 sm:gap-3">
+                <div className="flex items-end gap-2 sm:gap-3">
                   <FormField label="COMPANY" className="flex-1">
                     <Input
                       value={exp.company}
@@ -417,11 +449,31 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                       placeholder="Company Name"
                     />
                   </FormField>
+                  <div className="flex flex-col gap-0.5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => moveExperience(index, "up")}
+                      disabled={index === 0}
+                      className="h-4 w-7 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                    >
+                      <ChevronUp className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => moveExperience(index, "down")}
+                      disabled={index === experiences.length - 1}
+                      className="h-4 w-7 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                    >
+                      <ChevronDown className="h-3 w-3" />
+                    </Button>
+                  </div>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => removeExperience(index)}
-                    className="text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors duration-150 mt-5"
+                    className="text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -479,6 +531,39 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                         key={descIndex}
                         className="flex gap-1 items-start group/item"
                       >
+                        {/* Left: reorder (hidden until hover, only in normal mode) */}
+                        <div className="shrink-0 flex flex-col gap-0.5 pt-1.5 w-5">
+                          {!improvedPoints[index]?.[descIndex] && (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() =>
+                                  movePoint(index, descIndex, "up")
+                                }
+                                disabled={descIndex === 0}
+                                className="h-5 w-5 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                              >
+                                <ChevronUp className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() =>
+                                  movePoint(index, descIndex, "down")
+                                }
+                                disabled={
+                                  descIndex === exp.description.length - 1
+                                }
+                                className="h-5 w-5 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                              >
+                                <ChevronDown className="h-3 w-3" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+
+                        {/* Center: text editor */}
                         <div className="flex-1">
                           <Tiptap
                             content={desc}
@@ -533,14 +618,15 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                             </div>
                           )}
                         </div>
-                        <div className="flex flex-col gap-1">
+
+                        {/* Right: delete + AI (or accept/undo in AI mode) */}
+                        <div className="shrink-0 flex flex-col gap-1 pt-0.5">
                           {improvedPoints[index]?.[descIndex] ? (
                             <>
                               <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => {
-                                  // Remove the improvement state after accepting
                                   setImprovedPoints((prev) => {
                                     const newState = { ...prev };
                                     if (newState[index]) {
@@ -555,19 +641,9 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                     return newState;
                                   });
                                 }}
-                                className={cn(
-                                  "p-0 group-hover/item:opacity-100",
-                                  "h-8 w-8 rounded-lg",
-                                  "bg-green-50/80 hover:bg-green-100/80",
-                                  "text-green-600 hover:text-green-700",
-                                  "border border-green-200/60",
-                                  "shadow-sm",
-                                  "transition-all duration-300",
-                                  "hover:scale-105 hover:shadow-md",
-                                  "hover:-translate-y-0.5"
-                                )}
+                                className="h-7 w-7 p-0 rounded-lg bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700 border border-green-200/60 transition-colors"
                               >
-                                <Check className="h-4 w-4" />
+                                <Check className="h-3.5 w-3.5" />
                               </Button>
                               <Button
                                 variant="ghost"
@@ -575,19 +651,9 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                 onClick={() =>
                                   undoImprovement(index, descIndex)
                                 }
-                                className={cn(
-                                  "p-0 group-hover/item:opacity-100",
-                                  "h-8 w-8 rounded-lg",
-                                  "bg-rose-50/80 hover:bg-rose-100/80",
-                                  "text-rose-600 hover:text-rose-700",
-                                  "border border-rose-200/60",
-                                  "shadow-sm",
-                                  "transition-all duration-300",
-                                  "hover:scale-105 hover:shadow-md",
-                                  "hover:-translate-y-0.5"
-                                )}
+                                className="h-7 w-7 p-0 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-500 hover:text-rose-600 border border-rose-200/60 transition-colors"
                               >
-                                <X className="h-4 w-4" />
+                                <X className="h-3.5 w-3.5" />
                               </Button>
                             </>
                           ) : (
@@ -608,9 +674,9 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                   );
                                   onChange(updated);
                                 }}
-                                className="h-8 w-8 rounded-lg p-0 group-hover/item:opacity-100 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
+                                className="h-7 w-7 p-0 rounded-lg opacity-0 group-hover/item:opacity-100 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
                               >
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2 className="h-3.5 w-3.5" />
                               </Button>
 
                               {/* AI IMPROVEMENT */}
@@ -626,19 +692,12 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                       disabled={
                                         loadingPointAI[index]?.[descIndex]
                                       }
-                                      className={cn(
-                                        "p-0 group-hover/item:opacity-100",
-                                        "h-8 w-8 rounded-lg",
-                                        "bg-violet-50 hover:bg-violet-100",
-                                        "text-violet-500 hover:text-violet-700",
-                                        "border border-violet-200",
-                                        "transition-colors duration-150"
-                                      )}
+                                      className="h-7 w-7 p-0 rounded-lg opacity-0 group-hover/item:opacity-100 text-violet-400 hover:text-violet-600 hover:bg-violet-50 transition-all"
                                     >
                                       {loadingPointAI[index]?.[descIndex] ? (
-                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
                                       ) : (
-                                        <Sparkles className="h-4 w-4" />
+                                        <Sparkles className="h-3.5 w-3.5" />
                                       )}
                                     </Button>
                                   </TooltipTrigger>
@@ -646,13 +705,7 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                                     side="bottom"
                                     align="start"
                                     sideOffset={2}
-                                    className={cn(
-                                      "w-72 p-3.5",
-                                      "bg-white",
-                                      "border border-gray-200",
-                                      "shadow-md",
-                                      "rounded-lg"
-                                    )}
+                                    className="w-72 p-3.5 bg-white border border-gray-200 shadow-md rounded-lg"
                                   >
                                     <AIImprovementPrompt
                                       value={
@@ -703,71 +756,78 @@ export const WorkExperienceForm = memo(function WorkExperienceFormComponent({
                         </div>
                       )}
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const updated = experiences.map((exp, i) =>
-                          i === index
-                            ? { ...exp, description: [...exp.description, ""] }
-                            : exp
-                        );
-                        onChange(updated);
-                      }}
-                      className="flex-1 h-9 border-dashed border-gray-200 text-gray-400 text-[10px] sm:text-xs hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
-                    >
-                      <Plus className="h-4 w-4 mr-1" />
-                      Add Point
-                    </Button>
+                  <div className="flex flex-col gap-2 w-full">
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const updated = experiences.map((exp, i) =>
+                            i === index
+                              ? {
+                                  ...exp,
+                                  description: [...exp.description, ""],
+                                }
+                              : exp
+                          );
+                          onChange(updated);
+                        }}
+                        className="flex-1 h-9 border-dashed border-gray-200 text-gray-400 text-[10px] sm:text-xs hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-150"
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Add Point
+                      </Button>
 
-                    {/* SECTION TEMPLATES */}
-                    <SectionTemplatePicker
-                      onInsert={(bullets) => {
-                        const updated = experiences.map((exp, i) =>
-                          i === index
-                            ? {
-                                ...exp,
-                                description: [...exp.description, ...bullets],
-                              }
-                            : exp
-                        );
-                        onChange(updated);
-                      }}
-                    />
+                      {/* SECTION TEMPLATES */}
+                      <SectionTemplatePicker
+                        onInsert={(bullets) => {
+                          const updated = experiences.map((exp, i) =>
+                            i === index
+                              ? {
+                                  ...exp,
+                                  description: [...exp.description, ...bullets],
+                                }
+                              : exp
+                          );
+                          onChange(updated);
+                        }}
+                      />
+                    </div>
 
                     {/* AI GENERATION SETTINGS */}
-                    <AIGenerationSettingsTooltip
-                      index={index}
-                      loadingAI={loadingAI[index]}
-                      generateAIPoints={generateAIPoints}
-                      aiConfig={
-                        aiConfig[index] || { numPoints: 3, customPrompt: "" }
-                      }
-                      onNumPointsChange={(value) =>
-                        setAiConfig((prev) => ({
-                          ...prev,
-                          [index]: { ...prev[index], numPoints: value },
-                        }))
-                      }
-                      onCustomPromptChange={(value) =>
-                        setAiConfig((prev) => ({
-                          ...prev,
-                          [index]: { ...prev[index], customPrompt: value },
-                        }))
-                      }
-                      colorClass={{
-                        button: "text-gray-900",
-                        border: "border-gray-200",
-                        hoverBorder: "hover:border-gray-300",
-                        hoverBg: "hover:bg-gray-700",
-                        tooltipBg: "bg-purple-50",
-                        tooltipBorder: "border-2 border-purple-300",
-                        tooltipShadow: "shadow-lg shadow-purple-100/50",
-                        text: "text-white",
-                        hoverText: "hover:text-white",
-                      }}
-                    />
+                    <div className="flex">
+                      <AIGenerationSettingsTooltip
+                        index={index}
+                        loadingAI={loadingAI[index]}
+                        generateAIPoints={generateAIPoints}
+                        aiConfig={
+                          aiConfig[index] || { numPoints: 3, customPrompt: "" }
+                        }
+                        onNumPointsChange={(value) =>
+                          setAiConfig((prev) => ({
+                            ...prev,
+                            [index]: { ...prev[index], numPoints: value },
+                          }))
+                        }
+                        onCustomPromptChange={(value) =>
+                          setAiConfig((prev) => ({
+                            ...prev,
+                            [index]: { ...prev[index], customPrompt: value },
+                          }))
+                        }
+                        colorClass={{
+                          button: "text-gray-900",
+                          border: "border-gray-200",
+                          hoverBorder: "hover:border-gray-300",
+                          hoverBg: "hover:bg-gray-700",
+                          tooltipBg: "bg-purple-50",
+                          tooltipBorder: "border-2 border-purple-300",
+                          tooltipShadow: "shadow-lg shadow-purple-100/50",
+                          text: "text-white",
+                          hoverText: "hover:text-white",
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

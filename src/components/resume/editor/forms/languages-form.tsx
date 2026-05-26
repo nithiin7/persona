@@ -8,6 +8,8 @@ import { FormField, FORM_INPUT_CLASS } from "@/components/ui/form-field";
 import { DeleteButton } from "@/components/ui/delete-button";
 import { AddItemButton } from "@/components/ui/add-item-button";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 const PROFICIENCY_LEVELS = [
   "Native",
@@ -46,6 +48,17 @@ export function LanguagesForm({
     onChange(languages.filter((_, i) => i !== index));
   };
 
+  const moveLanguage = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= languages.length) return;
+    const updated = [...languages];
+    [updated[index], updated[targetIndex]] = [
+      updated[targetIndex],
+      updated[index],
+    ];
+    onChange(updated);
+  };
+
   const handleImportFromProfile = (imported: Language[]) => {
     onChange([...imported, ...languages]);
   };
@@ -74,7 +87,7 @@ export function LanguagesForm({
           className="bg-white border border-gray-200 rounded-lg shadow-sm"
         >
           <CardContent className="p-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-end gap-2">
               <FormField label="Language" className="flex-1">
                 <Input
                   value={lang.language}
@@ -101,10 +114,27 @@ export function LanguagesForm({
                   ))}
                 </datalist>
               </FormField>
-              <DeleteButton
-                onClick={() => removeLanguage(index)}
-                className="mt-5"
-              />
+              <div className="flex flex-col gap-0.5">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => moveLanguage(index, "up")}
+                  disabled={index === 0}
+                  className="h-4 w-7 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                >
+                  <ChevronUp className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => moveLanguage(index, "down")}
+                  disabled={index === languages.length - 1}
+                  className="h-4 w-7 p-0 rounded text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                >
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </div>
+              <DeleteButton onClick={() => removeLanguage(index)} />
             </div>
           </CardContent>
         </Card>

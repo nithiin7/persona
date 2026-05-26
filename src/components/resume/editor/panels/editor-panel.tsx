@@ -86,32 +86,33 @@ export function EditorPanel({
       <div className="flex-1 flex flex-col overflow-scroll">
         <ScrollArea className="flex-1 sm:pr-2" ref={scrollAreaRef}>
           <div className="relative pb-36">
-            <div className="sticky top-0 z-20 bg-white border-b border-gray-100">
-              <div className="flex flex-col gap-4">
-                <ResumeEditorActions
-                  onResumeChange={onResumeChange}
-                  job={job}
-                />
-              </div>
-            </div>
-
-            {/* Tailored Job Accordion */}
-            <Accordion
-              type="single"
-              collapsible
-              defaultValue="basic"
-              className="mt-6"
-            >
-              <TailoredJobAccordion
-                resume={resume}
-                job={job}
-                isLoading={isLoadingJob}
-              />
-            </Accordion>
-
-            {/* Tabs */}
+            {/* Tabs wraps everything so TabsList can be sticky alongside the actions bar */}
             <Tabs defaultValue="basic" className="mb-4">
-              <ResumeEditorTabs />
+              <div className="sticky top-0 z-20 bg-white border-b border-gray-100">
+                <div className="flex flex-col gap-4">
+                  <ResumeEditorActions
+                    onResumeChange={onResumeChange}
+                    job={job}
+                  />
+                </div>
+                <div className="pb-2">
+                  <ResumeEditorTabs />
+                </div>
+              </div>
+
+              {/* Tailored Job Accordion */}
+              <Accordion
+                type="single"
+                collapsible
+                defaultValue="basic"
+                className="mt-6"
+              >
+                <TailoredJobAccordion
+                  resume={resume}
+                  job={job}
+                  isLoading={isLoadingJob}
+                />
+              </Accordion>
 
               {highlightKeywords && (
                 <KeywordHighlightBar
