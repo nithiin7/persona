@@ -4,7 +4,16 @@ import { Skill, Profile } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash2, Sparkles, Loader2, Check, X } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Sparkles,
+  Loader2,
+  Check,
+  X,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ImportFromProfileDialog } from "../../management/dialogs/import-from-profile-dialog";
@@ -112,6 +121,13 @@ export function SkillsForm({ skills, onChange, profile }: SkillsFormProps) {
 
   const removeSkillCategory = (index: number) => {
     onChange(skills.filter((_, i) => i !== index));
+  };
+
+  const moveCategory = (index: number, direction: "up" | "down") => {
+    const updated = [...skills];
+    const swapWith = direction === "up" ? index - 1 : index + 1;
+    [updated[index], updated[swapWith]] = [updated[swapWith], updated[index]];
+    onChange(updated);
   };
 
   const addSkill = (categoryIndex: number) => {
@@ -266,14 +282,34 @@ export function SkillsForm({ skills, onChange, profile }: SkillsFormProps) {
                     placeholder="Category Name"
                   />
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeSkillCategory(index)}
-                  className="h-8 w-8 shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <div className="flex gap-1 shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => moveCategory(index, "up")}
+                    disabled={index === 0}
+                    className="h-8 w-8 text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150 disabled:opacity-30"
+                  >
+                    <ChevronUp className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => moveCategory(index, "down")}
+                    disabled={index === skills.length - 1}
+                    className="h-8 w-8 text-gray-300 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150 disabled:opacity-30"
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeSkillCategory(index)}
+                    className="h-8 w-8 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
 
               {/* Skills Display */}
