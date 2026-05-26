@@ -1,8 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -10,38 +10,62 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface UnsavedChangesDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
+  onDiscard: () => void;
+  onSave: () => Promise<void>;
 }
 
 export function UnsavedChangesDialog({
   isOpen,
   onOpenChange,
-  onConfirm,
+  onDiscard,
+  onSave,
 }: UnsavedChangesDialogProps) {
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await onSave();
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
           <AlertDialogDescription>
-            You have unsaved changes. Are you sure you want to leave? Your
-            changes will be lost.
+            You have unsaved changes. Save before leaving or discard them.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => onOpenChange(false)}>
-            Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          <AlertDialogCancel disabled={isSaving}>Cancel</AlertDialogCancel>
+          <Button
+            variant="outline"
+            onClick={onDiscard}
+            disabled={isSaving}
+            className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
           >
-            Leave Without Saving
-          </AlertDialogAction>
+            Discard & Leave
+          </Button>
+          <Button onClick={handleSave} disabled={isSaving}>
+            {isSaving ? (
+              <>
+                <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save & Leave"
+            )}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
