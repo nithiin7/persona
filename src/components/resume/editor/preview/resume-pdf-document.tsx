@@ -81,12 +81,22 @@ const HeaderSection = memo(function HeaderSection({
   resume: Resume;
   styles: ReturnType<typeof createResumeStyles>;
 }) {
-  const textContent = (
+  const hasAvatar = !!resume.avatar_url;
+
+  const nameStyle = hasAvatar
+    ? { ...styles.name, textAlign: "left" as const }
+    : styles.name;
+
+  const contactStyle = hasAvatar
+    ? { ...styles.contactInfo, justifyContent: "flex-start" as const }
+    : styles.contactInfo;
+
+  const nameAndContact = (
     <>
-      <Text style={styles.name}>
+      <Text style={nameStyle}>
         {resume.first_name} {resume.last_name}
       </Text>
-      <View style={styles.contactInfo}>
+      <View style={contactStyle}>
         {resume.location && (
           <>
             <Text>{resume.location}</Text>
@@ -167,22 +177,29 @@ const HeaderSection = memo(function HeaderSection({
 
   return (
     <View style={styles.header}>
-      {resume.avatar_url ? (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={{ flex: 1 }}>{textContent}</View>
-          <PDFImage
-            src={resume.avatar_url}
+      {hasAvatar ? (
+        <View
+          style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
+        >
+          <View style={{ flex: 1 }}>{nameAndContact}</View>
+          <View
             style={{
               width: 64,
               height: 64,
               borderRadius: 32,
+              overflow: "hidden",
               marginLeft: 12,
               flexShrink: 0,
             }}
-          />
+          >
+            <PDFImage
+              src={resume.avatar_url!}
+              style={{ width: 64, height: 64, objectFit: "cover" }}
+            />
+          </View>
         </View>
       ) : (
-        textContent
+        nameAndContact
       )}
     </View>
   );

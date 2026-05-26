@@ -232,6 +232,7 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
       "website",
       "linkedin_url",
       "github_url",
+      "avatar_url",
     ];
     fields.forEach((field) => {
       if (profile[field]) updateField(field, profile[field] as string);

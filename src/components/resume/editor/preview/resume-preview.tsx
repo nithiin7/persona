@@ -50,6 +50,7 @@ function generateResumeHash(resume: Resume): string {
         resume.linkedin_url,
         resume.github_url,
       ],
+      avatar_url: resume.avatar_url,
     },
     summary: resume.professional_summary,
     sections: {
