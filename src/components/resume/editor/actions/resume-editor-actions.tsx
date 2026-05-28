@@ -19,6 +19,7 @@ import { TextImport } from "../../text-import";
 import { ResumePDFDocument } from "../preview/resume-pdf-document";
 import { cn, getResumeFileName } from "@/lib/utils";
 import { useResumeContext } from "../resume-editor-context";
+import { CoverLetterPDFDocument } from "@/components/cover-letter/cover-letter-pdf-document";
 
 import { updateResume } from "@/utils/actions/resumes/actions";
 import {
@@ -139,38 +140,22 @@ export function ResumeEditorActions({
                       downloadOptions.coverLetter &&
                       resume.has_cover_letter
                     ) {
-                      // Dynamically import html2pdf only when needed
-                      const html2pdf = (await import("html2pdf.js")).default;
-
-                      const coverLetterElement = document.getElementById(
-                        "cover-letter-content"
-                      );
-                      if (!coverLetterElement) {
-                        throw new Error("Cover letter content not found");
-                      }
-
-                      const opt = {
-                        margin: [0, 0, -0.5, 0],
-                        filename: `${resume.first_name}_${resume.last_name}_Cover_Letter.pdf`,
-                        image: { type: "jpeg", quality: 0.98 },
-                        html2canvas: {
-                          backgroundColor: "red",
-                          useCORS: true,
-                          letterRendering: true,
-                          // width: 700,
-                          // height: 1000,
-                          // windowWidth: 700,
-                          logging: true,
-                          // windowHeight: 2000
-                        },
-                        jsPDF: {
-                          unit: "in",
-                          format: "letter",
-                          orientation: "portrait",
-                        },
-                      };
-
-                      await html2pdf().set(opt).from(coverLetterElement).save();
+                      const coverLetterContent = (
+                        resume.cover_letter as Record<string, unknown>
+                      )?.content as string | undefined;
+                      const coverBlob = await pdf(
+                        <CoverLetterPDFDocument
+                          content={coverLetterContent || ""}
+                        />
+                      ).toBlob();
+                      const coverUrl = URL.createObjectURL(coverBlob);
+                      const coverLink = document.createElement("a");
+                      coverLink.href = coverUrl;
+                      coverLink.download = `${resume.first_name}_${resume.last_name}_Cover_Letter.pdf`;
+                      document.body.appendChild(coverLink);
+                      coverLink.click();
+                      document.body.removeChild(coverLink);
+                      URL.revokeObjectURL(coverUrl);
                     }
 
                     toast({
