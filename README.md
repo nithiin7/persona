@@ -1,46 +1,109 @@
+<div align="center">
+
+<img src="public/android-chrome-512x512.png" alt="Persona" width="110" />
+
 # Persona
 
-**Your AI-powered resume builder — no subscriptions, no limits, runs on your machine.**
+**AI-powered resume builder — no subscriptions, no limits, runs on your machine.**
 
-Persona is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) with Stripe and paywalls completely removed. Every feature is unlocked by default. Bring your own API keys or run entirely local models through Ollama.
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs&logoColor=white)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![License](https://img.shields.io/badge/license-AGPL--3.0-22c55e)](LICENSE)
+[![AI](https://img.shields.io/badge/AI-Claude%20·%20GPT%20·%20Ollama-7c3aed)](#model-support)
+
+<br />
+
+<img src="public/images/ss4.webp" alt="Persona Dashboard" width="860" />
+
+</div>
 
 ---
 
-## What it does
+Persona is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) with Stripe and all paywalls completely removed. Every feature is unlocked by default. Bring your own API keys, or run entirely local models through Ollama. **GPT-4.1 Nano is included free — no key required.**
 
-- **AI resume tailoring** — paste a job description and watch the AI rewrite your resume to match it
-- **Live PDF preview** — see your formatted resume update as you type
-- **AI chat assistant** — ask questions, request rewrites, and get feedback in a sidebar chat
-- **ATS score** — instant compatibility score against any job posting
-- **ATS keyword highlighter** — after scoring, matched and missing job keywords appear in a persistent bar across all editor tabs so you can see coverage while editing any section, with no extra AI call
-- **Cover letter generator** — one-click drafts based on your resume and the job
-- **Multiple templates** — Classic, Modern, and Minimal layouts with full style control
-- **Profile as source of truth** — maintain one master profile; spin off tailored resumes from it. Includes a profile photo: upload once and it carries through to any resume via "Fill from Profile", rendering as a circular headshot in the PDF header
-- **Optional resume sections** — Publications, Volunteer, Languages, and Awards sections sit alongside the core ones; each is editable in the profile (for prefilling) and in the resume editor, supports "Import from Profile", renders in the PDF with full visibility/ordering control via the Layout tab, and is extracted automatically during AI resume/LinkedIn import
-- **Application pipeline (Kanban)** — track every job through Saved → Applied → Phone Screen → Onsite → Offer / Rejected on a drag-and-drop Kanban board on the home dashboard; status is also visible on resume cards and in the resume editor
-- **DOCX export** — download your resume as a Word document for ATS and job boards that require `.docx` over PDF; toggle between PDF and DOCX in the download menu or via the right-click context menu on the preview
-- **LinkedIn import** — populate your profile or resume from LinkedIn in two ways: paste your profile URL for a server-side fetch (extracts JSON-LD structured data + visible text), or copy all text from your browser profile page and paste it; AI parses either format into structured fields. Available on the Profile page (dedicated LinkedIn import dialog) and in the resume editor's Import dialog
-- **Version history** — every manual save snapshots the previous state; open the History panel in the editor to browse up to 5 timestamped checkpoints and restore any of them with one click. Restoring also snapshots the current state first, so the restore itself is undoable
-- **AI inline assist** — one-click AI buttons throughout the editor: generate a professional summary from your work history (Basic Info tab), suggest achievement bullet points per education entry (Education tab), and surface missing skill keywords pre-mapped to existing or new categories (Skills tab)
-- **Section templates** — a "Templates" button in each work experience entry opens a searchable library of pre-written bullet starters across 15 common roles (Software Engineer, Product Manager, Data Scientist, UX Designer, Sales, and more). Browse by role, check the bullets you want, and insert them in one click — each inserts as an editable entry you can tailor to your own experience
-- **Resume diff view** — a "Compare" button in the tailored resume editor opens a side-by-side diff against any of your base resumes. Bullet points are aligned with an LCS algorithm so additions (green), removals (red), and modifications (old struck-out + new highlighted) are shown inline for every section: summary, work experience, projects, skills, and education
+---
+
+## Features
+
+<table>
+<tr>
+<td valign="top" width="50%">
+
+**Resume building**
+
+- AI tailoring from job descriptions
+- Live PDF preview as you type
+- Classic, Modern, and Minimal templates
+- Profile-as-source-of-truth → spin off tailored resumes
+- Version history with one-click restore
+
+</td>
+<td valign="top" width="50%">
+
+**AI tools**
+
+- Streaming chat assistant in the editor sidebar
+- ATS score + persistent keyword highlighter
+- One-click cover letter generator
+- LinkedIn profile import (URL or paste)
+- Inline AI assist: summaries, bullet suggestions, skill gaps
+
+</td>
+</tr>
+<tr>
+<td valign="top" width="50%">
+
+**Job tracking**
+
+- Drag-and-drop Kanban pipeline
+- Saved → Applied → Phone Screen → Onsite → Offer / Rejected
+- Status surfaced on resume cards and in the editor
+
+</td>
+<td valign="top" width="50%">
+
+**Export & extras**
+
+- Download as PDF or DOCX
+- Resume diff view — compare tailored vs. base side-by-side
+- Optional sections: Publications, Volunteer, Languages, Awards
+- Profile photo rendered as circular headshot in PDF
+- Section templates: pre-written bullets across 15 common roles
+
+</td>
+</tr>
+</table>
+
+---
+
+## Screenshots
+
+<div align="center">
+
+|                            Resume Editor                             |                          AI Scoring & Suggestions                           |
+| :------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
+| <img src="public/images/ss1.webp" width="420" alt="Resume editor" /> | <img src="public/images/ss2.webp" width="420" alt="AI suggestions panel" /> |
+
+|                         Profile & Import                         |                            Fill from Profile                             |
+| :--------------------------------------------------------------: | :----------------------------------------------------------------------: |
+| <img src="public/images/ss4.webp" width="420" alt="Dashboard" /> | <img src="public/images/ss3.webp" width="420" alt="Fill from profile" /> |
+
+</div>
 
 ---
 
 ## Model support
 
-Persona routes AI calls through whichever provider you configure. Mix and match per your needs:
+Mix and match providers — configure as many or as few as you want:
 
-| Provider               | Notes                                                    |
-| ---------------------- | -------------------------------------------------------- |
-| **Anthropic** (Claude) | Best quality; recommended for complex tailoring          |
-| **OpenAI** (GPT)       | GPT-4.1 Nano is included free — no key required          |
-| **OpenRouter**         | Access hundreds of models with one API key               |
-| **Ollama**             | Run models locally — free, private, no internet required |
+| Provider               | Notes                                            |
+| ---------------------- | ------------------------------------------------ |
+| **Anthropic** (Claude) | Best quality; recommended for complex tailoring  |
+| **OpenAI** (GPT)       | GPT-4.1 Nano is free — no key required           |
+| **OpenRouter**         | Hundreds of models with one API key              |
+| **Ollama**             | Local models — free, private, no internet needed |
 
 ### Ollama (local AI)
-
-No API key, no cloud, no cost. If you have [Ollama](https://ollama.com) installed:
 
 ```bash
 ollama pull llama3.2   # or any model you like
@@ -50,31 +113,18 @@ Then go to **Settings → API Keys → Ollama (Local AI)**, click **Connect**, a
 
 ---
 
-## Tech stack
-
-- **Next.js 15** — App Router, React Server Components, Server Actions
-- **React 19** — concurrent rendering, optimistic updates
-- **TypeScript** — strict types throughout
-- **Shadcn UI + Tailwind CSS** — accessible components, utility-first styling
-- **Supabase** — Postgres database, auth, row-level security
-- **Vercel AI SDK** — unified streaming interface across all model providers
-- **React PDF** — client-side PDF generation with `@react-pdf/renderer`
-- **Upstash Redis** — rate limiting
-
----
-
 ## Getting started
 
 ### Prerequisites
 
 - Node.js 18+
 - pnpm
-- A [Supabase](https://supabase.com) project (free tier is fine)
+- A [Supabase](https://supabase.com) project (free tier works fine)
 
 ### 1. Clone and install
 
 ```bash
-git clone <https://github.com/nithiin7/persona>
+git clone https://github.com/nithiin7/persona
 cd persona
 pnpm install
 ```
@@ -88,7 +138,7 @@ cp .env.example .env
 Edit `.env` with your values:
 
 ```env
-# Supabase
+# Supabase (required)
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
@@ -106,11 +156,11 @@ UPSTASH_REDIS_REST_TOKEN=...
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-You don't need all keys. The app works with just Supabase configured — GPT-4.1 Nano is available for free without any AI key.
+You don't need all keys. The app works with just Supabase — GPT-4.1 Nano is always available for free.
 
 ### 3. Set up the database
 
-Run the schema in your Supabase project's SQL editor (found in `supabase/`), or use the CLI:
+Run the schema in your Supabase SQL editor (found in `supabase/`), or use the CLI:
 
 ```bash
 supabase db push
@@ -126,32 +176,17 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Project structure
+## Tech stack
 
-```
-src/
-  app/
-    (dashboard)/          # Auth-protected pages
-      home/               # Resume management dashboard
-      resumes/[id]/       # Resume editor
-      profile/            # Master profile
-      settings/           # Model & API key config
-    api/chat/             # Streaming AI chat endpoint
-    admin/                # User management
-    auth/                 # Login, signup, password reset
-  components/
-    resume/               # Editor panels, templates, PDF
-    settings/             # API key and model configuration
-    shared/               # Model selector, shared UI
-  lib/
-    ai-models.ts          # All model/provider definitions
-    types.ts              # Shared TypeScript types
-    prompts.ts            # AI system prompts
-  utils/
-    actions/              # Server Actions (AI, CRUD)
-    ai-tools.ts           # initializeAIClient — model routing
-    supabase/             # DB client helpers
-```
+| Layer           | Technology                                             |
+| --------------- | ------------------------------------------------------ |
+| Framework       | Next.js 15 — App Router, RSC, Server Actions           |
+| UI              | Shadcn UI + Tailwind CSS                               |
+| Language        | TypeScript (strict)                                    |
+| Database & Auth | Supabase (Postgres + RLS)                              |
+| AI SDK          | Vercel AI SDK — unified streaming across all providers |
+| PDF             | `@react-pdf/renderer` — client-side generation         |
+| Rate limiting   | Upstash Redis                                          |
 
 ---
 
@@ -169,7 +204,7 @@ pnpm format:check  # Prettier (check only)
 
 ## Adding a new AI model
 
-All model configuration lives in [`src/lib/ai-models.ts`](src/lib/ai-models.ts). To add a model, append an entry to `AI_MODELS` with its provider, features, and availability — no other files need changing. To swap which model is used for a specific task (e.g. "fast cheap" or "frontier"), update `MODEL_DESIGNATIONS` in the same file.
+All model configuration lives in [`src/lib/ai-models.ts`](src/lib/ai-models.ts). Append an entry to `AI_MODELS` with its provider, features, and availability — no other files need changing. To swap the model used for a specific task, update `MODEL_DESIGNATIONS` in the same file.
 
 ---
 
