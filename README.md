@@ -13,7 +13,7 @@
 
 <br />
 
-<img src="public/images/ss4.webp" alt="Persona Dashboard" width="860" />
+<img src="public/images/ss4.png" alt="Persona Dashboard" width="860" />
 
 </div>
 
@@ -80,13 +80,17 @@ Persona is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) wi
 
 <div align="center">
 
-|                            Resume Editor                             |                          AI Scoring & Suggestions                           |
-| :------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
-| <img src="public/images/ss1.webp" width="420" alt="Resume editor" /> | <img src="public/images/ss2.webp" width="420" alt="AI suggestions panel" /> |
+|                            Resume Editor                            |                          AI Scoring & Suggestions                          |
+| :-----------------------------------------------------------------: | :------------------------------------------------------------------------: |
+| <img src="public/images/ss1.png" width="420" alt="Resume editor" /> | <img src="public/images/ss2.png" width="420" alt="AI suggestions panel" /> |
 
-|                         Profile & Import                         |                            Fill from Profile                             |
-| :--------------------------------------------------------------: | :----------------------------------------------------------------------: |
-| <img src="public/images/ss4.webp" width="420" alt="Dashboard" /> | <img src="public/images/ss3.webp" width="420" alt="Fill from profile" /> |
+|                        Profile & Import                         |                            Fill from Profile                            |
+| :-------------------------------------------------------------: | :---------------------------------------------------------------------: |
+| <img src="public/images/ss4.png" width="420" alt="Dashboard" /> | <img src="public/images/ss3.png" width="420" alt="Fill from profile" /> |
+
+|                                                                  |
+| :--------------------------------------------------------------: |
+| <img src="public/images/ss5.png" width="860" alt="Screenshot" /> |
 
 </div>
 

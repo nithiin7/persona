@@ -356,7 +356,7 @@ export function EditorPanel({
         </ScrollArea>
       </div>
 
-      <div className="absolute w-full bottom-0">
+      <div className="absolute w-full bottom-0 z-30">
         <ChatBot resume={resume} onResumeChange={onResumeChange} job={job} />
       </div>
     </div>
