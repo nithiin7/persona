@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="public/android-chrome-512x512.png" alt="Persona" width="110" />
-
 # Persona
 
 **AI-powered resume builder — no subscriptions, no limits, runs on your machine.**
@@ -10,12 +8,6 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-22c55e)](LICENSE)
 [![AI](https://img.shields.io/badge/AI-Claude%20·%20GPT%20·%20Ollama-7c3aed)](#model-support)
-
-<br />
-
-<img src="public/images/ss4.png" alt="Persona Dashboard" width="860" />
-
-</div>
 
 ---
 
@@ -84,7 +76,7 @@ Persona is a personal fork of [ResumeLM](https://github.com/olyaiy/resume-lm) wi
 | :-----------------------------------------------------------------: | :------------------------------------------------------------------------: |
 | <img src="public/images/ss1.png" width="420" alt="Resume editor" /> | <img src="public/images/ss2.png" width="420" alt="AI suggestions panel" /> |
 
-|                        Profile & Import                         |                            Fill from Profile                            |
+|                        Tailored Resumes                         |                          Application Pipelines                          |
 | :-------------------------------------------------------------: | :---------------------------------------------------------------------: |
 | <img src="public/images/ss4.png" width="420" alt="Dashboard" /> | <img src="public/images/ss3.png" width="420" alt="Fill from profile" /> |
 
