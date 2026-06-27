@@ -124,7 +124,9 @@ const HeaderSection = memo(function HeaderSection({
         )}
         {resume.phone_number && (
           <>
-            <Text>{resume.phone_number}</Text>
+            <Link src={`tel:${resume.phone_number.replace(/\s/g, "")}`}>
+              <Text style={styles.link}>{resume.phone_number}</Text>
+            </Link>
             {(resume.website || resume.linkedin_url || resume.github_url) && (
               <Text style={styles.bulletSeparator}>•</Text>
             )}

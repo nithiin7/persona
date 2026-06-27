@@ -13,6 +13,7 @@ import {
   Loader2,
   X,
 } from "lucide-react";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
@@ -185,12 +186,9 @@ export function ProfileBasicInfoForm({
             />
           </FieldGroup>
           <FieldGroup label="Phone" icon={Phone}>
-            <Input
-              type="tel"
+            <PhoneInput
               value={profile.phone_number || ""}
-              onChange={(e) => onChange("phone_number", e.target.value)}
-              className={inputClass}
-              placeholder="+1 (555) 000-0000"
+              onChange={(val) => onChange("phone_number", val)}
             />
           </FieldGroup>
           <FieldGroup label="Location" icon={MapPin}>

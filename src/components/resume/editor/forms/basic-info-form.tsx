@@ -18,6 +18,7 @@ import {
   Sparkles,
   LucideIcon,
 } from "lucide-react";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { FORM_INPUT_CLASS } from "@/components/ui/form-field";
 import { Button } from "@/components/ui/button";
 import { useResumeContext } from "../resume-editor-context";
@@ -281,14 +282,22 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
           placeholder="email@example.com"
           type="email"
         />
-        <BasicInfoField
-          field="phone_number"
-          value={resume.phone_number || ""}
-          label="Phone"
-          icon={Phone}
-          placeholder="+1 (555) 000-0000"
-          type="tel"
-        />
+        <div className="space-y-1">
+          <label className="flex items-center gap-1.5 text-xs font-medium text-gray-500">
+            <Phone className="h-3 w-3 text-gray-400" />
+            Phone
+          </label>
+          <PhoneInput
+            value={resume.phone_number || ""}
+            onChange={(val) =>
+              dispatch({
+                type: "UPDATE_FIELD",
+                field: "phone_number",
+                value: val,
+              })
+            }
+          />
+        </div>
         <BasicInfoField
           field="location"
           value={resume.location || ""}
